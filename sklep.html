@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Sklep — rośliny in vitro | Nature &amp; Future</title>
+<meta name="description" content="Rośliny akwariowe i drzewa owocowe z kultury in vitro. 100% wolne od glonów, ślimaków i patogenów. Wysyłka w całej Polsce.">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #060906; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
+  ::view-transition-old(root) { animation-name: nf-vt-out; }
+  ::view-transition-new(root) { animation-name: nf-vt-in; }
+  @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
+  @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
+  @keyframes sp-needle { 0%,100%{transform:rotate(-26deg)} 50%{transform:rotate(20deg)} }
+  @keyframes sp-needle2 { 0%,100%{transform:rotate(8deg)} 50%{transform:rotate(-22deg)} }
+  @keyframes sp-glow { 0%,100%{opacity:.5} 50%{opacity:1} }
+  @keyframes nf-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(122,170,114,.55); } 70% { box-shadow: 0 0 0 10px rgba(122,170,114,0); } 100% { box-shadow: 0 0 0 0 rgba(122,170,114,0); } }
+  @media (prefers-reduced-motion: reduce){ .nf-anim{ animation:none !important } }
+</style>
+</helmet>
+
+<div style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(120% 80% at 50% -10%, #0e1810, #060906 60%); color:#b8b0a0;">
+
+  <!-- ============================================================ -->
+  <!-- NAV -->
+  <!-- ============================================================ -->
+  <div style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.2); max-width:1440px; margin:0 auto;">
+    <a href="index.html" style="display:flex; align-items:center; gap:13px;">
+      <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+      <span style="line-height:1.1;"><span style="display:block; font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</span><span style="display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</span></span>
+    </a>
+    <div style="display:flex; align-items:center; gap:22px; white-space:nowrap; font-family:'EB Garamond',serif; font-size:15px; letter-spacing:.02em; color:#b8b0a0;">
+      <a href="index.html#kim-jestesmy">O nas</a>
+      <a href="technologia.html">Technologia</a>
+      <a href="index.html#historia">Historia</a>
+      <a href="sklep.html" style="color:#8aba82; position:relative;">Sklep<span style="position:absolute; left:0; right:0; bottom:-6px; height:1px; background:linear-gradient(90deg,transparent,#8aba82,transparent);"></span></a>
+      <a href="index.html#kontakt">Współpraca</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><b style="color:#8aba82;">PL</b> <span style="opacity:.4">/ EN</span></span>
+      <a href="panel-klienta.html" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; border:1px solid rgba(90,120,70,.4); border-radius:4px; padding:9px 13px;">
+        <span style="width:14px; height:14px; border-radius:50%; border:1.5px solid #a9c0a0; display:inline-flex; align-items:center; justify-content:center;">
+          <span style="width:5px; height:5px; border-radius:50%; background:#a9c0a0;"></span>
+        </span>
+        Konto
+      </a>
+      <span onClick="{{ openDrawer }}" style="cursor:pointer; position:relative; display:inline-flex; align-items:center; gap:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:11px 16px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 18px rgba(90,120,70,.25);">
+        Koszyk
+        <span style="display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:11px; background:#060906; color:#8aba82; font-family:'Space Mono',monospace; font-size:11px; font-weight:700; border:1px solid #8aba82;">{{ cartCount }}</span>
+      </span>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- HERO + CATEGORY TABS -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:70px 40px 40px;">
+    <div style="display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:end;">
+      <div>
+        <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;">
+          <span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>
+          sklep · culta sub vitro
+        </div>
+        <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:56px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">
+          Rośliny ze szkła<br>
+          <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">do akwarium i sadu.</span>
+        </h1>
+        <p style="font-size:18px; line-height:1.66; color:#9a9480; max-width:520px; margin:22px 0 0;">
+          Wszystkie okazy z laboratorium w Wałbrzychu — kultura tkankowa <em>in vitro</em>, identyczne genetycznie z roślinami matecznymi, 100% wolne od patogenów. Wysyłka w całej Polsce w 48 h.
+        </p>
+      </div>
+
+      <!-- right: small instrument card -->
+      <div style="position:relative; padding:18px 22px; border-radius:14px; background:linear-gradient(145deg,#1c2418,#0e1410); border:1px solid rgba(90,120,70,.35); display:flex; align-items:center; gap:20px; box-shadow:inset 0 0 0 1px rgba(122,170,114,.1);">
+        <div style="position:relative; width:84px; height:84px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 14px rgba(0,0,0,.85), 0 0 18px rgba(90,120,70,.3); flex:none;">
+          <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.45;"></div>
+          <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:28px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(24deg); animation:sp-needle 7s ease-in-out infinite;"></div>
+          <div style="position:absolute; left:50%; top:50%; width:8px; height:8px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.18em; color:#5d7a50;">STAN&nbsp;MAGAZYNOWY</div>
+          <div style="font-family:'Cinzel',serif; font-size:26px; font-weight:600; color:#ddd8c6; margin-top:4px;">12 odmian · 1840 szt.</div>
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e; margin-top:4px;">aktualizacja: dziś, 06:42</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- CATEGORY TABS -->
+    <!-- ============================================================ -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:48px; padding-top:24px; border-top:1px solid rgba(90,120,70,.18); gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; gap:0; align-items:stretch; background:rgba(8,12,8,.5); border:1px solid rgba(90,120,70,.3); border-radius:8px; padding:5px;">
+        <span onClick="{{ setAkwa }}" style="cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 22px; border-radius:6px; background:{{ akwaTabBg }}; transition:background .25s;">
+          <span style="width:9px; height:9px; border-radius:50%; background:#7aaa72; box-shadow:0 0 8px rgba(122,170,114,.6);"></span>
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ akwaTabColor }}; letter-spacing:.04em;">Rośliny akwariowe</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ in&nbsp;vitro</span>
+        </span>
+        <span onClick="{{ setSad }}" style="cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 22px; border-radius:6px; background:{{ sadTabBg }}; transition:background .25s;">
+          <span style="width:9px; height:9px; border-radius:50%; background:#8aba82; box-shadow:0 0 8px rgba(122,170,114,.5);"></span>
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ sadTabColor }}; letter-spacing:.04em;">Drzewa owocowe</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ sad Walim</span>
+        </span>
+      </div>
+      <div style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
+        <span>SORTUJ:</span>
+        <span style="color:#a9c0a0;">Wszystkie</span>
+        <span>Cena ↑</span>
+        <span>Najnowsze</span>
+        <span>Dostępne</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- PRODUCT GRID -->
+  <!-- ============================================================ -->
+  <div style="max-width:1440px; margin:0 auto; padding:14px 40px 80px;">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px;">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+        <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.24); border-radius:14px; padding:18px; display:flex; flex-direction:column;">
+          <div style="position:relative; border-radius:10px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08;">
+            <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.6) 100%);"></div>
+            <span style="position:absolute; left:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:999px; padding:5px 10px;">{{ p.tag }}</span>
+            <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#7aaa72; background:rgba(8,12,8,.7); border:1px solid rgba(122,170,114,.4); border-radius:999px; padding:5px 10px;">in vitro</span>
+            <div style="position:absolute; left:12px; bottom:12px; display:flex; align-items:center; gap:7px; background:rgba(8,12,8,.7); border:1px solid rgba(90,120,70,.3); border-radius:5px; padding:5px 9px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 5px rgba(122,170,114,.7);"></span>
+              <span style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#a9c0a0;">{{ p.stock }}&nbsp;dostępne</span>
+            </div>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic;">{{ p.latin }}</div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em;">{{ p.name }}</div>
+          <p style="font-size:14.5px; line-height:1.55; color:#9a9480; margin:10px 0 16px; min-height:46px;">{{ p.desc }}</p>
+          <div style="margin-top:auto; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(90,120,70,.18); padding-top:14px; gap:12px;">
+            <div>
+              <div style="font-family:'Cinzel',serif; font-size:22px; font-weight:600; color:#8aba82;">{{ p.price }}&nbsp;PLN</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">{{ p.unit }}</div>
+            </div>
+            <span onClick="{{ p.onAdd }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:11px 18px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 18px rgba(90,120,70,.2); white-space:nowrap;">
+              Do koszyka +
+            </span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- BENEFIT STRIP -->
+  <!-- ============================================================ -->
+  <div style="max-width:1440px; margin:0 auto; padding:30px 40px 80px;">
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px; padding:30px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:14px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="position:relative; width:46px; height:46px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; flex:none;">
+          <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:14px; background:#7aaa72; transform-origin:bottom center; transform:rotate(-20deg);"></div>
+          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:#ddd8c6;">Wysyłka 48 h</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.04em; margin-top:2px;">DPD, InPost · cała Polska</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="position:relative; width:46px; height:46px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; flex:none;">
+          <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:14px; background:#8aba82; transform-origin:bottom center; transform:rotate(8deg);"></div>
+          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:#ddd8c6;">100% sterylne</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.04em; margin-top:2px;">zero glonów i ślimaków</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="position:relative; width:46px; height:46px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; flex:none;">
+          <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:14px; background:#7aaa72; transform-origin:bottom center; transform:rotate(36deg);"></div>
+          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:#ddd8c6;">Gwarancja przyjęcia</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.04em; margin-top:2px;">14 dni · zwrot lub wymiana</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="position:relative; width:46px; height:46px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; flex:none;">
+          <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:14px; background:#8aba82; transform-origin:bottom center; transform:rotate(54deg);"></div>
+          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:#ddd8c6;">B2B na zapytanie</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.04em; margin-top:2px;">ceny hurtowe · faktura VAT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================================ -->
+  <div style="border-top:1px solid rgba(90,120,70,.2); margin-top:20px;">
+    <div style="max-width:1440px; margin:0 auto; padding:50px 40px 40px;">
+      <div style="display:grid; grid-template-columns:1.2fr 1fr 1fr .8fr; gap:40px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+            <span style="width:30px; height:30px; border-radius:50%; border:1.5px solid #c69a4c; display:inline-flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-weight:700; color:#8aba82; font-size:14px;">N</span>
+            <div style="line-height:1.1;"><div style="font-family:'Cinzel',serif; font-weight:600; font-size:14px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</div><div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.22em; color:#5d7a50; margin-top:2px;">PLANT BIOTECH</div></div>
+          </div>
+          <p style="font-size:14px; line-height:1.6; color:#8c7d5e; max-width:260px;">In Vitro. Z natury ku przyszłości. Rośliny rozmnażane metodą mikropropagacji w Wałbrzychu.</p>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#5d7a50; margin-bottom:18px;">Nawigacja</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14.5px; color:#9a9480;">
+            <a href="index.html#kim-jestesmy">O nas</a>
+            <a href="technologia.html">Technologia in vitro</a>
+            <a href="index.html#historia">Historia sadu</a>
+            <a href="sklep.html">Sklep</a>
+            <a href="panel-klienta.html">Panel klienta</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#5d7a50; margin-bottom:18px;">Kontakt</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14.5px; color:#9a9480;">
+            <span>ul. Orkana 148</span>
+            <span>58-300 Wałbrzych</span>
+            <span style="color:#a9c0a0;">kontakt@nfplantbiotech.com</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#5d7a50; margin-bottom:18px;">Język</div>
+          <div style="display:flex; gap:10px; font-family:'Space Mono',monospace; font-size:13px;">
+            <span style="color:#8aba82; border:1px solid rgba(90,120,70,.4); border-radius:4px; padding:6px 12px;">PL</span>
+            <span style="color:#5a5a4e; border:1px solid rgba(90,120,70,.15); border-radius:4px; padding:6px 12px;">EN</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(90,120,70,.12);">
+        <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">© 2026 Nature &amp; Future. Wszelkie prawa zastrzeżone.</span>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">nfplantbiotech.com</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- CART DRAWER + OVERLAY -->
+  <!-- ============================================================ -->
+  <div onClick="{{ closeDrawer }}" style="position:fixed; inset:0; background:rgba(4,6,4,.78); backdrop-filter:blur(3px); opacity:{{ overlayOpacity }}; pointer-events:{{ overlayPointer }}; transition:opacity .35s ease; z-index:100;"></div>
+
+  <div style="position:fixed; top:0; right:0; bottom:0; width:min(480px,92vw); transform:{{ drawerTransform }}; transition:transform .42s cubic-bezier(.4,0,.2,1); z-index:101; display:flex; flex-direction:column; background:linear-gradient(180deg,#0e1610 0%,#0b0805 100%); border-left:1px solid rgba(90,120,70,.4); box-shadow:-30px 0 80px -20px rgba(0,0,0,.9); font-family:'EB Garamond',serif; color:#b8b0a0;">
+
+    <!-- drawer head -->
+    <div style="position:relative; padding:26px 28px 22px; border-bottom:1px solid rgba(90,120,70,.25);">
+      <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// koszyk · {{ cartCount }} szt.</div>
+      <div style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6; letter-spacing:.02em; margin-top:6px;">Twój gabinet zakupowy</div>
+      <span onClick="{{ closeDrawer }}" style="cursor:pointer; position:absolute; right:22px; top:22px; width:34px; height:34px; border-radius:50%; border:1px solid rgba(90,120,70,.4); display:inline-flex; align-items:center; justify-content:center; color:#a9c0a0; font-family:'Space Mono',monospace; font-size:18px; line-height:1;">×</span>
+    </div>
+
+    <!-- drawer scroll body -->
+    <div style="flex:1; overflow-y:auto; padding:18px 22px;">
+      <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <sc-for list="{{ cart }}" as="item" hint-placeholder-count="2">
+            <div style="display:grid; grid-template-columns:64px 1fr auto; gap:14px; align-items:center; padding:12px; border:1px solid rgba(90,120,70,.2); border-radius:10px; background:rgba(14,22,14,.55);">
+              <div style="position:relative; width:64px; height:64px; border-radius:8px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+                <img src="{{ item.image }}" alt="{{ item.name }}" style="width:100%; height:100%; object-fit:cover;">
+              </div>
+              <div style="min-width:0;">
+                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#7aaa72; font-style:italic; letter-spacing:.04em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ item.latin }}</div>
+                <div style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:#ddd8c6; margin-top:2px; line-height:1.2;">{{ item.name }}</div>
+                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                  <span onClick="{{ item.onDec }}" style="cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(90,120,70,.4); border-radius:5px; color:#a9c0a0; font-family:'Space Mono',monospace; font-size:14px; line-height:1;">−</span>
+                  <span style="font-family:'Space Mono',monospace; font-size:13px; color:#ddd8c6; min-width:18px; text-align:center;">{{ item.qty }}</span>
+                  <span onClick="{{ item.onInc }}" style="cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(90,120,70,.4); border-radius:5px; color:#a9c0a0; font-family:'Space Mono',monospace; font-size:14px; line-height:1;">+</span>
+                  <span onClick="{{ item.onRemove }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#8c7d5e; margin-left:6px;">usuń</span>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#8aba82;">{{ item.lineTotal }}&nbsp;PLN</div>
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; margin-top:2px;">{{ item.priceUnit }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 10px; text-align:center;">
+          <div style="position:relative; width:84px; height:84px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; margin:0 auto;">
+            <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:24px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-60deg); animation:sp-needle 8s ease-in-out infinite;"></div>
+            <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+          </div>
+          <div style="font-family:'Cinzel',serif; font-size:20px; color:#ddd8c6; margin-top:18px;">Koszyk jest pusty</div>
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#8c7d5e; margin-top:6px; max-width:280px; margin-left:auto; margin-right:auto;">Wskaźnik wskazuje próżnię. Wybierz okaz z katalogu — wskazówka zacznie się przesuwać.</div>
+          <span onClick="{{ closeDrawer }}" style="cursor:pointer; display:inline-block; margin-top:22px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 22px;">Wróć do katalogu</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ orderJustPlaced }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 10px; text-align:center;">
+          <div style="position:relative; width:84px; height:84px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1c2014,#0b0e08); border:2px solid #7aaa72; margin:0 auto; box-shadow:0 0 30px rgba(122,170,114,.3);">
+            <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#7a9560 0deg .8deg,transparent .8deg 30deg); opacity:.5;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; top:50%; width:30px; height:30px; transform:translate(-50%,-50%); color:#7aaa72; font-family:'Cinzel',serif; font-size:30px; text-align:center; line-height:30px;">✓</div>
+          </div>
+          <div style="font-family:'Cinzel',serif; font-size:22px; color:#ddd8c6; margin-top:20px;">Zamówienie przyjęte</div>
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#7aaa72; margin-top:8px;">Nr {{ lastOrderId }} · status: pakowanie</div>
+          <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; margin-top:10px; max-width:300px; margin-left:auto; margin-right:auto; line-height:1.55;">Dziękujemy. Szczegóły znajdziesz w panelu klienta — wraz z numerem listu przewozowego.</div>
+          <a href="konto.html" style="display:inline-block; margin-top:22px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:12px 22px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45);">Przejdź do panelu →</a>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- drawer footer -->
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:22px 28px; border-top:1px solid rgba(90,120,70,.25); background:linear-gradient(180deg,#0a120b,#080c08);">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; padding-bottom:8px;">
+          <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">SUMA</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ cartCount }} szt. · wysyłka 0 PLN</span>
+        </div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between; padding-bottom:18px;">
+          <span style="font-family:'Cinzel',serif; font-size:28px; font-weight:700; color:#ddd8c6;">{{ cartTotal }}&nbsp;PLN</span>
+          <span style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e;">do zapłaty</span>
+        </div>
+        <span onClick="{{ checkout }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35);">
+          Złóż zamówienie →
+        </span>
+        <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#5a5a4e; text-align:center; margin-top:12px;">Płatność: BLIK · przelew · za pobraniem</div>
+      </div>
+    </sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    cart: [],
+    drawerOpen: false,
+    category: 'akwariowe',
+    orderJustPlaced: false,
+    lastOrderId: null,
+    hydrated: false
+  };
+
+  PRODUCTS = [
+    // ===== AKWARIOWE =====
+    { id:'mech-jaw', cat:'akwariowe', name:'Mech jawajski', latin:'Taxiphyllum barbieri', price:25, image:'assets/sp-terrarium-gauge.jpg', tag:'Łatwy w hodowli', stock:42, unit:'szt. · kubek 5×5', desc:'Klasyk akwarystyki — gęsty, zielony kobierzec na korzeniach i kamieniach.' },
+    { id:'eleocharis', cat:'akwariowe', name:'Eleocharis mini', latin:'Eleocharis sp. „Mini"', price:28, image:'assets/sp-flasks.jpg', tag:'Trawnik', stock:34, unit:'szt. · kubek 5×5', desc:'Jasnozielony, niski kobierzec. Tworzy efekt łąki w nano-akwarium.' },
+    { id:'bucefalandra', cat:'akwariowe', name:'Bucefalandra Brownie', latin:'Bucephalandra sp.', price:35, image:'assets/leaf-wall.jpg', tag:'Rzadka odmiana', stock:12, unit:'szt. · kubek 5×5', desc:'Niewielka, twarda roślina — odporna, wolnorosnąca, idealna na korzenie.' },
+    { id:'anubias', cat:'akwariowe', name:'Anubias nana', latin:'Anubias barteri var. nana', price:22, image:'assets/capsule-rainforest.jpg', tag:'Łatwy w hodowli', stock:58, unit:'szt. · kubek 5×5', desc:'Sztywne, ciemnozielone liście. Niewybredna — światło słabe, średnie.' },
+    { id:'krypto', cat:'akwariowe', name:'Kryptokoryna Wendta', latin:'Cryptocoryne wendtii', price:18, image:'assets/capsule-forest.jpg', tag:'Podstawa', stock:67, unit:'szt. · kubek 5×5', desc:'Średnia, brązowo-zielona. Drugi plan i tło — wytrzymała, niezawodna.' },
+    { id:'hcc', cat:'akwariowe', name:'Hemianthus „Cuba"', latin:'Hemianthus callitrichoides', price:32, image:'assets/sp-desk-bottles.jpg', tag:'Dla wytrwałych', stock:20, unit:'szt. · kubek 5×5', desc:'Najmniejsza roślina akwariowa świata. Wymaga CO₂, ale efekt — bajka.' },
+
+    // ===== SADOWNICZE =====
+    { id:'wisnia', cat:'sadownicze', name:'Wiśnia Walimska', latin:'Prunus cerasus „Walimska"', price:65, image:'assets/sp-greenhouse.jpg', tag:'100-letnia odmiana', stock:18, unit:'szt. · z odżywką', desc:'Z ponad 100-letniego sadu w Walimiu. Odporna na mróz, owoce ciemnoczerwone.' },
+    { id:'antonowka', cat:'sadownicze', name:'Jabłoń Antonówka', latin:'Malus domestica „Antonówka"', price:58, image:'assets/sp-library-terrarium.jpg', tag:'Klasyk', stock:24, unit:'szt. · z odżywką', desc:'Stara odmiana z Gór Sowich. Jabłka kwaśne, soczyste, idealne na przetwory.' },
+    { id:'glogierowka', cat:'sadownicze', name:'Jabłoń Glogierówka', latin:'Malus domestica „Glogierówka"', price:62, image:'assets/sp-flasks.jpg', tag:'Z Walimia', stock:9, unit:'szt. · z odżywką', desc:'Średnio późna, śląska odmiana. Owoce żółto-czerwone, słodkawe.' },
+    { id:'czeresnia', cat:'sadownicze', name:'Czereśnia Walimska', latin:'Prunus avium „Walimska"', price:70, image:'assets/capsule-forest.jpg', tag:'Stulecie sadu', stock:7, unit:'szt. · z odżywką', desc:'Wysoka, plenna. Owoce duże, czarne, słodkie — przetrwała dwie wojny.' },
+    { id:'kosztela', cat:'sadownicze', name:'Jabłoń Kosztela', latin:'Malus domestica „Kosztela"', price:60, image:'assets/sp-greenhouse.jpg', tag:'Królewska', stock:14, unit:'szt. · z odżywką', desc:'Najstarsza polska odmiana — XVI w. Drobne owoce o miodowym smaku.' },
+    { id:'grusza', cat:'sadownicze', name:'Grusza Klapsa', latin:'Pyrus communis „Klapsa"', price:55, image:'assets/sp-airship-day.jpg', tag:'Soczysta', stock:16, unit:'szt. · z odżywką', desc:'Letnia odmiana z Pogórza Sudeckiego. Owoce duże, maślane, aromatyczne.' },
+  ];
+
+  componentDidMount() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('nf-cart') || '[]');
+      const cart = Array.isArray(saved) ? saved : [];
+      const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
+      this.setState({ cart, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0 });
+    } catch (e) {
+      this.setState({ hydrated: true });
+    }
+  }
+
+  saveCart(cart) {
+    try { localStorage.setItem('nf-cart', JSON.stringify(cart)); } catch(e) {}
+  }
+
+  addToCart = (id) => {
+    const product = this.PRODUCTS.find(p => p.id === id);
+    if (!product) return;
+    this.setState(s => {
+      const existing = s.cart.find(i => i.id === id);
+      let cart;
+      if (existing) {
+        cart = s.cart.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
+      } else {
+        cart = [...s.cart, { id: product.id, name: product.name, latin: product.latin, price: product.price, image: product.image, qty: 1 }];
+      }
+      this.saveCart(cart);
+      return { cart, drawerOpen: true, orderJustPlaced: false };
+    });
+  };
+
+  incQty = (id) => {
+    this.setState(s => {
+      const cart = s.cart.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
+      this.saveCart(cart);
+      return { cart };
+    });
+  };
+
+  decQty = (id) => {
+    this.setState(s => {
+      const cart = s.cart.flatMap(i => {
+        if (i.id !== id) return [i];
+        if (i.qty <= 1) return [];
+        return [{ ...i, qty: i.qty - 1 }];
+      });
+      this.saveCart(cart);
+      return { cart };
+    });
+  };
+
+  removeItem = (id) => {
+    this.setState(s => {
+      const cart = s.cart.filter(i => i.id !== id);
+      this.saveCart(cart);
+      return { cart };
+    });
+  };
+
+  checkout = () => {
+    const { cart } = this.state;
+    if (!cart.length) return;
+    this.closeDrawer();
+    window.location.href = 'konto.html#checkout';
+  };
+
+  setCategory = (cat) => this.setState({ category: cat });
+  openDrawer  = () => this.setState({ drawerOpen: true, orderJustPlaced: false });
+  closeDrawer = () => this.setState({ drawerOpen: false, orderJustPlaced: false });
+
+  renderVals() {
+    const { cart, category, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
+
+    const products = this.PRODUCTS
+      .filter(p => p.cat === category)
+      .map(p => ({ ...p, onAdd: () => this.addToCart(p.id) }));
+
+    const cartWithHandlers = cart.map(i => ({
+      ...i,
+      lineTotal: i.qty * i.price,
+      priceUnit: i.price + ' PLN / szt.',
+      onInc: () => this.incQty(i.id),
+      onDec: () => this.decQty(i.id),
+      onRemove: () => this.removeItem(i.id),
+    }));
+
+    const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
+    const cartTotal = cart.reduce((sum, i) => sum + i.qty * i.price, 0);
+
+    const akwaActive = category === 'akwariowe';
+    const sadActive  = category === 'sadownicze';
+
+    return {
+      products,
+      cart: cartWithHandlers,
+      cartCount,
+      cartTotal,
+      hasItems: cart.length > 0 && !orderJustPlaced,
+      isEmpty: hydrated && cart.length === 0 && !orderJustPlaced,
+      orderJustPlaced,
+      lastOrderId,
+      akwaTabBg:    akwaActive ? 'linear-gradient(180deg,#142016,#15110a)' : 'transparent',
+      akwaTabColor: akwaActive ? '#ddd8c6' : '#8c7d5e',
+      sadTabBg:     sadActive  ? 'linear-gradient(180deg,#142016,#15110a)' : 'transparent',
+      sadTabColor:  sadActive  ? '#ddd8c6' : '#8c7d5e',
+      drawerTransform: drawerOpen ? 'translateX(0)' : 'translateX(105%)',
+      overlayOpacity:  drawerOpen ? '1' : '0',
+      overlayPointer:  drawerOpen ? 'auto' : 'none',
+      setAkwa: () => this.setCategory('akwariowe'),
+      setSad:  () => this.setCategory('sadownicze'),
+      openDrawer:  this.openDrawer,
+      closeDrawer: this.closeDrawer,
+      checkout:    this.checkout,
+    };
+  }
+}
+</script>
+</body>
+</html>

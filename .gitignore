@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Materiały źródłowe nieużywane przez stronę
+uploads/
+screens/

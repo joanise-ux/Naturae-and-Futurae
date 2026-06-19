@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Technologia in vitro — Nature &amp; Future</title>
+<meta name="description" content="Mikropropagacja roślin krok po kroku: od eksplantatu po aklimatyzację. Sterylna kultura tkankowa, bez chorób i patogenów.">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #060906; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  a { color: inherit; text-decoration: none; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
+  ::view-transition-old(root) { animation-name: nf-vt-out; }
+  ::view-transition-new(root) { animation-name: nf-vt-in; }
+  @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
+  @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
+  @keyframes sp-needle  { 0%,100%{transform:rotate(-26deg)} 50%{transform:rotate(20deg)} }
+  @keyframes sp-needle2 { 0%,100%{transform:rotate(8deg)}   50%{transform:rotate(-22deg)} }
+  @keyframes sp-needle3 { 0%,100%{transform:rotate(-12deg)} 50%{transform:rotate(34deg)} }
+  @keyframes sp-glow    { 0%,100%{opacity:.5}                50%{opacity:1} }
+  @keyframes sp-spin    { to { transform: rotate(360deg) } }
+  @keyframes nf-firefly { 0%{transform:translate(0,0) scale(.8);opacity:0} 14%{opacity:.6} 50%{transform:translate(22px,-70px) scale(1.1);opacity:.3} 85%{opacity:.45} 100%{transform:translate(-12px,-130px) scale(.7);opacity:0} }
+  @keyframes nf-pulse   { 0%,100%{opacity:.55;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+  @keyframes nf-mist    { 0%,100%{transform:translateX(-3%) scaleY(1);opacity:.18} 50%{transform:translateX(3%) scaleY(1.1);opacity:.32} }
+  @media (prefers-reduced-motion: reduce){ .nf-anim{ animation:none !important } }
+</style>
+</helmet>
+
+<div data-screen-label="Technologia in vitro" style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(120% 80% at 50% -10%, #0e1810, #060906 60%); color:#b8b0a0;">
+
+  <!-- ============================================================ -->
+  <!-- NAV -->
+  <!-- ============================================================ -->
+  <div style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.18); max-width:1440px; margin:0 auto;">
+    <div style="display:flex; align-items:center; gap:13px;">
+      <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+      <div style="line-height:1.1;">
+        <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</div>
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:22px; white-space:nowrap; font-family:'EB Garamond',serif; font-size:15px; letter-spacing:.02em; color:#a09a88;">
+      <a href="index.html#kim-jestesmy">O nas</a>
+      <a href="technologia.html" style="color:#7aaa72; position:relative;">Technologia<span style="position:absolute; left:0; right:0; bottom:-6px; height:1px; background:linear-gradient(90deg,transparent,#7aaa72,transparent);"></span></a>
+      <a href="index.html#historia">Historia</a>
+      <a href="sklep.html">Rośliny</a>
+      <a href="index.html#kontakt">Współpraca</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-family:'Space Mono',monospace; font-size:12px; color:#a09a88;"><b style="color:#ddd8c6;">PL</b> <span style="opacity:.4">/ EN</span></span>
+      <a href="panel-klienta.html" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; border:1px solid rgba(122,170,114,.4); border-radius:4px; padding:9px 13px;"><span style="width:14px; height:14px; border-radius:50%; border:1.5px solid #a9c0a0; display:inline-flex; align-items:center; justify-content:center;"><span style="width:5px; height:5px; border-radius:50%; background:#a9c0a0;"></span></span>Konto</a>
+      <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(122,170,114,.45); border-radius:4px; padding:11px 16px;">Koszyk</a>
+      <a href="index.html#kontakt" style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #7aaa72; border-radius:4px; padding:11px 18px; box-shadow:inset 0 1px 0 rgba(180,220,170,.3), 0 0 20px rgba(93,138,93,.3);">Kontakt</a>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- HERO — Technologia in vitro -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:80px 40px 100px; overflow:hidden;">
+    <!-- fireflies -->
+    <div class="nf-anim" style="position:absolute; left:14%; top:38%; width:5px; height:5px; border-radius:50%; background:#7aaa72; box-shadow:0 0 12px 3px rgba(122,170,114,.7); animation:nf-firefly 9s ease-in-out infinite;"></div>
+    <div class="nf-anim" style="position:absolute; left:34%; top:72%; width:3px; height:3px; border-radius:50%; background:#8aba82; box-shadow:0 0 8px 2px rgba(138,186,130,.6); animation:nf-firefly 12s ease-in-out infinite 2s;"></div>
+    <div class="nf-anim" style="position:absolute; right:38%; top:30%; width:4px; height:4px; border-radius:50%; background:#7aaa72; box-shadow:0 0 10px 3px rgba(122,170,114,.5); animation:nf-firefly 11s ease-in-out infinite 5s;"></div>
+
+    <div style="display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:60px; align-items:center;">
+      <!-- LEFT — copy -->
+      <div style="position:relative; z-index:2;">
+        <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d8a5d; display:flex; align-items:center; gap:10px;">
+          <span style="width:24px; height:1px; background:#5d8a5d; display:inline-block;"></span>
+          rozdz. III · technologia
+        </div>
+        <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:clamp(40px,4.6vw,60px); line-height:1.04; letter-spacing:.01em; color:#ddd8c6; margin:24px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6); overflow-wrap:break-word;">
+          Mikropropagacja<br>
+          <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#7aaa72;">pod szkłem.</span>
+        </h1>
+        <p style="font-size:19px; line-height:1.7; color:#9a9480; max-width:520px; margin:26px 0 0;">
+          <span style="font-family:'EB Garamond',serif; font-style:italic; color:#b8b0a0;">In vitro</span> — z łac. „w szkle". Rozmnażamy rośliny w sterylnych warunkach, na pożywce, z fragmentów tkanki. Bez chorób, bez patogenów, identyczne genetycznie z rośliną matką. Stary sad z Walimia żyje dalej — w probówce.
+        </p>
+        <div style="display:flex; gap:14px; margin-top:34px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #7aaa72; border-radius:5px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.3), 0 0 24px rgba(93,138,93,.35);">Zobacz proces ↓</span>
+          <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#8a8470; border:1px solid rgba(138,132,112,.4); border-radius:5px; padding:14px 24px;">FAQ ↗</span>
+        </div>
+      </div>
+
+      <!-- RIGHT — big instrument: featured dual-color gauge over flask image -->
+      <div style="position:relative;">
+        <div style="position:absolute; inset:-8% -5%; background:radial-gradient(55% 45% at 52% 44%, rgba(93,138,93,.18), transparent 70%); filter:blur(10px);"></div>
+        <div style="position:relative; border-radius:14px; padding:11px; background:linear-gradient(145deg,#241a10,#120c08); border:1px solid #c69a4c; box-shadow:0 30px 70px -38px rgba(0,0,0,.9), inset 0 0 0 1px rgba(231,201,130,.15);">
+          <!-- brass rivets -->
+          <span style="position:absolute; left:8px; top:8px; width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
+          <span style="position:absolute; right:8px; top:8px; width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
+          <span style="position:absolute; left:8px; bottom:8px; width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
+          <span style="position:absolute; right:8px; bottom:8px; width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
+
+          <div style="position:relative; border-radius:8px; overflow:hidden; aspect-ratio:4/4.4; border:1px solid rgba(231,201,130,.18);">
+            <img src="assets/sp-flasks.jpg" alt="Kolby z kulturą in vitro" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <!-- dark green vignette -->
+            <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(8,12,8,.65) 100%);"></div>
+
+            <!-- HUGE featured gauge (dual color: gold rim + green needles) -->
+            <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:230px; height:230px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:3px solid #c69a4c; box-shadow:inset 0 0 30px rgba(0,0,0,.9), 0 0 60px rgba(198,154,76,.35), 0 0 0 6px rgba(198,154,76,.08);">
+              <!-- tick ring -->
+              <div style="position:absolute; inset:14px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg 1.2deg, transparent 1.2deg 30deg); opacity:.45;"></div>
+              <!-- inner glass -->
+              <div style="position:absolute; inset:30px; border-radius:50%; background:radial-gradient(circle at 50% 35%, rgba(122,170,114,.12), transparent 60%); border:1px solid rgba(198,154,76,.25);"></div>
+              <!-- minor scale numbers -->
+              <span style="position:absolute; top:18px; left:50%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#d8b87f; letter-spacing:.08em;">0</span>
+              <span style="position:absolute; top:50%; right:18px; transform:translateY(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#d8b87f; letter-spacing:.08em;">25</span>
+              <span style="position:absolute; bottom:18px; left:50%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#d8b87f; letter-spacing:.08em;">50</span>
+              <span style="position:absolute; top:50%; left:18px; transform:translateY(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#d8b87f; letter-spacing:.08em;">75</span>
+              <!-- long needle, green -->
+              <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:3px; height:84px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(38deg); border-radius:2px; box-shadow:0 0 12px rgba(122,170,114,.35); animation:sp-needle3 9s ease-in-out infinite;"></div>
+              <!-- short needle, brass -->
+              <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:3px; height:54px; background:linear-gradient(#e7c982,#7a531f); transform-origin:bottom center; transform:rotate(-72deg); border-radius:2px; animation:sp-needle 12s ease-in-out infinite;"></div>
+              <!-- center cap: gold rim + green core -->
+              <div style="position:absolute; left:50%; top:50%; width:22px; height:22px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); transform:translate(-50%,-50%); box-shadow:inset 0 -2px 4px rgba(0,0,0,.6);">
+                <div style="position:absolute; left:50%; top:50%; width:8px; height:8px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.7);"></div>
+              </div>
+              <!-- gauge label -->
+              <span style="position:absolute; left:50%; top:64%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">in vitro · μg / ml</span>
+            </div>
+
+            <!-- small herbarium note -->
+            <div style="position:absolute; left:18px; bottom:18px; transform:rotate(-2.5deg); background:linear-gradient(180deg,#d8dcc8,#c4ccb0); border:1px solid #8a9a70; border-radius:3px; padding:9px 12px 10px; box-shadow:0 8px 18px -8px rgba(0,0,0,.7); max-width:182px;">
+              <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#2a3a1a; line-height:1.3;">Pożywka MS · 30 g/l</div>
+              <div style="font-family:'EB Garamond',serif; font-size:11.5px; color:#4a5a36; line-height:1.4; margin-top:3px;">pH 5,7 · 21°C<br>BAP 1,0 µM · IAA 0,1 µM</div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #7aaa72; border-radius:3px; padding:5px 12px; white-space:nowrap;">INSTRUMENT&nbsp;//&nbsp;przyrząd&nbsp;pomiarowy</div>
+      </div>
+    </div>
+
+    <!-- bottom rule -->
+    <div style="margin-top:80px; height:1px; background:linear-gradient(90deg, transparent, rgba(93,138,93,.4) 30%, rgba(122,170,114,.6) 50%, rgba(93,138,93,.4) 70%, transparent);"></div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- CZYM JEST IN VITRO? -->
+  <!-- ============================================================ -->
+  <div style="max-width:1440px; margin:0 auto; padding:80px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 01</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">Czym jest <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">in vitro</span>?</h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">mikropropagacja roślin</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:.95fr 1.05fr; gap:56px; align-items:start;">
+      <!-- LEFT — image card -->
+      <div style="position:relative;">
+        <div style="position:relative; border-radius:12px; padding:10px; background:linear-gradient(145deg,#1c2418,#0e1410); border:1px solid rgba(90,120,70,.45); box-shadow:0 24px 50px -28px rgba(0,0,0,.85);">
+          <span style="position:absolute; left:7px; top:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#a0c08a,#3a5a2e);"></span>
+          <span style="position:absolute; right:7px; top:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#a0c08a,#3a5a2e);"></span>
+          <span style="position:absolute; left:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#a0c08a,#3a5a2e);"></span>
+          <span style="position:absolute; right:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#a0c08a,#3a5a2e);"></span>
+          <div style="position:relative; border-radius:7px; overflow:hidden; aspect-ratio:4/4.3;">
+            <img src="assets/bottle-vial.jpg" alt="Probówki in vitro" style="width:100%; height:100%; object-fit:cover; display:block;">
+            <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(8,12,8,.6) 100%);"></div>
+            <span style="position:absolute; left:14px; bottom:14px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#8aba82;">PL. 014 · in&nbsp;vitro · kultura&nbsp;tkankowa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — explainer prose + mini stats -->
+      <div>
+        <p style="font-size:21px; line-height:1.62; color:#c4c0b0; margin:0; max-width:580px;">
+          To metoda rozmnażania roślin w sterylnych warunkach laboratoryjnych — z mikroskopijnego fragmentu tkanki <span style="font-style:italic; color:#8aba82;">(eksplantatu)</span> wyrasta nowa, samodzielna roślina, identyczna genetycznie z matką.
+        </p>
+        <p style="font-size:17px; line-height:1.7; color:#9a9480; margin:22px 0 0; max-width:580px;">
+          Zamiast nasion, sadzonek czy szczepień — szkło, pożywka i regulatory wzrostu. Tysiące roślin z jednego liścia, w skali, której tradycyjna szkółka nie udźwignie. Bez patogenów, bez wirusów, bez utraty cech odmianowych.
+        </p>
+
+        <!-- 3 inline gauge stats -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:42px; padding:24px 0; border-top:1px solid rgba(90,120,70,.22); border-bottom:1px solid rgba(90,120,70,.22);">
+          <!-- atom: gauge + value -->
+          <div style="display:flex; align-items:center; gap:13px;">
+            <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+              <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+              <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-32deg); animation:sp-needle 7s ease-in-out infinite;"></div>
+              <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+            </div>
+            <div>
+              <div style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6;">100%</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#6a6a58; margin-top:2px;">WOLNE&nbsp;OD&nbsp;PATOGENÓW</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:13px;">
+            <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+              <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+              <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#7aaa72,#2a4a2a); transform-origin:bottom center; transform:rotate(18deg); animation:sp-needle2 8s ease-in-out infinite;"></div>
+              <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+            </div>
+            <div>
+              <div style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6;">1 → 10⁴</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#6a6a58; margin-top:2px;">ROŚLIN&nbsp;Z&nbsp;EKSPLANTATU</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:13px;">
+            <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+              <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+              <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(46deg); animation:sp-needle3 9s ease-in-out infinite;"></div>
+              <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+            </div>
+            <div>
+              <div style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6;">21 °C</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#6a6a58; margin-top:2px;">SZAFA&nbsp;HODOWLANA</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:16px; color:#7a8a70; margin:22px 0 0; max-width:580px;">
+          „Stare odmiany ze sadu w Walimiu — Antonówka, Glogierówka, Kosztela — zachowane pod szkłem, wolne od chorób, gotowe na nowe stulecie."
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- ETAPY PROCESU — 6 stages w/ dual-color gauges -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:60px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 02</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">Sześć etapów <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">procesu</span></h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">od liścia do sadzonki · 6–14 tygodni</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+      <!-- step 1 -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:22px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-58deg);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">etap&nbsp;I · ~1 dzień</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Pobranie<br>eksplantatu</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#9a9480; margin:0;">Z rośliny matki wycinamy fragment tkanki — wierzchołek pędu, kawałek liścia, fragment korzenia. To <em style="color:#b8b0a0;">eksplantat</em>.</p>
+      </div>
+
+      <!-- step 2 -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:22px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-32deg);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">etap&nbsp;II · ~30 min</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Sterylizacja<br>powierzchniowa</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#9a9480; margin:0;">Kąpiel w roztworze podchlorynu, etanolu i detergentu. Eliminujemy bakterie i grzyby na powierzchni — wszystko, co mogłoby zniszczyć kulturę.</p>
+      </div>
+
+      <!-- step 3 -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:22px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#7aaa72,#2a4a2a); transform-origin:bottom center; transform:rotate(-8deg);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">etap&nbsp;III · 2–4 tyg.</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Inicjacja<br>na pożywce</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#9a9480; margin:0;">Eksplantat trafia na pożywkę agarową (Murashige &amp; Skoog) z cukrem, solami i hormonami. Pojawiają się pierwsze pączki — kultura rusza.</p>
+      </div>
+
+      <!-- step 4 -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:22px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(18deg);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">etap&nbsp;IV · 4–8 tyg.</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Multiplikacja —<br>namnażanie</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#9a9480; margin:0;">Co kilka tygodni dzielimy kępkę pędów i przekładamy na świeżą pożywkę. Z jednego eksplantatu — dziesiątki, potem setki, potem tysiące pędów.</p>
+      </div>
+
+      <!-- step 5 -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:22px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.25); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(40deg);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#8c7d5e;">etap&nbsp;V · 2–4 tyg.</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Ukorzenianie<br>pędów</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#9a9480; margin:0;">Pojedyncze pędy przekładamy na pożywkę z auksyną. W ciągu 2–4 tygodni wypuszczają własne korzenie — to już prawie roślina.</p>
+      </div>
+
+      <!-- step 6 — accent, final -->
+      <div style="position:relative; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#142016,#0c160e); border:1px solid rgba(122,170,114,.55); border-radius:12px; padding:22px; box-shadow:0 0 30px rgba(122,170,114,.12), inset 0 0 0 1px rgba(122,170,114,.08);">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #e7c982; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 20px rgba(198,154,76,.45); flex:none;">
+            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#a08a5e 0deg .8deg,transparent .8deg 30deg); opacity:.5;"></div>
+            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#a0d098,#3a6a3a); transform-origin:bottom center; transform:rotate(64deg); box-shadow:0 0 4px rgba(122,170,114,.5);"></div>
+            <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%); box-shadow:0 0 8px rgba(138,186,130,.7);"></div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#e7c982;">etap&nbsp;VI · 3–6 tyg.</div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin-top:5px; line-height:1.25;">Aklimatyzacja<br>do natury</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px; line-height:1.6; color:#b8b0a0; margin:0;">Wyciągamy roślinkę ze szkła. Trafia do podłoża, do szklarni z kontrolowaną wilgotnością. Powoli — do prawdziwego powietrza, prawdziwego słońca.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- DLACZEGO IN VITRO? — 4 benefit cards -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:60px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 03</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">Dlaczego <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">tą drogą</span>?</h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">cztery argumenty</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+      <!-- 1 -->
+      <div style="display:flex; flex-direction:column; gap:18px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:14px; padding:24px;">
+        <div style="position:relative; width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 14px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.22);">
+          <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:22px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-72deg); animation:sp-needle 8s ease-in-out infinite;"></div>
+          <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; line-height:1.2;">Bez chorób, bez wirusów</div>
+          <p style="font-size:14px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Sterylne warunki = brak patogenów. Kluczowe dla roślin akwariowych — żadnych ślimaków, glonów, hydry.</p>
+        </div>
+      </div>
+      <!-- 2 -->
+      <div style="display:flex; flex-direction:column; gap:18px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:14px; padding:24px;">
+        <div style="position:relative; width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 14px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.22);">
+          <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:22px; background:linear-gradient(#7aaa72,#2a4a2a); transform-origin:bottom center; transform:rotate(-12deg); animation:sp-needle2 7s ease-in-out infinite;"></div>
+          <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; line-height:1.2;">Identyczność genetyczna</div>
+          <p style="font-size:14px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Każda roślina to dokładna kopia matki. Cechy odmianowe — kolor, smak, pokrój — zachowane bez ubytków.</p>
+        </div>
+      </div>
+      <!-- 3 -->
+      <div style="display:flex; flex-direction:column; gap:18px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:14px; padding:24px;">
+        <div style="position:relative; width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 14px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.22);">
+          <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:22px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(24deg); animation:sp-needle3 9s ease-in-out infinite;"></div>
+          <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; line-height:1.2;">Stare odmiany żyją dalej</div>
+          <p style="font-size:14px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Sto lat sadu w Walimiu zapisanych pod szkłem. Drzewa, które inaczej znikłyby z mapy — wracają w setkach.</p>
+        </div>
+      </div>
+      <!-- 4 -->
+      <div style="display:flex; flex-direction:column; gap:18px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:14px; padding:24px;">
+        <div style="position:relative; width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 14px rgba(0,0,0,.85), 0 0 16px rgba(198,154,76,.22);">
+          <div style="position:absolute; inset:6px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
+          <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:22px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(56deg); animation:sp-needle 11s ease-in-out infinite;"></div>
+          <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.5);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; line-height:1.2;">Skala bez kompromisu</div>
+          <p style="font-size:14px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Tysiące roślin z jednego liścia, w przewidywalnym czasie. Rzadkie gatunki — dostępne, bez wyniszczania stanowisk.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- IN VITRO vs TRADYCYJNE -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:60px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 04</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">In vitro <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">vs</span> klasyka</h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">porównanie metod</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid rgba(90,120,70,.22); border-radius:14px; overflow:hidden;">
+      <!-- LEFT: tradycyjne -->
+      <div style="background:linear-gradient(180deg,#15110b,#0e0a06); padding:32px 30px; border-right:1px solid rgba(90,120,70,.22);">
+        <div style="display:flex; align-items:center; gap:12px; padding-bottom:18px; border-bottom:1px dashed rgba(140,125,94,.3);">
+          <span style="width:10px; height:10px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#c8a06a,#5a3a18); box-shadow:0 0 6px rgba(198,154,76,.4);"></span>
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#d8b87f; letter-spacing:.03em;">Metoda tradycyjna</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#7a6a4c; margin-left:auto;">szczepienie · sadzonki · nasiona</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:18px; margin-top:22px;">
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; min-width:32px; padding-top:3px;">01</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#d8b87f;">Sezon</div><p style="font-size:14px; line-height:1.55; color:#9a8a6e; margin:4px 0 0;">Zależność od pory roku, pogody, dostępności materiału.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; min-width:32px; padding-top:3px;">02</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#d8b87f;">Choroby</div><p style="font-size:14px; line-height:1.55; color:#9a8a6e; margin:4px 0 0;">Wirusy, grzyby, mszyce — przechodzą z matki na potomstwo.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; min-width:32px; padding-top:3px;">03</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#d8b87f;">Skala</div><p style="font-size:14px; line-height:1.55; color:#9a8a6e; margin:4px 0 0;">Dziesiątki sadzonek z drzewa w sezonie. Rzadkie odmiany — trudno dostępne.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; min-width:32px; padding-top:3px;">04</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#d8b87f;">Tożsamość</div><p style="font-size:14px; line-height:1.55; color:#9a8a6e; margin:4px 0 0;">Nasiona — rozrzut cech. Szczepienia — częściowe, z podkładką.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: in vitro -->
+      <div style="background:linear-gradient(180deg,#0e1812,#0a140d); padding:32px 30px; position:relative;">
+        <div style="display:flex; align-items:center; gap:12px; padding-bottom:18px; border-bottom:1px dashed rgba(122,170,114,.3);">
+          <span style="width:10px; height:10px; border-radius:50%; background:#7aaa72; box-shadow:0 0 10px rgba(122,170,114,.7);"></span>
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#9ed098; letter-spacing:.03em;">In vitro</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#5d8a5d; margin-left:auto;">kultura&nbsp;tkankowa · mikropropagacja</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:18px; margin-top:22px;">
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; min-width:32px; padding-top:3px;">01</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#9ed098;">Cały rok</div><p style="font-size:14px; line-height:1.55; color:#a9b09a; margin:4px 0 0;">Szafa hodowlana, 21 °C, 16 h światła. Niezależnie od pogody.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; min-width:32px; padding-top:3px;">02</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#9ed098;">Sterylność</div><p style="font-size:14px; line-height:1.55; color:#a9b09a; margin:4px 0 0;">Brak patogenów. Roślina zaczyna życie od czystej karty.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; min-width:32px; padding-top:3px;">03</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#9ed098;">Skala</div><p style="font-size:14px; line-height:1.55; color:#a9b09a; margin:4px 0 0;">Tysiące roślin z jednego eksplantatu. Rzadkie odmiany — w zasięgu.</p></div>
+          </div>
+          <div style="display:flex; gap:14px;">
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; min-width:32px; padding-top:3px;">04</span>
+            <div><div style="font-family:'Cinzel',serif; font-size:15px; color:#9ed098;">Klon</div><p style="font-size:14px; line-height:1.55; color:#a9b09a; margin:4px 0 0;">Genetyczna identyczność z matką. Cechy zachowane w 100 %.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- GALERIA LABORATORIUM -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:60px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 05</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">Galeria <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">laboratorium</span></h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">Wałbrzych, ul. Orkana 148</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:240px 240px; gap:14px;">
+      <!-- tall left -->
+      <div style="grid-column:span 2; grid-row:span 2; position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+        <img src="assets/sp-desk-bottles.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 50%, rgba(8,12,8,.85));"></div>
+        <div style="position:absolute; left:14px; bottom:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; color:#7aaa72;">PL. 021</div>
+          <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Stół roboczy · pożywki</div>
+        </div>
+      </div>
+
+      <!-- wide -->
+      <div style="grid-column:span 2; position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+        <img src="assets/sp-flasks.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(8,12,8,.85));"></div>
+        <div style="position:absolute; left:14px; bottom:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; color:#7aaa72;">PL. 022</div>
+          <div style="font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6; margin-top:4px;">Kolby — szafa hodowlana</div>
+        </div>
+      </div>
+
+      <!-- video porthole -->
+      <div style="grid-column:span 2; position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(198,154,76,.45); background:#0a0c08;">
+        <video src="assets/sp-animation.mp4" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+        <div style="position:absolute; inset:0; background:radial-gradient(60% 60% at 50% 50%, transparent, rgba(8,12,8,.6) 100%);"></div>
+        <span class="nf-anim" style="position:absolute; inset:0; box-shadow:0 0 60px rgba(198,154,76,.18) inset; animation:sp-glow 5s ease-in-out infinite;"></span>
+        <div style="position:absolute; left:14px; top:14px; display:flex; align-items:center; gap:8px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:#c69a4c; box-shadow:0 0 8px rgba(198,154,76,.7);" class="nf-anim"></span>
+          <span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; color:#d8b87f;">REC · LIVE</span>
+        </div>
+        <div style="position:absolute; left:14px; bottom:14px;">
+          <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6;">Wzrost kultury · time-lapse</div>
+        </div>
+      </div>
+
+      <!-- bottom row 2 -->
+      <div style="grid-column:span 2; position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+        <img src="assets/sp-library-terrarium.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(8,12,8,.85));"></div>
+        <div style="position:absolute; left:14px; bottom:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; color:#7aaa72;">PL. 023</div>
+          <div style="font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6; margin-top:4px;">Terrarium · aklimatyzacja</div>
+        </div>
+      </div>
+
+      <div style="grid-column:span 2; position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+        <img src="assets/sp-terrarium-gauge.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(8,12,8,.85));"></div>
+        <div style="position:absolute; left:14px; bottom:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.18em; color:#7aaa72;">PL. 024</div>
+          <div style="font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6; margin-top:4px;">Kontrola wilgotności</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- FAQ -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto; padding:60px 40px 90px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:baseline; gap:18px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 06</span>
+        <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:42px; letter-spacing:.01em; color:#ddd8c6; margin:0;">Najczęstsze <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">pytania</span></h2>
+      </div>
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">FAQ</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 28px;">
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Czy roślina <em style="color:#8aba82; font-family:'EB Garamond',serif;">in vitro</em> to GMO?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Nie. Mikropropagacja to kopia wegetatywna — żadnej ingerencji w geny. To samo, co sadzonkowanie, tylko sterylne i w skali laboratoryjnej.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Jak długo trwa cały proces?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Od eksplantatu do gotowej, zaaklimatyzowanej rośliny — 3 do 6 miesięcy, zależnie od gatunku. Multiplikacja jest cykliczna — z każdej tury więcej materiału.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Czy rośliny akwariowe in vitro są bezpieczne?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Tak — to ich największa zaleta. Żadnych ślimaków, glonów, hydry, planarii. Roślina trafia do akwarium z gwarancją czystości, bez kwarantanny.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Jak roślina przeżywa wyjście ze szkła?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Powoli. Aklimatyzacja w szklarni z wysoką wilgotnością, stopniowo obniżaną. To najdelikatniejszy etap — wymaga uwagi, ale skuteczność u nas to ponad 95 %.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Skąd biorą się stare odmiany jabłoni?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Z sadu w Walimiu, gdzie drzewa rosną od XIX wieku. Pobieramy maleńki fragment, oczyszczamy z wirusów i zakładamy kulturę. Stary sad — w nowych roślinach.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px; padding:24px 26px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-family:'Cinzel',serif; font-weight:700; font-size:24px; color:#c69a4c; min-width:40px;">Q.</span>
+          <div>
+            <div style="font-family:'Cinzel',serif; font-weight:600; font-size:17px; color:#ddd8c6; line-height:1.3;">Współpracujecie ze szkółkami i hurtem?</div>
+            <p style="font-size:15px; line-height:1.6; color:#9a9480; margin:10px 0 0;">Tak. Dostarczamy partie roślin akwariowych do sklepów i hurtowni, oraz pojedyncze odmiany historyczne dla kolekcjonerów i sadowników. Wystarczy napisać.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- CTA / FOOTER -->
+  <!-- ============================================================ -->
+  <div style="position:relative; max-width:1440px; margin:0 auto 60px; padding:0 40px;">
+    <div style="position:relative; border-radius:18px; overflow:hidden; background:linear-gradient(135deg,#0e1812 0%, #0a140d 50%, #142016 100%); border:1px solid rgba(122,170,114,.4); padding:64px 56px;">
+      <!-- fireflies -->
+      <div class="nf-anim" style="position:absolute; left:18%; top:30%; width:4px; height:4px; border-radius:50%; background:#8aba82; box-shadow:0 0 10px 3px rgba(138,186,130,.7); animation:nf-firefly 10s ease-in-out infinite;"></div>
+      <div class="nf-anim" style="position:absolute; right:22%; top:60%; width:3px; height:3px; border-radius:50%; background:#7aaa72; box-shadow:0 0 8px 2px rgba(122,170,114,.6); animation:nf-firefly 13s ease-in-out infinite 3s;"></div>
+
+      <div style="display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d8a5d;">// kontakt</div>
+          <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:38px; line-height:1.1; color:#ddd8c6; margin:14px 0 0;">Zainteresowany? <span style="font-style:italic; font-family:'EB Garamond',serif; color:#7aaa72;">Napisz do nas.</span></h3>
+          <p style="font-size:17px; line-height:1.65; color:#9a9480; max-width:560px; margin:14px 0 0;">Pracownia w Wałbrzychu, sad w Walimiu. Pokażemy proces, dobierzemy odmianę, ustalimy partię — od pojedynczej rośliny po hurt dla szkółki.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #7aaa72; border-radius:5px; padding:16px 28px; box-shadow:inset 0 1px 0 rgba(180,220,170,.3), 0 0 24px rgba(93,138,93,.35); text-align:center;">Napisz wiadomość →</span>
+          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.05em; color:#9a9480; text-align:center;">lub: kontakt@nfplantbiotech.com</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer fine print -->
+    <div style="margin-top:32px; padding:0 8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#5a5a4e;">
+      <span>Nature &amp; Future · Plant Biotech · Wałbrzych, ul. Orkana 148</span>
+      <span>© 2026 · in vitro · culta sub vitro</span>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+</body>
+</html>
