@@ -1,0 +1,92 @@
+/* =====================================================================
+   Nature & Future — responsywność mobilna
+   Dołączane do każdej strony przez <helmet>. Reguły używają !important,
+   bo strona jest budowana ze stylami "inline".
+   ===================================================================== */
+
+/* Przycisk hamburgera — ukryty na desktopie, widoczny na mobile */
+.nf-burger{
+  display:none;
+  background:rgba(20,32,20,.55);
+  border:1px solid rgba(122,170,114,.45);
+  border-radius:6px;
+  color:#cfe3c6;
+  width:46px; height:40px;
+  font-size:20px; line-height:1;
+  cursor:pointer;
+  align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+
+@media (max-width: 860px){
+
+  html, body{ overflow-x:hidden; max-width:100%; }
+
+  /* ---------- NAWIGACJA → menu hamburger ---------- */
+  .nf-nav{
+    flex-wrap:wrap !important;
+    padding:16px 20px !important;
+    row-gap:16px !important;
+  }
+  .nf-burger{ display:inline-flex !important; }
+
+  /* 3. dziecko = grupa linków, 4. dziecko = grupa akcji (Konto/Koszyk/Kontakt) */
+  .nf-nav > :nth-child(3),
+  .nf-nav > :nth-child(4){
+    display:none !important;
+    flex-basis:100% !important;
+    width:100% !important;
+    white-space:normal !important;
+  }
+  .nf-nav.nf-open > :nth-child(3),
+  .nf-nav.nf-open > :nth-child(4){
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:16px !important;
+  }
+  .nf-nav > :nth-child(3) a{ font-size:18px !important; }
+
+  /* ---------- UKŁAD: siatki wielokolumnowe → jedna kolumna ---------- */
+  [style*="grid-template-columns"]{ grid-template-columns:1fr !important; }
+
+  /* media nie wychodzą poza ekran */
+  img, video{ max-width:100% !important; }
+
+  /* ---------- TYPOGRAFIA: ujarzmiamy ogromne nagłówki ----------
+     overflow-wrap:anywhere (nie break-word!) — tylko 'anywhere' zmniejsza
+     intrinsic min-content, dzięki czemu długie słowa (np. "Mikropropagacja")
+     nie rozpychają sekcji poza ekran. */
+  h1, h2, h3{
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+    hyphens:none !important;
+  }
+  [style*="font-size:60px"]{ font-size:clamp(34px, 11vw, 56px) !important; line-height:1.08 !important; }
+  [style*="font-size:56px"]{ font-size:clamp(32px, 10.5vw, 52px) !important; line-height:1.08 !important; }
+  [style*="font-size:46px"]{ font-size:clamp(30px, 9vw, 44px) !important; line-height:1.1 !important; }
+  [style*="font-size:42px"]{ font-size:clamp(28px, 8.5vw, 40px) !important; line-height:1.1 !important; }
+
+  /* ---------- Przełącznik kategorii (sklep) — zwężamy, by mieścił się w ekranie ----------
+     Strony z komponentem re-serializują styl do formy ze spacjami ("align-items: stretch"),
+     więc dopasowujemy obie warianty (zwartą i ze spacjami). */
+  [style*="align-items:stretch"][style*="border-radius:8px"],
+  [style*="align-items: stretch"][style*="border-radius: 8px"]{ max-width:100% !important; flex-wrap:wrap; }
+  [style*="align-items:stretch"][style*="border-radius:8px"] span,
+  [style*="align-items: stretch"][style*="border-radius: 8px"] span{ font-size:13px !important; }
+
+  /* ---------- ODSTĘPY: duże poziome paddingi sekcji ---------- */
+  [style*="padding:66px 40px 58px"],
+  [style*="padding:80px 40px 100px"],
+  [style*="padding:80px 40px 90px"],
+  [style*="padding:60px 40px 90px"],
+  [style*="padding:50px 40px 80px"],
+  [style*="padding:70px 40px 40px"],
+  [style*="padding:80px 40px"],
+  [style*="padding:70px 40px"],
+  [style*="padding:60px 40px"],
+  [style*="padding:50px 40px"]{
+    padding-left:20px !important;
+    padding-right:20px !important;
+  }
+}
