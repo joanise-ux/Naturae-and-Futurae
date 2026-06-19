@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,8 +8,8 @@
 <body>
 <x-dc>
 <helmet>
-<title>Panel klienta — Nature &amp; Future</title>
-<meta name="description" content="Zaloguj się do panelu klienta Nature & Future: historia zamówień, obserwowane odmiany i adresy wysyłki.">
+<title>Client panel — Nature &amp; Future</title>
+<meta name="description" content="Sign in to the Nature & Future client panel: order history, watched varieties and shipping addresses.">
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
 <link rel="stylesheet" href="assets/mobile.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,30 +36,30 @@
 
   <!-- ===== NAV ===== -->
   <div class="nf-nav" style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.2); max-width:1440px; margin:0 auto;">
-    <a href="index.html" style="display:flex; align-items:center; gap:13px;">
+    <a href="index-en.html" style="display:flex; align-items:center; gap:13px;">
       <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
       <span style="line-height:1.1;"><span style="display:block; font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</span><span style="display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</span></span>
     </a>
-    <span class="nf-lang" role="button" tabindex="0" style="cursor:pointer" aria-label="Zmień język"><b>PL</b> / EN</span>
+    <span class="nf-lang" role="button" tabindex="0" style="cursor:pointer" aria-label="Change language">PL / <b>EN</b></span>
     <button class="nf-burger" aria-label="Menu">☰</button>
     <div style="display:flex; align-items:center; gap:22px; white-space:nowrap; font-family:'EB Garamond',serif; font-size:15px; letter-spacing:.02em; color:#b8b0a0;">
-      <a href="index.html#kim-jestesmy">O nas</a>
-      <a href="technologia.html">Technologia</a>
-      <a href="index.html#historia">Historia</a>
-      <a href="sklep.html">Sklep</a>
-      <a href="index.html#kontakt">Współpraca</a>
+      <a href="index-en.html#kim-jestesmy">About</a>
+      <a href="technologia-en.html">Technology</a>
+      <a href="index-en.html#historia">History</a>
+      <a href="sklep-en.html">Shop</a>
+      <a href="index-en.html#kontakt">Partnership</a>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
-      <span class="nf-lang" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><b style="color:#8aba82;">PL</b> <span style="opacity:.4">/ EN</span></span>
+      <span class="nf-lang" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><span style="opacity:.4">PL /</span> <b style="color:#8aba82;">EN</b></span>
       <span style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#8aba82; border:1px solid rgba(122,170,114,.55); border-radius:4px; padding:9px 13px; position:relative;">
         <span style="width:14px; height:14px; border-radius:50%; border:1.5px solid #8aba82; display:inline-flex; align-items:center; justify-content:center;">
           <span style="width:5px; height:5px; border-radius:50%; background:#8aba82;"></span>
         </span>
-        Konto
+        Account
         <span style="position:absolute; left:0; right:0; bottom:-6px; height:1px; background:linear-gradient(90deg,transparent,#8aba82,transparent);"></span>
       </span>
-      <a href="sklep.html#cart" style="display:inline-flex; align-items:center; gap:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:4px; padding:11px 16px;">
-        Koszyk <span style="display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:10px; background:rgba(122,170,114,.15); color:#8aba82; font-size:10.5px; border:1px solid rgba(122,170,114,.4);">{{ cartCount }}</span>
+      <a href="sklep-en.html#cart" style="display:inline-flex; align-items:center; gap:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:4px; padding:11px 16px;">
+        Cart <span style="display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:10px; background:rgba(122,170,114,.15); color:#8aba82; font-size:10.5px; border:1px solid rgba(122,170,114,.4);">{{ cartCount }}</span>
       </a>
     </div>
   </div>
@@ -75,18 +75,18 @@
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;">
             <span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>
-            panel klienta · accessio
+            client panel · accessio
           </div>
           <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:56px; line-height:1.04; color:#ddd8c6; margin:22px 0 0; letter-spacing:.01em;">
-            Twoje konto<br>
-            <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">w gabinecie roślin.</span>
+            Your account<br>
+            <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">in the plant cabinet.</span>
           </h1>
           <p style="font-size:18px; line-height:1.66; color:#9a9480; max-width:480px; margin:22px 0 0;">
-            Wskaźnik wskazuje twój ostatni eksplantat. Zaloguj się, aby zobaczyć historię zamówień, listy obserwowanych odmian i adresy wysyłki.
+            The gauge points to your latest explant. Sign in to see your order history, watched-variety lists and shipping addresses.
           </p>
 
           <div style="margin-top:36px; padding:30px; background:linear-gradient(180deg,#0e1610,#0a0805); border:1px solid rgba(90,120,70,.3); border-radius:14px; max-width:480px;">
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#5d7a50;">// formularz · log_in</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#5d7a50;">// form · log_in</div>
 
             <div style="margin-top:20px;">
               <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
@@ -97,7 +97,7 @@
             </div>
 
             <div style="margin-top:18px;">
-              <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">HASŁO</div>
+              <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">PASSWORD</div>
               <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px;">
                 <span style="width:6px; height:6px; border-radius:50%; background:#8aba82; box-shadow:0 0 6px rgba(122,170,114,.5);"></span>
                 <span style="font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6;">••••••••</span>
@@ -107,23 +107,23 @@
             <div style="display:flex; align-items:center; justify-content:space-between; margin-top:18px;">
               <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; display:flex; align-items:center; gap:8px;">
                 <span style="width:14px; height:14px; border:1.5px solid #c69a4c; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; color:#8aba82; font-size:11px; line-height:1;">✓</span>
-                Zapamiętaj mnie
+                Remember me
               </span>
-              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#a9c0a0;">Zapomniałam hasła?</span>
+              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#a9c0a0;">Forgot your password?</span>
             </div>
 
-            <a href="konto.html" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
-              Zaloguj się →
+            <a href="konto-en.html" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
+              Sign in →
             </a>
 
             <div style="display:flex; align-items:center; gap:14px; margin-top:24px;">
               <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#5a5a4e;">lub</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#5a5a4e;">or</span>
               <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
             </div>
 
             <span onClick="{{ login }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:6px; padding:14px 24px; margin-top:14px;">
-              Załóż konto
+              Create an account
             </span>
           </div>
         </div>
@@ -135,7 +135,7 @@
             <div style="position:absolute; inset:18px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg 1deg, transparent 1deg 30deg); opacity:.45;"></div>
             <div style="position:absolute; inset:38px; border-radius:50%; background:radial-gradient(circle at 50% 35%, rgba(122,170,114,.12), transparent 60%); border:1px solid rgba(90,120,70,.25);"></div>
             <span style="position:absolute; top:24px; left:50%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; letter-spacing:.1em;">accessio</span>
-            <span style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; letter-spacing:.18em;">log_in · sesja</span>
+            <span style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; letter-spacing:.18em;">log_in · session</span>
             <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:3px; height:120px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(-46deg); border-radius:2px; animation:sp-needle 9s ease-in-out infinite;"></div>
             <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:3px; height:80px; background:linear-gradient(#8aba82,#7a531f); transform-origin:bottom center; transform:rotate(36deg); border-radius:2px; animation:sp-needle2 12s ease-in-out infinite;"></div>
             <div style="position:absolute; left:50%; top:50%; width:28px; height:28px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); transform:translate(-50%,-50%); box-shadow:inset 0 -2px 4px rgba(0,0,0,.6);">
@@ -157,13 +157,13 @@
       <!-- Header / greeting -->
       <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-bottom:30px; border-bottom:1px solid rgba(90,120,70,.18);">
         <div>
-          <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72;">// panel klienta · sesja aktywna</div>
-          <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:46px; line-height:1.06; color:#ddd8c6; margin:14px 0 0; letter-spacing:.01em;">Witaj, Anno.</h1>
-          <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:#9a9480; margin:8px 0 0;">Twoje konto · ostatnie logowanie: dziś, 14:22 z Wałbrzycha</p>
+          <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72;">// client panel · session active</div>
+          <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:46px; line-height:1.06; color:#ddd8c6; margin:14px 0 0; letter-spacing:.01em;">Welcome, Anna.</h1>
+          <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:#9a9480; margin:8px 0 0;">Your account · last login: today, 14:22 from Wałbrzych</p>
         </div>
         <div style="display:flex; gap:12px; align-items:center;">
           <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">ID: <span style="color:#a9c0a0;">NF-0182</span></span>
-          <span onClick="{{ logout }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Wyloguj →</span>
+          <span onClick="{{ logout }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Sign out →</span>
         </div>
       </div>
 
@@ -177,7 +177,7 @@
           </div>
           <div>
             <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">{{ ordersCount }}</div>
-            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">ZAMÓWIENIA</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">ORDERS</div>
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:14px; padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px;">
@@ -188,7 +188,7 @@
           </div>
           <div>
             <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">{{ totalSpent }}&nbsp;PLN</div>
-            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">SUMA&nbsp;WYDATKÓW</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">TOTAL&nbsp;SPENT</div>
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:14px; padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px;">
@@ -199,7 +199,7 @@
           </div>
           <div>
             <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">7</div>
-            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">OBSERWOWANE</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">WATCHED</div>
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:14px; padding:22px; background:linear-gradient(180deg,#142016,#0c160e); border:1px solid rgba(122,170,114,.45); border-radius:12px; box-shadow:0 0 24px -10px rgba(122,170,114,.35);">
@@ -209,8 +209,8 @@
             <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%); box-shadow:0 0 6px rgba(122,170,114,.6);"></div>
           </div>
           <div>
-            <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">Klient · ASTRA</div>
-            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#7aaa72; margin-top:2px;">POZIOM&nbsp;LOJALNOŚCI</div>
+            <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">Client · ASTRA</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#7aaa72; margin-top:2px;">LOYALTY&nbsp;LEVEL</div>
           </div>
         </div>
       </div>
@@ -223,9 +223,9 @@
           <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px;">
             <div style="display:flex; align-items:baseline; gap:14px;">
               <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 01</span>
-              <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:28px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Historia zamówień</h2>
+              <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:28px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Order history</h2>
             </div>
-            <span style="font-family:'Space Mono',monospace; font-size:10.5px; color:#8c7d5e;">{{ ordersCount }} pozycji</span>
+            <span style="font-family:'Space Mono',monospace; font-size:10.5px; color:#8c7d5e;">{{ ordersCount }} items</span>
           </div>
 
           <sc-if value="{{ hasOrders }}" hint-placeholder-val="{{ true }}">
@@ -271,9 +271,9 @@
                 <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:22px; background:#8aba82; transform-origin:bottom center; transform:rotate(-66deg); animation:sp-needle 9s ease-in-out infinite;"></div>
                 <div style="position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
               </div>
-              <div style="font-family:'Cinzel',serif; font-size:20px; color:#ddd8c6; margin-top:16px;">Brak zamówień</div>
-              <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#8c7d5e; margin-top:6px; max-width:340px; margin-left:auto; margin-right:auto;">Wskaźnik jeszcze nie drgnął. Zajrzyj do sklepu — pierwszy okaz pojawi się tu po zamówieniu.</div>
-              <a href="sklep.html" style="display:inline-block; margin-top:22px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:12px 22px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45);">Przejdź do sklepu →</a>
+              <div style="font-family:'Cinzel',serif; font-size:20px; color:#ddd8c6; margin-top:16px;">No orders</div>
+              <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#8c7d5e; margin-top:6px; max-width:340px; margin-left:auto; margin-right:auto;">The gauge hasn't moved yet. Visit the shop — your first specimen will appear here after an order.</div>
+              <a href="sklep-en.html" style="display:inline-block; margin-top:22px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:12px 22px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45);">Go to the shop →</a>
             </div>
           </sc-if>
         </div>
@@ -287,38 +287,38 @@
             <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px;">
               <div style="display:flex; align-items:baseline; gap:10px;">
                 <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 02</span>
-                <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Obserwowane</h3>
+                <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Watched</h3>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">7 odmian</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">7 varieties</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:10px;">
               <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
                 <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/sp-greenhouse.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
                 <span style="flex:1; min-width:0;">
                   <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Malus „Reneta szara"</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Reneta szara · zima 2026</span>
+                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Grey Reinette · winter 2026</span>
                 </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">poinformuj →</span>
+                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">notify me →</span>
               </div>
               <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
                 <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/leaf-wall.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
                 <span style="flex:1; min-width:0;">
                   <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Rotala rotundifolia</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Rotala okrągłolistna</span>
+                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Round-leaf rotala</span>
                 </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; white-space:nowrap;">dostępna ✓</span>
+                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; white-space:nowrap;">available ✓</span>
               </div>
               <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
                 <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/capsule-forest.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
                 <span style="flex:1; min-width:0;">
                   <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Prunus avium „Hedelfińska"</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Czereśnia Hedelfińska</span>
+                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Hedelfingen cherry</span>
                 </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">w hodowli</span>
+                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">in cultivation</span>
               </div>
             </div>
             <div style="text-align:center; margin-top:14px;">
-              <span style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.06em; color:#a9c0a0;">Zobacz wszystkie →</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.06em; color:#a9c0a0;">See all →</span>
             </div>
           </div>
 
@@ -327,21 +327,21 @@
             <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px;">
               <div style="display:flex; align-items:baseline; gap:10px;">
                 <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 03</span>
-                <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Adresy wysyłki</h3>
+                <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Shipping addresses</h3>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">+ dodaj</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">+ add</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:12px;">
               <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(122,170,114,.4); border-radius:8px; position:relative;">
-                <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DOMYŚLNY</span>
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">DOM</div>
+                <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DEFAULT</span>
+                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">HOME</div>
                 <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">ul. Sienkiewicza 14/3<br>58-300 Wałbrzych</div>
+                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">14/3 Sienkiewicza St.<br>58-300 Wałbrzych</div>
               </div>
               <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.18); border-radius:8px;">
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">SAD · WALIM</div>
-                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska — sad</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">ul. Boczna 7<br>58-320 Walim</div>
+                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">ORCHARD · WALIM</div>
+                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska — orchard</div>
+                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">7 Boczna St.<br>58-320 Walim</div>
               </div>
             </div>
           </div>
@@ -350,12 +350,12 @@
           <div style="background:linear-gradient(180deg,#1c2014,#10160d); border:1px solid rgba(122,170,114,.35); border-radius:12px; padding:24px;">
             <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:14px;">
               <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#7aaa72;">§ 04</span>
-              <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Dziennik Nature</h3>
+              <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Nature Journal</h3>
             </div>
-            <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:14.5px; color:#a8b09a; line-height:1.55; margin:0 0 14px;">Co kwartał list ze szklarni — nowe odmiany, kalendarz sadzenia, fotografie pożywek.</p>
+            <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:14.5px; color:#a8b09a; line-height:1.55; margin:0 0 14px;">A quarterly letter from the greenhouse — new varieties, a planting calendar, photos of the media.</p>
             <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(20,28,18,.55); border:1px solid rgba(122,170,114,.25); border-radius:6px;">
               <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 6px rgba(122,170,114,.6);"></span>
-              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#c4d4b8;">subskrybcja aktywna · od 03/2025</span>
+              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#c4d4b8;">subscription active · since 03/2025</span>
             </div>
           </div>
 
@@ -369,11 +369,11 @@
       <div style="margin-top:36px; padding:30px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:12px;">
         <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:24px;">
           <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 05</span>
-          <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Dane konta</h3>
+          <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Account details</h3>
         </div>
         <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px;">
           <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Imię i nazwisko</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Full name</div>
             <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">Anna Kowalska</div>
           </div>
           <div>
@@ -381,18 +381,18 @@
             <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">anna.kowalska@gmail.com</div>
           </div>
           <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Telefon</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Phone</div>
             <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">+48 612 884 027</div>
           </div>
           <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Konto od</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">marzec 2025</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Member since</div>
+            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">March 2025</div>
           </div>
         </div>
         <div style="display:flex; gap:10px; margin-top:22px;">
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Edytuj dane</span>
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Zmień hasło</span>
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#5a5a4e; border:1px solid rgba(140,125,94,.3); border-radius:5px; padding:11px 18px;">Usuń konto</span>
+          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Edit details</span>
+          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Change password</span>
+          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#5a5a4e; border:1px solid rgba(140,125,94,.3); border-radius:5px; padding:11px 18px;">Delete account</span>
         </div>
       </div>
 
@@ -407,10 +407,10 @@
     <div style="max-width:1440px; margin:0 auto; padding:36px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px;">
       <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">© 2026 Nature &amp; Future · Plant Biotech</span>
       <div style="display:flex; gap:24px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
-        <a href="index.html#kontakt">Kontakt</a>
-        <a href="index.html#historia">Historia</a>
-        <a href="technologia.html">Technologia</a>
-        <a href="sklep.html">Sklep</a>
+        <a href="index-en.html#kontakt">Contact</a>
+        <a href="index-en.html#historia">History</a>
+        <a href="technologia-en.html">Technology</a>
+        <a href="sklep-en.html">Shop</a>
       </div>
     </div>
   </div>
@@ -418,12 +418,12 @@
 </div>
 </x-dc>
 <script>
-/* Nature & Future — menu mobilne (hamburger). Faza capture, bo x-dc renderuje się dynamicznie. */
+/* Nature & Future — mobile menu (hamburger). Capture phase, because x-dc renders dynamically. */
 (function(){
   document.addEventListener('click', function(e){
     var t = e.target;
     var lg = t.closest ? t.closest('.nf-lang') : null;
-    if (lg){ e.preventDefault(); var pg=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,''); location.href = /-en$/.test(pg) ? pg.replace(/-en$/,'')+'.html' : pg+'-en.html'; return; }
+    if (lg){ e.preventDefault(); var pg=(location.pathname.split('/').pop()||'index-en.html').replace(/\.html$/,''); location.href = /-en$/.test(pg) ? pg.replace(/-en$/,'')+'.html' : pg+'-en.html'; return; }
     var b = t.closest ? t.closest('.nf-burger') : null;
     if (b){ var n = b.closest('.nf-nav'); if(n) n.classList.toggle('nf-open'); return; }
     var l = t.closest ? t.closest('.nf-nav.nf-open a') : null;
@@ -445,9 +445,9 @@ class Component extends DCLogic {
       id: 'NF-AX2K',
       date: '2026-04-12T10:30:00Z',
       total: 153,
-      status: 'Dostarczone',
+      status: 'Delivered',
       items: [
-        { name:'Mech jawajski', latin:'Taxiphyllum barbieri', qty:2, price:25, image:'assets/sp-terrarium-gauge.jpg' },
+        { name:'Java moss', latin:'Taxiphyllum barbieri', qty:2, price:25, image:'assets/sp-terrarium-gauge.jpg' },
         { name:'Eleocharis mini', latin:'Eleocharis sp.', qty:1, price:28, image:'assets/sp-flasks.jpg' },
         { name:'Anubias nana', latin:'Anubias barteri', qty:3, price:22, image:'assets/capsule-rainforest.jpg' },
       ]
@@ -456,11 +456,11 @@ class Component extends DCLogic {
       id: 'NF-QM7L',
       date: '2026-02-26T16:42:00Z',
       total: 246,
-      status: 'Dostarczone',
+      status: 'Delivered',
       items: [
-        { name:'Wiśnia Walimska', latin:'Prunus cerasus', qty:2, price:65, image:'assets/sp-greenhouse.jpg' },
-        { name:'Jabłoń Antonówka', latin:'Malus „Antonówka"', qty:1, price:58, image:'assets/sp-library-terrarium.jpg' },
-        { name:'Jabłoń Kosztela', latin:'Malus „Kosztela"', qty:1, price:60, image:'assets/sp-greenhouse.jpg' },
+        { name:'Walim cherry', latin:'Prunus cerasus', qty:2, price:65, image:'assets/sp-greenhouse.jpg' },
+        { name:'Antonówka apple', latin:'Malus „Antonówka"', qty:1, price:58, image:'assets/sp-library-terrarium.jpg' },
+        { name:'Kosztela apple', latin:'Malus „Kosztela"', qty:1, price:60, image:'assets/sp-greenhouse.jpg' },
       ]
     }
   ];
@@ -492,7 +492,7 @@ class Component extends DCLogic {
   };
 
   fmtDate(iso) {
-    const months = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const d = new Date(iso);
     if (isNaN(d.getTime())) return iso;
     return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
@@ -500,9 +500,9 @@ class Component extends DCLogic {
 
   statusStyle(status) {
     const s = (status || '').toLowerCase();
-    if (s.includes('dostar')) return { color:'#7aaa72', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.35)', dot:'#7aaa72' };
-    if (s.includes('pakow')) return { color:'#8aba82', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.4)', dot:'#8aba82' };
-    if (s.includes('wysy'))  return { color:'#a9c0a0', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.35)', dot:'#a9c0a0' };
+    if (s.includes('deliver')) return { color:'#7aaa72', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.35)', dot:'#7aaa72' };
+    if (s.includes('pack')) return { color:'#8aba82', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.4)', dot:'#8aba82' };
+    if (s.includes('ship'))  return { color:'#a9c0a0', bg:'rgba(122,170,114,.08)', border:'rgba(122,170,114,.35)', dot:'#a9c0a0' };
     return { color:'#8c7d5e', bg:'rgba(140,125,94,.08)', border:'rgba(140,125,94,.3)', dot:'#8c7d5e' };
   }
 
@@ -516,7 +516,7 @@ class Component extends DCLogic {
       return {
         ...o,
         dateLabel: this.fmtDate(o.date),
-        itemsLabel: `${itemCount} szt. · ${(o.items||[]).length} odmian`,
+        itemsLabel: `${itemCount} pcs · ${(o.items||[]).length} varieties`,
         statusColor: st.color,
         statusBg: st.bg,
         statusBorder: st.border,
