@@ -144,14 +144,14 @@
             <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.6) 100%);"></div>
             <span style="position:absolute; left:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:999px; padding:5px 10px;">{{ p.tag }}</span>
-            <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#7aaa72; background:rgba(8,12,8,.7); border:1px solid rgba(122,170,114,.4); border-radius:999px; padding:5px 10px;">in vitro</span>
+            <span onClick="{{ p.onToggleWatch }}" style="cursor:pointer; position:absolute; right:12px; top:12px; font-size:18px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; background:rgba(8,12,8,.75); border:1px solid {{ p.watchBorder }}; border-radius:50%; color:{{ p.watchColor }}; transition:all .25s; z-index:2;">{{ p.watchIcon }}</span>
             <div style="position:absolute; left:12px; bottom:12px; display:flex; align-items:center; gap:7px; background:rgba(8,12,8,.7); border:1px solid rgba(90,120,70,.3); border-radius:5px; padding:5px 9px;">
               <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 5px rgba(122,170,114,.7);"></span>
               <span style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#a9c0a0;">{{ p.stock }}&nbsp;dostępne</span>
             </div>
           </div>
-          <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic;">{{ p.latin }}</div>
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em;">{{ p.name }}</div>
+          <a href="{{ p.detailUrl }}" style="font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic; text-decoration:none;">{{ p.latin }}</a>
+          <a href="{{ p.detailUrl }}" style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em; text-decoration:none;">{{ p.name }}</a>
           <p style="font-size:14.5px; line-height:1.55; color:#9a9480; margin:10px 0 16px; min-height:46px;">{{ p.desc }}</p>
           <div style="margin-top:auto; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(90,120,70,.18); padding-top:14px; gap:12px;">
             <div>
@@ -383,7 +383,8 @@ class Component extends DCLogic {
     orderJustPlaced: false,
     lastOrderId: null,
     hydrated: false,
-    user: null
+    user: null,
+    watchedIds: [],
   };
 
   async componentDidMount() {
@@ -400,15 +401,18 @@ class Component extends DCLogic {
     const user = session?.user || null;
 
     let cart = [];
+    let watchedIds = [];
     if (user) {
-      const { data: dbCart } = await sb.from('cart_items')
-        .select('product_id, qty, products(name, latin, price, image)')
-        .eq('user_id', user.id);
-      cart = (dbCart || []).map(c => ({
+      const [cartRes, watchRes] = await Promise.all([
+        sb.from('cart_items').select('product_id, qty, products(name, latin, price, image)').eq('user_id', user.id),
+        sb.from('watched_products').select('product_id').eq('user_id', user.id),
+      ]);
+      cart = (cartRes.data || []).map(c => ({
         id: c.product_id, qty: c.qty,
         name: c.products.name, latin: c.products.latin,
         price: Number(c.products.price), image: c.products.image
       }));
+      watchedIds = (watchRes.data || []).map(w => w.product_id);
       this.saveCartLocal(cart);
     } else {
       try {
@@ -418,10 +422,16 @@ class Component extends DCLogic {
     }
 
     const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
-    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0 });
+    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds });
 
-    sb.auth.onAuthStateChange((_event, session) => {
-      this.setState({ user: session?.user || null });
+    sb.auth.onAuthStateChange(async (_event, session) => {
+      const u = session?.user || null;
+      if (u) {
+        const { data: wd } = await sb.from('watched_products').select('product_id').eq('user_id', u.id);
+        this.setState({ user: u, watchedIds: (wd || []).map(w => w.product_id) });
+      } else {
+        this.setState({ user: u, watchedIds: [] });
+      }
     });
   }
 
@@ -501,13 +511,27 @@ class Component extends DCLogic {
     window.location.href = 'konto.html#checkout';
   };
 
+  toggleWatch = async (productId) => {
+    const { user, watchedIds } = this.state;
+    if (!user) { window.location.href = 'panel-klienta.html'; return; }
+    const sb = window.supabaseClient;
+    const isWatched = watchedIds.includes(productId);
+    if (isWatched) {
+      await sb.from('watched_products').delete().eq('user_id', user.id).eq('product_id', productId);
+      this.setState({ watchedIds: watchedIds.filter(id => id !== productId) });
+    } else {
+      await sb.from('watched_products').insert({ user_id: user.id, product_id: productId });
+      this.setState({ watchedIds: [...watchedIds, productId] });
+    }
+  };
+
   setCategory = (cat) => this.setState({ category: cat });
   setSortMode = (mode) => this.setState({ sortMode: mode });
   openDrawer  = () => this.setState({ drawerOpen: true, orderJustPlaced: false });
   closeDrawer = () => this.setState({ drawerOpen: false, orderJustPlaced: false });
 
   renderVals() {
-    const { cart, products, category, sortMode, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
+    const { cart, products, category, sortMode, drawerOpen, orderJustPlaced, lastOrderId, hydrated, watchedIds } = this.state;
 
     let filteredProducts = products.filter(p => p.cat === category);
 
@@ -515,7 +539,18 @@ class Component extends DCLogic {
     else if (sortMode === 'newest') filteredProducts.sort((a, b) => b.id - a.id);
     else if (sortMode === 'available') filteredProducts = filteredProducts.filter(p => p.stock > 0);
 
-    filteredProducts = filteredProducts.map(p => ({ ...p, onAdd: () => this.addToCart(p.id) }));
+    filteredProducts = filteredProducts.map(p => {
+      const isW = watchedIds.includes(p.id);
+      return {
+        ...p,
+        onAdd: () => this.addToCart(p.id),
+        onToggleWatch: () => this.toggleWatch(p.id),
+        detailUrl: 'produkt.html#' + p.id,
+        watchIcon: isW ? '♥' : '♡',
+        watchColor: isW ? '#e06060' : '#a9c0a0',
+        watchBorder: isW ? 'rgba(224,96,96,.5)' : 'rgba(122,170,114,.4)',
+      };
+    });
 
     const cartWithHandlers = cart.map(i => ({
       ...i,

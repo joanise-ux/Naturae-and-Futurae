@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Produkt — Nature &amp; Future</title>
+<meta name="description" content="Szczegóły produktu Nature &amp; Future — rośliny in vitro.">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<link rel="stylesheet" href="assets/mobile.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scrollbar-gutter: stable; }
+  body { margin: 0; background: #111812; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
+  ::view-transition-old(root) { animation-name: nf-vt-out; }
+  ::view-transition-new(root) { animation-name: nf-vt-in; }
+  @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
+  @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
+  @keyframes sp-needle { 0%,100%{transform:rotate(-26deg)} 50%{transform:rotate(20deg)} }
+  @keyframes sp-needle2 { 0%,100%{transform:rotate(8deg)} 50%{transform:rotate(-22deg)} }
+  @keyframes nf-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(122,170,114,.55); } 70% { box-shadow: 0 0 0 10px rgba(122,170,114,0); } }
+  @media (prefers-reduced-motion: reduce){ .nf-anim{ animation:none !important } }
+</style>
+</helmet>
+
+<div style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(120% 80% at 50% -10%, #1a2e20, #111812 60%); color:#b8b0a0;">
+
+  <!-- NAV -->
+  <div class="nf-nav" style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.2); max-width:1440px; margin:0 auto;">
+    <a href="index.html" style="display:flex; align-items:center; gap:13px;">
+      <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+      <span style="line-height:1.1;"><span style="display:block; font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</span><span style="display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</span></span>
+    </a>
+    <span class="nf-lang" role="button" tabindex="0" style="cursor:pointer" aria-label="Zmien jezyk"><b>PL</b> / EN</span>
+    <button class="nf-burger" aria-label="Menu">&#9776;</button>
+    <div style="display:flex; align-items:center; gap:22px; white-space:nowrap; font-family:'EB Garamond',serif; font-size:15px; letter-spacing:.02em; color:#b8b0a0;">
+      <a href="index.html#kim-jestesmy">O nas</a>
+      <a href="technologia.html">Technologia</a>
+      <a href="historia.html">Historia</a>
+      <a href="sklep.html">Sklep</a>
+      <a href="index.html#kontakt">Wspolpraca</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span class="nf-lang" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><b style="color:#8aba82;">PL</b> <span style="opacity:.4">/ EN</span></span>
+      <a href="panel-klienta.html" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; border:1px solid rgba(90,120,70,.4); border-radius:4px; padding:9px 13px;">
+        <span style="width:14px; height:14px; border-radius:50%; border:1.5px solid #a9c0a0; display:inline-flex; align-items:center; justify-content:center;">
+          <span style="width:5px; height:5px; border-radius:50%; background:#a9c0a0;"></span>
+        </span>
+        Konto
+      </a>
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div style="max-width:1440px; margin:0 auto; padding:24px 40px 0;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; display:flex; align-items:center; gap:8px;">
+      <a href="sklep.html" style="color:#a9c0a0;">Sklep</a>
+      <span style="opacity:.4;">/</span>
+      <span>{{ productName }}</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <sc-if value="{{ loaded }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1440px; margin:0 auto; padding:30px 40px 80px;">
+      <div style="display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:start;">
+
+        <!-- LEFT: image -->
+        <div style="position:relative; border-radius:14px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08; border:1px solid rgba(90,120,70,.24);">
+          <img src="{{ productImage }}" alt="{{ productName }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.4) 100%);"></div>
+          <span style="position:absolute; left:14px; top:14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:999px; padding:6px 12px;">{{ productTag }}</span>
+          <span style="position:absolute; right:14px; top:14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#7aaa72; background:rgba(8,12,8,.7); border:1px solid rgba(122,170,114,.4); border-radius:999px; padding:6px 12px;">in vitro</span>
+        </div>
+
+        <!-- RIGHT: info -->
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; color:#7aaa72; letter-spacing:.04em; font-style:italic;">{{ productLatin }}</div>
+          <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:42px; line-height:1.1; color:#ddd8c6; margin:10px 0 0; letter-spacing:.01em;">{{ productName }}</h1>
+
+          <div style="display:flex; align-items:center; gap:14px; margin-top:20px;">
+            <div style="display:flex; align-items:center; gap:7px; background:rgba(8,12,8,.7); border:1px solid rgba(90,120,70,.3); border-radius:5px; padding:6px 12px;">
+              <span style="width:7px; height:7px; border-radius:50%; background:{{ stockDotColor }}; box-shadow:0 0 5px {{ stockDotColor }};"></span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#a9c0a0;">{{ stockLabel }}</span>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ productUnit }}</span>
+          </div>
+
+          <p style="font-size:18px; line-height:1.7; color:#9a9480; margin:24px 0 0;">{{ productDesc }}</p>
+
+          <div style="margin-top:30px; padding-top:24px; border-top:1px solid rgba(90,120,70,.18);">
+            <div style="font-family:'Cinzel',serif; font-size:36px; font-weight:600; color:#8aba82;">{{ productPrice }}&nbsp;PLN</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:4px;">{{ productUnit }}</div>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            <span onClick="{{ addToCart }}" style="cursor:pointer; flex:1; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 18px rgba(90,120,70,.25);">
+              Do koszyka +
+            </span>
+            <span onClick="{{ toggleWatch }}" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; color:{{ watchBtnColor }}; border:1px solid {{ watchBtnBorder }}; background:{{ watchBtnBg }}; border-radius:6px; padding:16px 20px; transition:all .25s;">
+              {{ watchIcon }} {{ watchLabel }}
+            </span>
+          </div>
+
+          <sc-if value="{{ cartMsg }}">
+            <div style="margin-top:14px; padding:12px 16px; background:rgba(122,170,114,.08); border:1px solid rgba(122,170,114,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#7aaa72;">{{ cartMsg }}</div>
+          </sc-if>
+
+          <!-- details grid -->
+          <div style="margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div style="padding:16px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:10px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#5d7a50;">KATEGORIA</div>
+              <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:6px;">{{ categoryLabel }}</div>
+            </div>
+            <div style="padding:16px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:10px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#5d7a50;">STAN MAGAZYNOWY</div>
+              <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:6px;">{{ productStock }} szt.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ notFound }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1440px; margin:0 auto; padding:80px 40px; text-align:center;">
+      <div style="font-family:'Cinzel',serif; font-size:28px; color:#ddd8c6;">Nie znaleziono produktu</div>
+      <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:16px; color:#8c7d5e; margin-top:12px;">Produkt o podanym identyfikatorze nie istnieje lub zostal usuniety.</p>
+      <a href="sklep.html" style="display:inline-block; margin-top:24px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:12px 22px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45);">Wróć do sklepu</a>
+    </div>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <div style="border-top:1px solid rgba(90,120,70,.2); margin-top:20px;">
+    <div style="max-width:1440px; margin:0 auto; padding:36px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px;">
+      <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">&copy; 2026 Nature &amp; Future &middot; Plant Biotech</span>
+      <div style="display:flex; gap:24px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
+        <a href="index.html#kontakt">Kontakt</a>
+        <a href="historia.html">Historia</a>
+        <a href="technologia.html">Technologia</a>
+        <a href="sklep.html">Sklep</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script>
+(function(){
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    var lg = t.closest ? t.closest('.nf-lang') : null;
+    if (lg){ e.preventDefault(); var pg=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,''); location.href = /-en$/.test(pg) ? pg.replace(/-en$/,'')+'.html' : pg+'-en.html'; return; }
+    var b = t.closest ? t.closest('.nf-burger') : null;
+    if (b){ var n = b.closest('.nf-nav'); if(n) n.classList.toggle('nf-open'); return; }
+    var l = t.closest ? t.closest('.nf-nav.nf-open a') : null;
+    if (l){ var o = l.closest('.nf-nav'); if(o) o.classList.remove('nf-open'); }
+  }, true);
+})();
+</script>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    product: null,
+    loaded: false,
+    notFound: false,
+    isWatched: false,
+    cartMsg: '',
+    user: null,
+  };
+
+  async componentDidMount() {
+    const sb = window.supabaseClient;
+    const productId = window.location.hash.replace('#', '') || new URLSearchParams(window.location.search).get('id');
+
+    if (!productId) {
+      this.setState({ loaded: false, notFound: true });
+      return;
+    }
+
+    const { data: product } = await sb.from('products').select('*').eq('id', productId).single();
+    if (!product) {
+      this.setState({ loaded: false, notFound: true });
+      return;
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+    const user = session?.user || null;
+
+    let isWatched = false;
+    if (user) {
+      const { data: w } = await sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', productId).maybeSingle();
+      isWatched = !!w;
+    }
+
+    this.setState({
+      product: {
+        id: product.id, name: product.name, latin: product.latin,
+        price: Number(product.price), image: product.image, tag: product.tag,
+        stock: product.stock, unit: product.unit, desc: product.description,
+        category: product.category,
+      },
+      loaded: true, notFound: false, isWatched, user,
+    });
+
+    sb.auth.onAuthStateChange(async (_event, session) => {
+      const user = session?.user || null;
+      this.setState({ user });
+      if (user && this.state.product) {
+        const { data: w } = await sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', this.state.product.id).maybeSingle();
+        this.setState({ isWatched: !!w });
+      } else {
+        this.setState({ isWatched: false });
+      }
+    });
+  }
+
+  addToCart = () => {
+    const { product, user } = this.state;
+    if (!product) return;
+    const sb = window.supabaseClient;
+
+    if (user) {
+      sb.from('cart_items').upsert(
+        { user_id: user.id, product_id: product.id, qty: 1 },
+        { onConflict: 'user_id,product_id' }
+      ).then(() => {});
+    } else {
+      try {
+        const cart = JSON.parse(localStorage.getItem('nf-cart') || '[]');
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) { existing.qty += 1; }
+        else { cart.push({ id: product.id, name: product.name, latin: product.latin, price: product.price, image: product.image, qty: 1 }); }
+        localStorage.setItem('nf-cart', JSON.stringify(cart));
+      } catch(e) {}
+    }
+    this.setState({ cartMsg: 'Dodano do koszyka!' });
+    setTimeout(() => this.setState({ cartMsg: '' }), 2500);
+  };
+
+  toggleWatch = async () => {
+    const { product, user, isWatched } = this.state;
+    if (!product) return;
+    if (!user) {
+      window.location.href = 'panel-klienta.html';
+      return;
+    }
+    const sb = window.supabaseClient;
+    if (isWatched) {
+      await sb.from('watched_products').delete().eq('user_id', user.id).eq('product_id', product.id);
+      this.setState({ isWatched: false });
+    } else {
+      await sb.from('watched_products').insert({ user_id: user.id, product_id: product.id });
+      this.setState({ isWatched: true });
+    }
+  };
+
+  renderVals() {
+    const { product, loaded, notFound, isWatched, cartMsg } = this.state;
+    const p = product || {};
+
+    return {
+      loaded,
+      notFound,
+      pageTitle: p.name || 'Produkt',
+      metaDesc: p.desc || '',
+      productName: p.name || '',
+      productLatin: p.latin || '',
+      productImage: p.image || '',
+      productTag: p.tag || '',
+      productPrice: p.price || 0,
+      productUnit: p.unit || '',
+      productDesc: p.desc || '',
+      productStock: p.stock || 0,
+      categoryLabel: p.category === 'akwariowe' ? 'Rośliny akwariowe' : 'Drzewa owocowe',
+      stockLabel: (p.stock || 0) > 0 ? p.stock + ' dostępne' : 'niedostępne',
+      stockDotColor: (p.stock || 0) > 0 ? '#7aaa72' : '#8c7d5e',
+
+      isWatched,
+      watchIcon: isWatched ? '♥' : '♡',
+      watchLabel: isWatched ? 'Obserwujesz' : 'Obserwuj',
+      watchBtnColor: isWatched ? '#7aaa72' : '#a9c0a0',
+      watchBtnBorder: isWatched ? 'rgba(122,170,114,.5)' : 'rgba(90,120,70,.5)',
+      watchBtnBg: isWatched ? 'rgba(122,170,114,.1)' : 'transparent',
+      toggleWatch: this.toggleWatch,
+
+      addToCart: this.addToCart,
+      cartMsg: cartMsg || '',
+    };
+  }
+}
+</script>
+</body>
+</html>

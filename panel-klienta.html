@@ -201,7 +201,7 @@
             <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
           </div>
           <div>
-            <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">7</div>
+            <div style="font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:#ddd8c6;">{{ watchedCount }}</div>
             <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">OBSERWOWANE</div>
           </div>
         </div>
@@ -292,36 +292,31 @@
                 <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 02</span>
                 <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Obserwowane</h3>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">7 odmian</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ watchedCount }} odmian</span>
             </div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
-                <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/sp-greenhouse.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
-                <span style="flex:1; min-width:0;">
-                  <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Malus „Reneta szara"</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Reneta szara · zima 2026</span>
-                </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">poinformuj →</span>
+
+            <sc-if value="{{ hasWatched }}">
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <sc-for list="{{ watched }}" as="w">
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
+                    <a href="{{ w.detailUrl }}" style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="{{ w.image }}" alt="" style="width:100%; height:100%; object-fit:cover;"></a>
+                    <a href="{{ w.detailUrl }}" style="flex:1; min-width:0; text-decoration:none;">
+                      <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">{{ w.latin }}</span>
+                      <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">{{ w.name }}</span>
+                    </a>
+                    <span style="font-family:'Space Mono',monospace; font-size:10px; color:{{ w.statusColor }}; white-space:nowrap;">{{ w.statusLabel }}</span>
+                    <span onClick="{{ w.onRemove }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:14px; color:#8c7d5e; padding:4px 6px;" title="Usuń z obserwowanych">×</span>
+                  </div>
+                </sc-for>
               </div>
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
-                <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/leaf-wall.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
-                <span style="flex:1; min-width:0;">
-                  <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Rotala rotundifolia</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Rotala okrągłolistna</span>
-                </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; white-space:nowrap;">dostępna ✓</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:12px; padding:10px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.16); border-radius:8px;">
-                <span style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid rgba(90,120,70,.22); display:inline-block; flex:none;"><img src="assets/capsule-forest.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></span>
-                <span style="flex:1; min-width:0;">
-                  <span style="display:block; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72; font-style:italic;">Prunus avium „Hedelfińska"</span>
-                  <span style="display:block; font-family:'Cinzel',serif; font-size:14px; color:#ddd8c6;">Czereśnia Hedelfińska</span>
-                </span>
-                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; white-space:nowrap;">w hodowli</span>
-              </div>
-            </div>
+            </sc-if>
+
+            <sc-if value="{{ noWatched }}">
+              <div style="text-align:center; padding:20px; font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e;">Brak obserwowanych odmian. Polub roślinkę w sklepie, aby dodać ją tutaj.</div>
+            </sc-if>
+
             <div style="text-align:center; margin-top:14px;">
-              <span style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.06em; color:#a9c0a0;">Zobacz wszystkie →</span>
+              <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.06em; color:#a9c0a0; text-decoration:none;">Przejdź do sklepu →</a>
             </div>
           </div>
 
@@ -510,6 +505,7 @@ class Component extends DCLogic {
     profile: null,
     orders: [],
     addresses: [],
+    watched: [],
     cartCount: 0,
     hydrated: false,
     authError: '',
@@ -548,19 +544,20 @@ class Component extends DCLogic {
       if (user && !this.state.user) {
         await this.loadUserData(user);
       } else if (!user) {
-        this.setState({ user: null, profile: null, orders: [], addresses: [], cartCount: 0 });
+        this.setState({ user: null, profile: null, orders: [], addresses: [], watched: [], cartCount: 0 });
       }
     });
   }
 
   async loadUserData(user) {
     const sb = window.supabaseClient;
-    const [profileRes, ordersRes, itemsRes, cartRes, addrRes] = await Promise.all([
+    const [profileRes, ordersRes, itemsRes, cartRes, addrRes, watchRes] = await Promise.all([
       sb.from('profiles').select('*').eq('id', user.id).single(),
       sb.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
       sb.from('order_items').select('*, orders!inner(user_id)').eq('orders.user_id', user.id),
       sb.from('cart_items').select('qty').eq('user_id', user.id),
       sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false }),
+      sb.from('watched_products').select('*, products(*)').eq('user_id', user.id).order('created_at', { ascending: false }),
     ]);
 
     const profile = profileRes.data || {};
@@ -573,7 +570,15 @@ class Component extends DCLogic {
 
     const cartCount = (cartRes.data || []).reduce((s,i) => s + (i.qty||0), 0);
     const addresses = addrRes.data || [];
-    this.setState({ user, profile, orders, addresses, cartCount, hydrated: true });
+    const watched = (watchRes.data || []).filter(w => w.products).map(w => ({
+      id: w.id,
+      product_id: w.product_id,
+      name: w.products.name,
+      latin: w.products.latin,
+      image: w.products.image,
+      stock: w.products.stock,
+    }));
+    this.setState({ user, profile, orders, addresses, watched, cartCount, hydrated: true });
   }
 
   onLoginEmail = (e) => this.setState({ loginEmail: e.target.value, authError: '' });
@@ -621,7 +626,14 @@ class Component extends DCLogic {
 
   logout = async () => {
     await window.supabaseClient.auth.signOut();
-    this.setState({ user: null, profile: null, orders: [], addresses: [], cartCount: 0 });
+    this.setState({ user: null, profile: null, orders: [], addresses: [], watched: [], cartCount: 0 });
+  };
+
+  // --- Watched management ---
+  removeWatched = async (watchId) => {
+    const sb = window.supabaseClient;
+    await sb.from('watched_products').delete().eq('id', watchId);
+    this.setState(s => ({ watched: s.watched.filter(w => w.id !== watchId) }));
   };
 
   // --- Address management ---
@@ -746,7 +758,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { user, profile, orders, addresses, cartCount, hydrated, authError, loginEmail, loginPassword, registerName, isRegisterMode, authLoading, showAddressForm, editingAddrId, addrForm, editingProfile, editForm, profileSaveError, changingPassword, newPassword, passwordMsg, passwordMsgColor } = this.state;
+    const { user, profile, orders, addresses, watched, cartCount, hydrated, authError, loginEmail, loginPassword, registerName, isRegisterMode, authLoading, showAddressForm, editingAddrId, addrForm, editingProfile, editForm, profileSaveError, changingPassword, newPassword, passwordMsg, passwordMsgColor } = this.state;
     const loggedIn = !!user;
     const ordersCount = orders.length;
     const totalSpent = orders.reduce((s,o) => s + (o.total || 0), 0);
@@ -786,6 +798,19 @@ class Component extends DCLogic {
       hasOrders: ordersCount > 0,
       noOrders: hydrated && ordersCount === 0,
       cartCount,
+
+      // watched
+      watched: watched.map(w => ({
+        ...w,
+        detailUrl: 'produkt.html#' + w.product_id,
+        statusLabel: (w.stock || 0) > 0 ? 'dostępna ✓' : 'niedostępna',
+        statusColor: (w.stock || 0) > 0 ? '#7aaa72' : '#8c7d5e',
+        onRemove: () => this.removeWatched(w.id),
+      })),
+      watchedCount: watched.length,
+      hasWatched: watched.length > 0,
+      noWatched: hydrated && loggedIn && watched.length === 0,
+
       logout: this.logout,
 
       authError: authError || '',
