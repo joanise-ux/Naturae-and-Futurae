@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -90,43 +92,84 @@
           <div style="margin-top:36px; padding:30px; background:linear-gradient(180deg,#0e1610,#0a0805); border:1px solid rgba(90,120,70,.3); border-radius:14px; max-width:480px;">
             <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#5d7a50;">// form · log_in</div>
 
-            <div style="margin-top:20px;">
-              <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
-              <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px;">
-                <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 6px rgba(122,170,114,.5);"></span>
-                <span style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6;">anna.kowalska@gmail.com</span>
-              </div>
-            </div>
+            <sc-if value="{{ authError }}">
+              <div style="margin-top:14px; padding:12px 16px; background:rgba(180,60,60,.12); border:1px solid rgba(180,60,60,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#e07070;">{{ authError }}</div>
+            </sc-if>
 
-            <div style="margin-top:18px;">
-              <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">PASSWORD</div>
-              <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px;">
-                <span style="width:6px; height:6px; border-radius:50%; background:#8aba82; box-shadow:0 0 6px rgba(122,170,114,.5);"></span>
-                <span style="font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6;">••••••••</span>
+            <sc-if value="{{ registerSuccess }}">
+              <div style="text-align:center; padding:24px 0 8px;">
+                <div style="width:56px; height:56px; border-radius:50%; background:rgba(122,170,114,.12); border:2px solid #8aba82; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;">
+                  <span style="font-size:24px; color:#8aba82;">✓</span>
+                </div>
+                <div style="font-family:'Cinzel',serif; font-size:20px; color:#ddd8c6; margin-bottom:8px;">Account created!</div>
+                <p style="font-family:'EB Garamond',serif; font-size:15px; color:#9a9480; line-height:1.55; margin:0 0 20px;">We sent a confirmation link to your e-mail. Click it to activate your account and sign in.</p>
+                <span onClick="{{ backToLogin }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; padding:8px;">← Back to sign in</span>
               </div>
-            </div>
+            </sc-if>
 
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:18px;">
-              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; display:flex; align-items:center; gap:8px;">
-                <span style="width:14px; height:14px; border:1.5px solid #c69a4c; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; color:#8aba82; font-size:11px; line-height:1;">✓</span>
-                Remember me
+            <sc-if value="{{ resetSuccess }}">
+              <div style="text-align:center; padding:24px 0 8px;">
+                <div style="width:56px; height:56px; border-radius:50%; background:rgba(122,170,114,.12); border:2px solid #8aba82; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;">
+                  <span style="font-size:24px; color:#8aba82;">✉</span>
+                </div>
+                <div style="font-family:'Cinzel',serif; font-size:20px; color:#ddd8c6; margin-bottom:8px;">Link sent!</div>
+                <p style="font-family:'EB Garamond',serif; font-size:15px; color:#9a9480; line-height:1.55; margin:0 0 20px;">Check your inbox. Click the link to set a new password.</p>
+                <span onClick="{{ backToLogin }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; padding:8px;">← Back to sign in</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ resetMode }}">
+              <div style="margin-top:20px;">
+                <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
+                <input type="email" placeholder="your@email.com" value="{{ resetEmail }}" onInput="{{ onResetEmail }}" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:17px; outline:none;">
+              </div>
+              <span onClick="{{ forgotPassword }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
+                {{ resetSubmitLabel }}
               </span>
-              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#a9c0a0;">Forgot your password?</span>
-            </div>
+              <span onClick="{{ backToLogin }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; margin-top:14px; padding:8px;">← Back to sign in</span>
+            </sc-if>
 
-            <span onClick="{{ login }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
-              Sign in →
-            </span>
+            <sc-if value="{{ showAuthForm }}">
+              <div style="margin-top:20px;">
+                <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
+                <input type="email" value="{{ loginEmail }}" onInput="{{ onLoginEmail }}" placeholder="your@email.com" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; outline:none;" />
+              </div>
 
-            <div style="display:flex; align-items:center; gap:14px; margin-top:24px;">
-              <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#5a5a4e;">or</span>
-              <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
-            </div>
+              <div style="margin-top:18px;">
+                <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">PASSWORD</div>
+                <input type="password" value="{{ loginPassword }}" onInput="{{ onLoginPassword }}" placeholder="••••••••" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6; outline:none;" />
+                <sc-if value="{{ !isRegisterMode }}">
+                  <div style="text-align:right; margin-top:8px;">
+                    <span onClick="{{ showForgotPassword }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#8c7d5e;">Forgot password?</span>
+                  </div>
+                </sc-if>
+              </div>
 
-            <span onClick="{{ login }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:6px; padding:14px 24px; margin-top:14px;">
-              Create an account
-            </span>
+              <sc-if value="{{ isRegisterMode }}">
+                <div style="margin-top:18px;">
+                  <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">FULL NAME</div>
+                  <input type="text" value="{{ registerName }}" onInput="{{ onRegisterName }}" placeholder="Your name" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; outline:none;" />
+                </div>
+              </sc-if>
+
+              <span onClick="{{ submitAuth }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
+                {{ authSubmitLabel }}
+              </span>
+
+              <div style="display:flex; align-items:center; gap:14px; margin-top:24px;">
+                <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
+                <span style="font-family:'Space Mono',monospace; font-size:10px; color:#5a5a4e;">or</span>
+                <div style="flex:1; height:1px; background:rgba(90,120,70,.18);"></div>
+              </div>
+
+              <span onClick="{{ loginWithGoogle }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:6px; padding:14px 24px; margin-top:14px;">
+                Sign in with Google
+              </span>
+
+              <div style="text-align:center; margin-top:16px;">
+                <span onClick="{{ toggleAuthMode }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">{{ authToggleLabel }}</span>
+              </div>
+            </sc-if>
           </div>
         </div>
 
@@ -170,22 +213,22 @@
 
         <div style="padding:28px; background:linear-gradient(180deg,#0e1610,#0a0805); border:1px solid rgba(90,120,70,.3); border-radius:14px; margin-bottom:18px;">
           <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#5d7a50; margin-bottom:18px;">// I have an account</div>
+          <sc-if value="{{ authError }}">
+            <div style="margin-bottom:14px; padding:12px 16px; background:rgba(180,60,60,.12); border:1px solid rgba(180,60,60,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#e07070;">{{ authError }}</div>
+          </sc-if>
           <div style="margin-bottom:14px;">
             <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
-            <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 6px rgba(122,170,114,.5);"></span>
-              <span style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6;">anna.kowalska@gmail.com</span>
-            </div>
+            <input type="email" value="{{ loginEmail }}" onInput="{{ onLoginEmail }}" placeholder="your@email.com" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; outline:none;" />
           </div>
           <div style="margin-bottom:18px;">
             <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">PASSWORD</div>
-            <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#8aba82; box-shadow:0 0 6px rgba(122,170,114,.5);"></span>
-              <span style="font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6;">••••••••</span>
-            </div>
+            <input type="password" value="{{ loginPassword }}" onInput="{{ onLoginPassword }}" placeholder="••••••••" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6; outline:none;" />
           </div>
           <span onClick="{{ loginAndCheckout }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35);">
             Sign in and continue →
+          </span>
+          <span onClick="{{ loginWithGoogle }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:6px; padding:14px 24px; margin-top:12px;">
+            Sign in with Google
           </span>
         </div>
 
@@ -221,8 +264,8 @@
       <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-bottom:30px; border-bottom:1px solid rgba(90,120,70,.18);">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72;">// client panel · session active</div>
-          <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:46px; line-height:1.06; color:#ddd8c6; margin:14px 0 0; letter-spacing:.01em;">Welcome, Anna.</h1>
-          <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:#9a9480; margin:8px 0 0;">Your account · last login: today, 14:22 from Wałbrzych</p>
+          <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:46px; line-height:1.06; color:#ddd8c6; margin:14px 0 0; letter-spacing:.01em;">Welcome, {{ userFirstName }}.</h1>
+          <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:#9a9480; margin:8px 0 0;">{{ userEmail }}</p>
         </div>
         <div style="display:flex; gap:12px; align-items:center;">
           <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">ID: <span style="color:#a9c0a0;">NF-0182</span></span>
@@ -460,19 +503,19 @@
         <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px;">
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Full name</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">Anna Kowalska</div>
+            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ profileName }}</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">E-mail</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">anna.kowalska@gmail.com</div>
+            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ userEmail }}</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Phone</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">+48 612 884 027</div>
+            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ profilePhone }}</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Member since</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">March 2025</div>
+            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ accountSince }}</div>
           </div>
         </div>
         <div style="display:flex; gap:10px; margin-top:22px;">
@@ -855,17 +898,20 @@
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   state = {
-    loggedIn: false,
+    user: null,
+    profile: null,
     orders: [],
     cart: [],
     hydrated: false,
-    // checkout
-    checkoutStep: 0, // 0=off, 1=addr, 2=delivery, 3=payment, 4=summary, 5=done
+    authError: '',
+    loginEmail: '',
+    loginPassword: '',
+    registerName: '',
+    isRegisterMode: false,
+    authLoading: false,
+    checkoutStep: 0,
     selectedAddrIdx: 0,
-    addresses: [
-      { label:'HOME', name:'Anna Kowalska', street:'14/3 Sienkiewicza St.', postal:'58-300', city:'Wałbrzych', phone:'+48 612 884 027', isDefault:true },
-      { label:'ORCHARD · WALIM', name:'Anna Kowalska — orchard', street:'7 Boczna St.', postal:'58-320', city:'Walim', phone:'+48 612 884 027', isDefault:false },
-    ],
+    addresses: [],
     showNewForm: false,
     newAddress: { label:'', name:'', street:'', postal:'', city:'', phone:'' },
     selectedDeliveryId: 'inpost-paczkomat',
@@ -874,20 +920,11 @@ class Component extends DCLogic {
     wantsCheckout: false,
     guestMode: false,
     guestData: { email:'', name:'', phone:'', street:'', postal:'', city:'' },
+    resetMode: false,
+    resetEmail: '',
+    resetSuccess: false,
+    registerSuccess: false,
   };
-
-  SEED_ORDERS = [
-    { id:'NF-AX2K', date:'2026-04-12T10:30:00Z', total:153, status:'Delivered', items:[
-      { name:'Java moss', latin:'Taxiphyllum barbieri', qty:2, price:25, image:'assets/sp-terrarium-gauge.jpg' },
-      { name:'Eleocharis mini', latin:'Eleocharis sp.', qty:1, price:28, image:'assets/sp-flasks.jpg' },
-      { name:'Anubias nana', latin:'Anubias barteri', qty:3, price:22, image:'assets/capsule-rainforest.jpg' },
-    ]},
-    { id:'NF-QM7L', date:'2026-02-26T16:42:00Z', total:246, status:'Delivered', items:[
-      { name:'Walim cherry', latin:'Prunus cerasus', qty:2, price:65, image:'assets/sp-greenhouse.jpg' },
-      { name:'Antonówka apple', latin:'Malus „Antonówka"', qty:1, price:58, image:'assets/sp-library-terrarium.jpg' },
-      { name:'Kosztela apple', latin:'Malus „Kosztela"', qty:1, price:60, image:'assets/sp-greenhouse.jpg' },
-    ]},
-  ];
 
   DELIVERY = [
     { id:'inpost-paczkomat', name:'InPost Locker', time:'1–2 business days', price:9.99, icon:'IP' },
@@ -903,29 +940,140 @@ class Component extends DCLogic {
     { id:'cod', name:'Cash on delivery', desc:'Personal pickup only (+5 PLN)', icon:'COD', onlyPersonal:true },
   ];
 
-  componentDidMount() {
-    let userOrders = [], cart = [];
-    try { const s = JSON.parse(localStorage.getItem('nf-orders')||'[]'); if(Array.isArray(s)) userOrders = s; } catch(e){}
-    try { const c = JSON.parse(localStorage.getItem('nf-cart')||'[]'); if(Array.isArray(c)) cart = c; } catch(e){}
-    const loggedIn = localStorage.getItem('nf-logged-in') === '1';
+  async componentDidMount() {
+    const sb = window.supabaseClient;
+    const { data: { session } } = await sb.auth.getSession();
+    const user = session?.user || null;
     const wantsCheckout = window.location.hash === '#checkout';
-    const startStep = (wantsCheckout && loggedIn && cart.length > 0) ? 1 : 0;
-    this.setState({ loggedIn, orders:[...userOrders,...this.SEED_ORDERS], cart, hydrated:true, wantsCheckout, checkoutStep: startStep });
+
+    if (user) {
+      await this.loadUserData(user, wantsCheckout);
+    } else {
+      let cart = [];
+      try { const c = JSON.parse(localStorage.getItem('nf-cart')||'[]'); if(Array.isArray(c)) cart = c; } catch(e){}
+      this.setState({ hydrated: true, wantsCheckout, cart });
+    }
+
+    sb.auth.onAuthStateChange(async (_event, session) => {
+      const user = session?.user || null;
+      if (user && !this.state.user) {
+        await this.loadUserData(user, this.state.wantsCheckout);
+      } else if (!user) {
+        this.setState({ user: null, profile: null, orders: [], addresses: [], checkoutStep: 0 });
+      }
+    });
   }
 
-  login = () => { try{localStorage.setItem('nf-logged-in','1')}catch(e){} this.setState({loggedIn:true}); };
-  logout = () => { try{localStorage.removeItem('nf-logged-in')}catch(e){} this.setState({loggedIn:false, checkoutStep:0}); };
-  loginAndCheckout = () => { try{localStorage.setItem('nf-logged-in','1')}catch(e){} this.setState({loggedIn:true, checkoutStep:1}); };
-  continueAsGuest = () => { this.setState({guestMode:true, checkoutStep:1}); };
+  async loadUserData(user, wantsCheckout) {
+    const sb = window.supabaseClient;
+    const [profileRes, ordersRes, itemsRes, addrRes, cartRes] = await Promise.all([
+      sb.from('profiles').select('*').eq('id', user.id).single(),
+      sb.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      sb.from('order_items').select('*, orders!inner(user_id)').eq('orders.user_id', user.id),
+      sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false }),
+      sb.from('cart_items').select('product_id, qty, products(name, latin, price, image)').eq('user_id', user.id),
+    ]);
+
+    const profile = profileRes.data || {};
+    const orders = (ordersRes.data || []).map(o => {
+      const oItems = (itemsRes.data || []).filter(i => i.order_id === o.id).map(i => ({
+        name: i.name, latin: i.latin, qty: i.qty, price: Number(i.price), image: i.image
+      }));
+      return { id: o.id, date: o.created_at, total: Number(o.total), status: o.status, items: oItems };
+    });
+
+    const addresses = (addrRes.data || []).map(a => ({
+      id: a.id, label: a.label, name: a.full_name, street: a.street,
+      postal: a.postal, city: a.city, phone: a.phone, isDefault: a.is_default
+    }));
+
+    const cart = (cartRes.data || []).map(c => ({
+      id: c.product_id, qty: c.qty,
+      name: c.products.name, latin: c.products.latin,
+      price: Number(c.products.price), image: c.products.image
+    }));
+    try { localStorage.setItem('nf-cart', JSON.stringify(cart)); } catch(e) {}
+
+    const startStep = (wantsCheckout && cart.length > 0) ? 1 : 0;
+    this.setState({ user, profile, orders, addresses, cart, hydrated: true, wantsCheckout, checkoutStep: startStep });
+  }
+
+  onLoginEmail = (e) => this.setState({ loginEmail: e.target.value, authError: '' });
+  onLoginPassword = (e) => this.setState({ loginPassword: e.target.value, authError: '' });
+  onRegisterName = (e) => this.setState({ registerName: e.target.value });
+  toggleAuthMode = () => this.setState(s => ({ isRegisterMode: !s.isRegisterMode, authError: '', registerSuccess: false }));
+  showForgotPassword = () => this.setState({ resetMode: true, resetEmail: this.state.loginEmail, authError: '' });
+  backToLogin = () => this.setState({ resetMode: false, authError: '', resetSuccess: false, registerSuccess: false });
+  onResetEmail = (e) => this.setState({ resetEmail: e.target.value, authError: '' });
+
+  forgotPassword = async () => {
+    const { resetEmail, authLoading } = this.state;
+    if (authLoading) return;
+    if (!resetEmail) { this.setState({ authError: 'Please enter your e-mail address.' }); return; }
+    this.setState({ authLoading: true, authError: '' });
+    const sb = window.supabaseClient;
+    const { error } = await sb.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin + '/konto-en.html'
+    });
+    if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+    this.setState({ authLoading: false, resetSuccess: true });
+  };
+
+  submitAuth = async () => {
+    const { loginEmail, loginPassword, isRegisterMode, registerName, authLoading } = this.state;
+    if (authLoading) return;
+    if (!loginEmail || !loginPassword) { this.setState({ authError: 'Please enter e-mail and password.' }); return; }
+    if (isRegisterMode && !registerName) { this.setState({ authError: 'Please enter your full name.' }); return; }
+
+    this.setState({ authLoading: true, authError: '' });
+    const sb = window.supabaseClient;
+
+    if (isRegisterMode) {
+      const { error } = await sb.auth.signUp({
+        email: loginEmail, password: loginPassword,
+        options: { data: { full_name: registerName } }
+      });
+      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+      this.setState({ authLoading: false, registerSuccess: true });
+      return;
+    } else {
+      const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+    }
+    this.setState({ authLoading: false });
+  };
+
+  loginAndCheckout = async () => {
+    const { loginEmail, loginPassword, authLoading } = this.state;
+    if (authLoading) return;
+    if (!loginEmail || !loginPassword) { this.setState({ authError: 'Please enter e-mail and password.' }); return; }
+    this.setState({ authLoading: true, authError: '', wantsCheckout: true });
+    const sb = window.supabaseClient;
+    const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+    if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+    this.setState({ authLoading: false });
+  };
+
+  loginWithGoogle = async () => {
+    const sb = window.supabaseClient;
+    await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/konto-en.html' }
+    });
+  };
+
+  logout = async () => {
+    await window.supabaseClient.auth.signOut();
+    this.setState({ user: null, profile: null, orders: [], addresses: [], cart: [], checkoutStep: 0 });
+  };
+
+  continueAsGuest = () => { this.setState({ guestMode: true, checkoutStep: 1 }); };
   onGuestField = (e) => { const f=e.target.dataset.field; const v=e.target.value; this.setState(s=>({guestData:{...s.guestData,[f]:v}})); };
 
   startCheckout = () => { if(this.state.cart.length) this.setState({checkoutStep:1}); };
   backToDashboard = () => {
     if (this.state.guestMode) { window.location.href = 'sklep-en.html'; return; }
-    let userOrders = [], cart = [];
-    try { const s = JSON.parse(localStorage.getItem('nf-orders')||'[]'); if(Array.isArray(s)) userOrders = s; } catch(e){}
-    try { const c = JSON.parse(localStorage.getItem('nf-cart')||'[]'); if(Array.isArray(c)) cart = c; } catch(e){}
-    this.setState({checkoutStep:0, orders:[...userOrders,...this.SEED_ORDERS], cart, confirmOrderId:''});
+    this.loadUserData(this.state.user, false);
   };
   nextStep = () => this.setState(s => ({checkoutStep: Math.min(s.checkoutStep+1, 4)}));
   prevStep = () => this.setState(s => ({checkoutStep: Math.max(s.checkoutStep-1, 1)}));
@@ -938,17 +1086,29 @@ class Component extends DCLogic {
     const v = e.target.value;
     this.setState(s => ({newAddress:{...s.newAddress,[f]:v}}));
   };
-  saveNewAddr = () => {
-    const {newAddress, addresses} = this.state;
+  saveNewAddr = async () => {
+    const {newAddress, addresses, user} = this.state;
     if(!newAddress.name || !newAddress.street || !newAddress.city) return;
-    const addr = {...newAddress, isDefault:false, label:newAddress.label||'NEW'};
-    const idx = addresses.length;
-    this.setState({addresses:[...addresses,addr], selectedAddrIdx:idx, showNewForm:false, newAddress:{label:'',name:'',street:'',postal:'',city:'',phone:''}});
+    if (user) {
+      const sb = window.supabaseClient;
+      const { data } = await sb.from('addresses').insert({
+        user_id: user.id, label: newAddress.label || 'NEW', full_name: newAddress.name,
+        street: newAddress.street, postal: newAddress.postal, city: newAddress.city, phone: newAddress.phone
+      }).select().single();
+      if (data) {
+        const addr = { id: data.id, label: data.label, name: data.full_name, street: data.street, postal: data.postal, city: data.city, phone: data.phone, isDefault: false };
+        const idx = addresses.length;
+        this.setState({addresses:[...addresses,addr], selectedAddrIdx:idx, showNewForm:false, newAddress:{label:'',name:'',street:'',postal:'',city:'',phone:''}});
+      }
+    } else {
+      const addr = {...newAddress, isDefault:false, label:newAddress.label||'NEW'};
+      const idx = addresses.length;
+      this.setState({addresses:[...addresses,addr], selectedAddrIdx:idx, showNewForm:false, newAddress:{label:'',name:'',street:'',postal:'',city:'',phone:''}});
+    }
   };
 
   selectDelivery = (id) => {
-    const s = this.state;
-    let payId = s.selectedPaymentId;
+    let payId = this.state.selectedPaymentId;
     if(id !== 'personal' && payId === 'cod') payId = 'blik';
     this.setState({selectedDeliveryId:id, selectedPaymentId:payId});
   };
@@ -957,39 +1117,52 @@ class Component extends DCLogic {
     this.setState({selectedPaymentId:id});
   };
 
-  placeOrder = () => {
-    const {cart, addresses, selectedAddrIdx, selectedDeliveryId, selectedPaymentId, guestMode, guestData} = this.state;
+  placeOrder = async () => {
+    const {cart, addresses, selectedAddrIdx, selectedDeliveryId, selectedPaymentId, guestMode, guestData, user} = this.state;
     if(!cart.length) return;
     const delivery = this.DELIVERY.find(d=>d.id===selectedDeliveryId);
     const subtotal = cart.reduce((s,i)=>s+(i.qty||0)*(i.price||0),0);
     const shipping = delivery ? delivery.price : 0;
     const codFee = selectedPaymentId==='cod' ? 5 : 0;
-    const total = subtotal + shipping + codFee;
+    const total = Math.round((subtotal + shipping + codFee)*100)/100;
     const orderId = 'NF-' + Date.now().toString(36).toUpperCase().slice(-6);
-    const order = {
-      id: orderId,
-      date: new Date().toISOString(),
-      items: cart.map(i=>({id:i.id,name:i.name,latin:i.latin,qty:i.qty,price:i.price,image:i.image})),
-      total: Math.round(total*100)/100,
-      status: 'Packing',
-      address: guestMode ? {label:'GUEST', name:guestData.name, street:guestData.street, postal:guestData.postal, city:guestData.city, phone:guestData.phone, email:guestData.email} : addresses[selectedAddrIdx],
-      deliveryMethod: selectedDeliveryId,
-      paymentMethod: selectedPaymentId,
-    };
-    try {
-      const prior = JSON.parse(localStorage.getItem('nf-orders')||'[]');
-      const orders = Array.isArray(prior)?prior:[];
-      orders.unshift(order);
-      localStorage.setItem('nf-orders', JSON.stringify(orders));
-      localStorage.setItem('nf-cart', '[]');
-    } catch(e){}
+
+    const addrSnapshot = guestMode
+      ? {label:'GUEST', name:guestData.name, street:guestData.street, postal:guestData.postal, city:guestData.city, phone:guestData.phone, email:guestData.email}
+      : addresses[selectedAddrIdx] || {};
+
+    const sb = window.supabaseClient;
+    await sb.from('orders').insert({
+      id: orderId, user_id: user?.id || null, total,
+      status: 'Packing', delivery_method: selectedDeliveryId,
+      payment_method: selectedPaymentId, address_snapshot: addrSnapshot,
+      guest_email: guestMode ? guestData.email : null,
+      guest_name: guestMode ? guestData.name : null,
+    });
+
+    const orderItems = cart.map(i => ({
+      order_id: orderId, product_id: i.id, name: i.name,
+      latin: i.latin, qty: i.qty, price: i.price, image: i.image
+    }));
+    await sb.from('order_items').insert(orderItems);
+
+    if (user) {
+      await sb.from('cart_items').delete().eq('user_id', user.id);
+    }
+    try { localStorage.setItem('nf-cart', '[]'); } catch(e) {}
+
     this.setState({checkoutStep:5, confirmOrderId:orderId, cart:[]});
   };
 
   fmtDate(iso) {
     const m=['January','February','March','April','May','June','July','August','September','October','November','December'];
     const d=new Date(iso); if(isNaN(d.getTime()))return iso;
-    return `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()}`;
+    return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear();
+  }
+  fmtMonth(iso) {
+    const m=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const d=new Date(iso); if(isNaN(d.getTime()))return '';
+    return m[d.getMonth()]+' '+d.getFullYear();
   }
   statusStyle(st) {
     const s=(st||'').toLowerCase();
@@ -1000,7 +1173,8 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const {loggedIn,orders,cart,hydrated,checkoutStep,addresses,selectedAddrIdx,showNewForm,newAddress,selectedDeliveryId,selectedPaymentId,confirmOrderId,wantsCheckout,guestMode,guestData} = this.state;
+    const {user,profile,orders,cart,hydrated,checkoutStep,addresses,selectedAddrIdx,showNewForm,newAddress,selectedDeliveryId,selectedPaymentId,confirmOrderId,wantsCheckout,guestMode,guestData,authError,loginEmail,loginPassword,registerName,isRegisterMode,authLoading,resetMode,resetEmail,resetSuccess,registerSuccess} = this.state;
+    const loggedIn = !!user;
     const inCheckout = checkoutStep > 0;
     const cartCount = cart.reduce((s,i)=>s+(i.qty||0),0);
     const cartSubtotal = cart.reduce((s,i)=>s+(i.qty||0)*(i.price||0),0);
@@ -1011,19 +1185,16 @@ class Component extends DCLogic {
     const effectiveCod = checkoutStep >= 3 ? codFee : 0;
     const cartTotal = Math.round((cartSubtotal+effectiveShipping+effectiveCod)*100)/100;
 
-    // orders formatting
     const ordersCount = orders.length;
     const totalSpent = orders.reduce((s,o)=>s+(o.total||0),0);
     const ordersFmt = orders.map(o=>{
       const st=this.statusStyle(o.status);
       const ic=(o.items||[]).reduce((s,i)=>s+(i.qty||0),0);
-      return {...o, dateLabel:this.fmtDate(o.date), itemsLabel:`${ic} pcs · ${(o.items||[]).length} varieties`, statusColor:st.color, statusBg:st.bg, statusBorder:st.border, statusDot:st.dot, items:(o.items||[]).map(i=>({...i}))};
+      return {...o, dateLabel:this.fmtDate(o.date), itemsLabel:ic+' pcs · '+(o.items||[]).length+' varieties', statusColor:st.color, statusBg:st.bg, statusBorder:st.border, statusDot:st.dot, items:(o.items||[]).map(i=>({...i}))};
     });
 
-    // cart items for display
     const cartItems = cart.map(i=>({...i, lineTotal:(i.qty||0)*(i.price||0)}));
 
-    // stepper
     const stepLabels = ['Address','Delivery','Payment','Summary'];
     const stepsData = stepLabels.map((label,i)=>{
       const num = i+1;
@@ -1040,7 +1211,6 @@ class Component extends DCLogic {
       };
     });
 
-    // addresses for selection
     const addrList = addresses.map((a,i)=>({
       ...a,
       isSelected: i===selectedAddrIdx,
@@ -1050,13 +1220,12 @@ class Component extends DCLogic {
       select: ()=>this.selectAddr(i),
     }));
 
-    // delivery options
     const delOpts = this.DELIVERY.map(d=>{
       const sel = d.id===selectedDeliveryId;
       return {
         ...d,
         isSelected: sel,
-        priceLabel: d.price===0?'Free':`${d.price.toFixed(2)} PLN`,
+        priceLabel: d.price===0?'Free':d.price.toFixed(2)+' PLN',
         priceColor: d.price===0?'#7aaa72':'#ddd8c6',
         cardBg: sel?'linear-gradient(180deg,#142016,#10160d)':'linear-gradient(180deg,#0e1610,#0a120b)',
         cardBorder: sel?'rgba(122,170,114,.5)':'rgba(90,120,70,.22)',
@@ -1067,7 +1236,6 @@ class Component extends DCLogic {
       };
     });
 
-    // payment options
     const isPersonal = selectedDeliveryId==='personal';
     const payOpts = this.PAYMENTS.map(p=>{
       const disabled = p.onlyPersonal && !isPersonal;
@@ -1085,42 +1253,65 @@ class Component extends DCLogic {
       };
     });
 
-    // summary data
     const selAddr = addresses[selectedAddrIdx]||addresses[0]||{};
     const selDel = delivery||this.DELIVERY[0];
     const selPay = this.PAYMENTS.find(p=>p.id===selectedPaymentId)||this.PAYMENTS[0];
 
-    // next button state
     const canNext = true;
     const nextBg = canNext?'linear-gradient(180deg,#6a9a62,#3d6a38)':'rgba(90,120,70,.2)';
     const nextBorder = canNext?'#8aba82':'rgba(90,120,70,.3)';
     const nextShadow = canNext?'inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35)':'none';
 
+    const fullName = profile?.full_name || user?.user_metadata?.full_name || '';
+    const firstName = fullName.split(' ')[0] || user?.email?.split('@')[0] || '';
+
     return {
-      // existing
       showLogin: hydrated && !loggedIn && !wantsCheckout,
       showCheckoutGate: hydrated && !loggedIn && wantsCheckout && !guestMode && checkoutStep===0,
       showDashboard: hydrated && loggedIn && !inCheckout,
       orders: ordersFmt, ordersCount, totalSpent,
       hasOrders: ordersCount>0,
       noOrders: hydrated && ordersCount===0,
-      login: this.login, logout: this.logout,
+      logout: this.logout,
 
-      // cart on dashboard
+      authError: authError || '',
+      loginEmail, loginPassword, registerName, isRegisterMode,
+      onLoginEmail: this.onLoginEmail,
+      onLoginPassword: this.onLoginPassword,
+      onRegisterName: this.onRegisterName,
+      submitAuth: this.submitAuth,
+      loginWithGoogle: this.loginWithGoogle,
+      toggleAuthMode: this.toggleAuthMode,
+      authSubmitLabel: authLoading ? 'Loading...' : (isRegisterMode ? 'Create account →' : 'Sign in →'),
+      authToggleLabel: isRegisterMode ? 'I have an account — sign in' : 'No account — create one',
+
+      showAuthForm: !resetMode && !registerSuccess && !resetSuccess,
+      resetMode, resetEmail, resetSuccess, registerSuccess,
+      onResetEmail: this.onResetEmail,
+      forgotPassword: this.forgotPassword,
+      showForgotPassword: this.showForgotPassword,
+      backToLogin: this.backToLogin,
+      resetSubmitLabel: authLoading ? 'Sending...' : 'Send reset link →',
+
+      userFirstName: firstName,
+      userEmail: user?.email || '',
+      profileName: fullName || '—',
+      profilePhone: profile?.phone || '—',
+      accountSince: user ? this.fmtMonth(user.created_at) : '',
+
       cartCount, cartSubtotal,
       hasCartItems: hydrated && cart.length>0 && !inCheckout,
       cartItems,
 
-      // checkout
       showCheckout: hydrated && (loggedIn || guestMode) && inCheckout && checkoutStep<=5,
       startCheckout: this.startCheckout,
       backToDashboard: this.backToDashboard,
+      loginAndCheckout: this.loginAndCheckout,
       nextStep: this.nextStep, prevStep: this.prevStep,
       goToStep1: ()=>this.goToStep(1),
       goToStep2: ()=>this.goToStep(2),
       goToStep3: ()=>this.goToStep(3),
 
-      // steps
       steps: stepsData,
       isStep1: checkoutStep===1,
       isStep2: checkoutStep===2,
@@ -1128,7 +1319,6 @@ class Component extends DCLogic {
       isStep4: checkoutStep===4,
       isStep5: hydrated && (loggedIn || guestMode) && checkoutStep===5,
 
-      // step 1
       addresses: addrList,
       showNewForm,
       toggleNewForm: this.toggleNewForm,
@@ -1141,29 +1331,23 @@ class Component extends DCLogic {
       newAddrCity: newAddress.city,
       newAddrPhone: newAddress.phone,
 
-      // step 2
       deliveryOptions: delOpts,
-      // step 3
       paymentOptions: payOpts,
 
-      // step 4 summary
       sumAddrName: guestMode ? (guestData.name||'') : (selAddr.name||''),
       sumAddrStreet: guestMode ? (guestData.street||'') : (selAddr.street||''),
       sumAddrCity: guestMode ? ((guestData.postal?guestData.postal+' ':'')+guestData.city) : ((selAddr.postal?selAddr.postal+' ':'')+selAddr.city),
       sumDeliveryName: selDel.name,
       sumDeliveryTime: selDel.time,
-      sumDeliveryPrice: selDel.price===0?'Free':`${selDel.price.toFixed(2)} PLN`,
+      sumDeliveryPrice: selDel.price===0?'Free':selDel.price.toFixed(2)+' PLN',
       sumPaymentName: selPay.name,
       sumPaymentDesc: selPay.desc,
 
-      // shipping
-      shippingLabel: checkoutStep>=2?(shippingCost===0?'Free':`${shippingCost.toFixed(2)} PLN`):'—',
+      shippingLabel: checkoutStep>=2?(shippingCost===0?'Free':shippingCost.toFixed(2)+' PLN'):'—',
       cartTotal: Math.round(cartTotal*100)/100,
 
-      // next btn
       nextBtnBg: nextBg, nextBtnBorder: nextBorder, nextBtnShadow: nextShadow,
 
-      // step 5
       confirmOrderId,
       placeOrder: this.placeOrder,
       backLabel: guestMode ? '← Shop' : '← Panel',
@@ -1178,7 +1362,6 @@ class Component extends DCLogic {
       guestCity: guestData.city,
       onGuestField: this.onGuestField,
       continueAsGuest: this.continueAsGuest,
-      loginAndCheckout: this.loginAndCheckout,
     };
   }
 }

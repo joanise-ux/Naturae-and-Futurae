@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -373,78 +375,110 @@
 class Component extends DCLogic {
   state = {
     cart: [],
+    products: [],
     drawerOpen: false,
     category: 'akwariowe',
     orderJustPlaced: false,
     lastOrderId: null,
-    hydrated: false
+    hydrated: false,
+    user: null
   };
 
-  PRODUCTS = [
-    // ===== AKWARIOWE =====
-    { id:'mech-jaw', cat:'akwariowe', name:'Mech jawajski', latin:'Taxiphyllum barbieri', price:25, image:'assets/sp-terrarium-gauge.jpg', tag:'Łatwy w hodowli', stock:42, unit:'szt. · kubek 5×5', desc:'Klasyk akwarystyki — gęsty, zielony kobierzec na korzeniach i kamieniach.' },
-    { id:'eleocharis', cat:'akwariowe', name:'Eleocharis mini', latin:'Eleocharis sp. „Mini"', price:28, image:'assets/sp-flasks.jpg', tag:'Trawnik', stock:34, unit:'szt. · kubek 5×5', desc:'Jasnozielony, niski kobierzec. Tworzy efekt łąki w nano-akwarium.' },
-    { id:'bucefalandra', cat:'akwariowe', name:'Bucefalandra Brownie', latin:'Bucephalandra sp.', price:35, image:'assets/leaf-wall.jpg', tag:'Rzadka odmiana', stock:12, unit:'szt. · kubek 5×5', desc:'Niewielka, twarda roślina — odporna, wolnorosnąca, idealna na korzenie.' },
-    { id:'anubias', cat:'akwariowe', name:'Anubias nana', latin:'Anubias barteri var. nana', price:22, image:'assets/capsule-rainforest.jpg', tag:'Łatwy w hodowli', stock:58, unit:'szt. · kubek 5×5', desc:'Sztywne, ciemnozielone liście. Niewybredna — światło słabe, średnie.' },
-    { id:'krypto', cat:'akwariowe', name:'Kryptokoryna Wendta', latin:'Cryptocoryne wendtii', price:18, image:'assets/capsule-forest.jpg', tag:'Podstawa', stock:67, unit:'szt. · kubek 5×5', desc:'Średnia, brązowo-zielona. Drugi plan i tło — wytrzymała, niezawodna.' },
-    { id:'hcc', cat:'akwariowe', name:'Hemianthus „Cuba"', latin:'Hemianthus callitrichoides', price:32, image:'assets/sp-desk-bottles.jpg', tag:'Dla wytrwałych', stock:20, unit:'szt. · kubek 5×5', desc:'Najmniejsza roślina akwariowa świata. Wymaga CO₂, ale efekt — bajka.' },
+  async componentDidMount() {
+    const sb = window.supabaseClient;
 
-    // ===== SADOWNICZE =====
-    { id:'wisnia', cat:'sadownicze', name:'Wiśnia Walimska', latin:'Prunus cerasus „Walimska"', price:65, image:'assets/sp-greenhouse.jpg', tag:'100-letnia odmiana', stock:18, unit:'szt. · z odżywką', desc:'Z ponad 100-letniego sadu w Walimiu. Odporna na mróz, owoce ciemnoczerwone.' },
-    { id:'antonowka', cat:'sadownicze', name:'Jabłoń Antonówka', latin:'Malus domestica „Antonówka"', price:58, image:'assets/sp-library-terrarium.jpg', tag:'Klasyk', stock:24, unit:'szt. · z odżywką', desc:'Stara odmiana z Gór Sowich. Jabłka kwaśne, soczyste, idealne na przetwory.' },
-    { id:'glogierowka', cat:'sadownicze', name:'Jabłoń Glogierówka', latin:'Malus domestica „Glogierówka"', price:62, image:'assets/sp-flasks.jpg', tag:'Z Walimia', stock:9, unit:'szt. · z odżywką', desc:'Średnio późna, śląska odmiana. Owoce żółto-czerwone, słodkawe.' },
-    { id:'czeresnia', cat:'sadownicze', name:'Czereśnia Walimska', latin:'Prunus avium „Walimska"', price:70, image:'assets/capsule-forest.jpg', tag:'Stulecie sadu', stock:7, unit:'szt. · z odżywką', desc:'Wysoka, plenna. Owoce duże, czarne, słodkie — przetrwała dwie wojny.' },
-    { id:'kosztela', cat:'sadownicze', name:'Jabłoń Kosztela', latin:'Malus domestica „Kosztela"', price:60, image:'assets/sp-greenhouse.jpg', tag:'Królewska', stock:14, unit:'szt. · z odżywką', desc:'Najstarsza polska odmiana — XVI w. Drobne owoce o miodowym smaku.' },
-    { id:'grusza', cat:'sadownicze', name:'Grusza Klapsa', latin:'Pyrus communis „Klapsa"', price:55, image:'assets/sp-airship-day.jpg', tag:'Soczysta', stock:16, unit:'szt. · z odżywką', desc:'Letnia odmiana z Pogórza Sudeckiego. Owoce duże, maślane, aromatyczne.' },
-  ];
+    const { data: products } = await sb.from('products').select('*');
+    const mapped = (products || []).map(p => ({
+      id: p.id, cat: p.category, name: p.name, latin: p.latin,
+      price: Number(p.price), image: p.image, tag: p.tag,
+      stock: p.stock, unit: p.unit, desc: p.description
+    }));
 
-  componentDidMount() {
-    try {
-      const saved = JSON.parse(localStorage.getItem('nf-cart') || '[]');
-      const cart = Array.isArray(saved) ? saved : [];
-      const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
-      this.setState({ cart, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0 });
-    } catch (e) {
-      this.setState({ hydrated: true });
+    const { data: { session } } = await sb.auth.getSession();
+    const user = session?.user || null;
+
+    let cart = [];
+    if (user) {
+      const { data: dbCart } = await sb.from('cart_items')
+        .select('product_id, qty, products(name, latin, price, image)')
+        .eq('user_id', user.id);
+      cart = (dbCart || []).map(c => ({
+        id: c.product_id, qty: c.qty,
+        name: c.products.name, latin: c.products.latin,
+        price: Number(c.products.price), image: c.products.image
+      }));
+      this.saveCartLocal(cart);
+    } else {
+      try {
+        const saved = JSON.parse(localStorage.getItem('nf-cart') || '[]');
+        cart = Array.isArray(saved) ? saved : [];
+      } catch (e) {}
     }
+
+    const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
+    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0 });
+
+    sb.auth.onAuthStateChange((_event, session) => {
+      this.setState({ user: session?.user || null });
+    });
   }
 
-  saveCart(cart) {
+  saveCartLocal(cart) {
     try { localStorage.setItem('nf-cart', JSON.stringify(cart)); } catch(e) {}
   }
 
+  async syncCartItem(id, qty) {
+    const { user } = this.state;
+    if (!user) return;
+    const sb = window.supabaseClient;
+    if (qty <= 0) {
+      await sb.from('cart_items').delete().eq('user_id', user.id).eq('product_id', id);
+    } else {
+      await sb.from('cart_items').upsert({ user_id: user.id, product_id: id, qty }, { onConflict: 'user_id,product_id' });
+    }
+  }
+
   addToCart = (id) => {
-    const product = this.PRODUCTS.find(p => p.id === id);
+    const product = this.state.products.find(p => p.id === id);
     if (!product) return;
     this.setState(s => {
       const existing = s.cart.find(i => i.id === id);
-      let cart;
+      let cart, newQty;
       if (existing) {
-        cart = s.cart.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
+        newQty = existing.qty + 1;
+        cart = s.cart.map(i => i.id === id ? { ...i, qty: newQty } : i);
       } else {
+        newQty = 1;
         cart = [...s.cart, { id: product.id, name: product.name, latin: product.latin, price: product.price, image: product.image, qty: 1 }];
       }
-      this.saveCart(cart);
+      this.saveCartLocal(cart);
+      this.syncCartItem(id, newQty);
       return { cart, drawerOpen: true, orderJustPlaced: false };
     });
   };
 
   incQty = (id) => {
     this.setState(s => {
-      const cart = s.cart.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
-      this.saveCart(cart);
+      const item = s.cart.find(i => i.id === id);
+      const newQty = item ? item.qty + 1 : 1;
+      const cart = s.cart.map(i => i.id === id ? { ...i, qty: newQty } : i);
+      this.saveCartLocal(cart);
+      this.syncCartItem(id, newQty);
       return { cart };
     });
   };
 
   decQty = (id) => {
     this.setState(s => {
+      let removedQty = 0;
       const cart = s.cart.flatMap(i => {
         if (i.id !== id) return [i];
-        if (i.qty <= 1) return [];
-        return [{ ...i, qty: i.qty - 1 }];
+        if (i.qty <= 1) { removedQty = 0; return []; }
+        removedQty = i.qty - 1;
+        return [{ ...i, qty: removedQty }];
       });
-      this.saveCart(cart);
+      this.saveCartLocal(cart);
+      this.syncCartItem(id, removedQty);
       return { cart };
     });
   };
@@ -452,7 +486,8 @@ class Component extends DCLogic {
   removeItem = (id) => {
     this.setState(s => {
       const cart = s.cart.filter(i => i.id !== id);
-      this.saveCart(cart);
+      this.saveCartLocal(cart);
+      this.syncCartItem(id, 0);
       return { cart };
     });
   };
@@ -469,9 +504,9 @@ class Component extends DCLogic {
   closeDrawer = () => this.setState({ drawerOpen: false, orderJustPlaced: false });
 
   renderVals() {
-    const { cart, category, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
+    const { cart, products, category, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
 
-    const products = this.PRODUCTS
+    const filteredProducts = products
       .filter(p => p.cat === category)
       .map(p => ({ ...p, onAdd: () => this.addToCart(p.id) }));
 
@@ -491,7 +526,7 @@ class Component extends DCLogic {
     const sadActive  = category === 'sadownicze';
 
     return {
-      products,
+      products: filteredProducts,
       cart: cartWithHandlers,
       cartCount,
       cartTotal,
