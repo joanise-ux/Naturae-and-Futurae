@@ -4,6 +4,9 @@
    bo strona jest budowana ze stylami "inline".
    ===================================================================== */
 
+/* Stabilny scrollbar-gutter — zapobiega przesuwaniu layoutu między stronami */
+html { scrollbar-gutter: stable; }
+
 /* Przycisk hamburgera — ukryty na desktopie, widoczny na mobile */
 .nf-burger{
   display:none;

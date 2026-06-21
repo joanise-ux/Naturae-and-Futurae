@@ -19,6 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
+  html { scrollbar-gutter: stable; }
   body { margin: 0; background: #060906; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
   @view-transition { navigation: auto; }
@@ -123,10 +124,10 @@
       </div>
       <div style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
         <span>SORTUJ:</span>
-        <span style="color:#a9c0a0;">Wszystkie</span>
-        <span>Cena ↑</span>
-        <span>Najnowsze</span>
-        <span>Dostępne</span>
+        <span onClick="{{ sortAll }}" style="cursor:pointer; color:{{ sortAllColor }};">Wszystkie</span>
+        <span onClick="{{ sortPrice }}" style="cursor:pointer; color:{{ sortPriceColor }};">Cena ↑</span>
+        <span onClick="{{ sortNewest }}" style="cursor:pointer; color:{{ sortNewestColor }};">Najnowsze</span>
+        <span onClick="{{ sortAvail }}" style="cursor:pointer; color:{{ sortAvailColor }};">Dostępne</span>
       </div>
     </div>
   </div>
@@ -228,7 +229,7 @@
       <div style="display:grid; grid-template-columns:1.2fr 1fr 1fr .8fr; gap:40px;">
         <div>
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-            <span style="width:30px; height:30px; border-radius:50%; border:1.5px solid #c69a4c; display:inline-flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-weight:700; color:#8aba82; font-size:14px;">N</span>
+            <img src="assets/logo-circle.png" alt="Nature & Future" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
             <div style="line-height:1.1;"><div style="font-family:'Cinzel',serif; font-weight:600; font-size:14px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</div><div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.22em; color:#5d7a50; margin-top:2px;">PLANT BIOTECH</div></div>
           </div>
           <p style="font-size:14px; line-height:1.6; color:#8c7d5e; max-width:260px;">In Vitro. Z natury ku przyszłości. Rośliny rozmnażane metodą mikropropagacji w Wałbrzychu.</p>
@@ -378,6 +379,7 @@ class Component extends DCLogic {
     products: [],
     drawerOpen: false,
     category: 'akwariowe',
+    sortMode: 'all',
     orderJustPlaced: false,
     lastOrderId: null,
     hydrated: false,
@@ -500,15 +502,20 @@ class Component extends DCLogic {
   };
 
   setCategory = (cat) => this.setState({ category: cat });
+  setSortMode = (mode) => this.setState({ sortMode: mode });
   openDrawer  = () => this.setState({ drawerOpen: true, orderJustPlaced: false });
   closeDrawer = () => this.setState({ drawerOpen: false, orderJustPlaced: false });
 
   renderVals() {
-    const { cart, products, category, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
+    const { cart, products, category, sortMode, drawerOpen, orderJustPlaced, lastOrderId, hydrated } = this.state;
 
-    const filteredProducts = products
-      .filter(p => p.cat === category)
-      .map(p => ({ ...p, onAdd: () => this.addToCart(p.id) }));
+    let filteredProducts = products.filter(p => p.cat === category);
+
+    if (sortMode === 'price') filteredProducts.sort((a, b) => a.price - b.price);
+    else if (sortMode === 'newest') filteredProducts.sort((a, b) => b.id - a.id);
+    else if (sortMode === 'available') filteredProducts = filteredProducts.filter(p => p.stock > 0);
+
+    filteredProducts = filteredProducts.map(p => ({ ...p, onAdd: () => this.addToCart(p.id) }));
 
     const cartWithHandlers = cart.map(i => ({
       ...i,
@@ -543,6 +550,14 @@ class Component extends DCLogic {
       overlayPointer:  drawerOpen ? 'auto' : 'none',
       setAkwa: () => this.setCategory('akwariowe'),
       setSad:  () => this.setCategory('sadownicze'),
+      sortAll:     () => this.setSortMode('all'),
+      sortPrice:   () => this.setSortMode('price'),
+      sortNewest:  () => this.setSortMode('newest'),
+      sortAvail:   () => this.setSortMode('available'),
+      sortAllColor:     sortMode === 'all' ? '#a9c0a0' : '#8c7d5e',
+      sortPriceColor:   sortMode === 'price' ? '#a9c0a0' : '#8c7d5e',
+      sortNewestColor:  sortMode === 'newest' ? '#a9c0a0' : '#8c7d5e',
+      sortAvailColor:   sortMode === 'available' ? '#a9c0a0' : '#8c7d5e',
       openDrawer:  this.openDrawer,
       closeDrawer: this.closeDrawer,
       checkout:    this.checkout,
