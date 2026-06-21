@@ -579,6 +579,10 @@
                 <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:26px; color:#ddd8c6; margin:0;">Adres dostawy</h2>
               </div>
 
+              <sc-if value="{{ addrError }}">
+                <div style="margin-bottom:16px; padding:12px 16px; background:rgba(180,60,60,.12); border:1px solid rgba(180,60,60,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#e07070;">{{ addrError }}</div>
+              </sc-if>
+
               <!-- Guest address form -->
               <sc-if value="{{ guestMode }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:24px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.3); border-radius:10px; display:flex; flex-direction:column; gap:14px;">
@@ -932,6 +936,7 @@ class Component extends DCLogic {
     resetEmail: '',
     resetSuccess: false,
     registerSuccess: false,
+    addrError: '',
   };
 
   DELIVERY = [
@@ -1091,7 +1096,28 @@ class Component extends DCLogic {
     if (this.state.guestMode) { window.location.href = 'sklep.html'; return; }
     this.loadUserData(this.state.user, false);
   };
-  nextStep = () => this.setState(s => ({checkoutStep: Math.min(s.checkoutStep+1, 4)}));
+  nextStep = () => {
+    const { checkoutStep, guestMode, guestData, addresses, selectedAddrIdx } = this.state;
+    if (checkoutStep === 1) {
+      if (guestMode) {
+        const errors = [];
+        if (!guestData.name || guestData.name.trim().length < 3) errors.push('Imię i nazwisko');
+        if (!guestData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestData.email)) errors.push('Poprawny e-mail');
+        if (!guestData.street || guestData.street.trim().length < 3) errors.push('Ulica i numer');
+        if (!guestData.postal || !/^\d{2}-\d{3}$/.test(guestData.postal.trim())) errors.push('Kod pocztowy (format: 00-000)');
+        if (!guestData.city || guestData.city.trim().length < 2) errors.push('Miasto');
+        if (!guestData.phone || !/^[\d\s\+\-]{9,}$/.test(guestData.phone.trim())) errors.push('Numer telefonu');
+        if (errors.length) { this.setState({ addrError: 'Uzupełnij poprawnie: ' + errors.join(', ') }); return; }
+        this.setState({ addrError: '' });
+      } else {
+        if (!addresses.length) { this.setState({ addrError: 'Dodaj adres dostawy.' }); return; }
+        const addr = addresses[selectedAddrIdx];
+        if (!addr || !addr.name || !addr.street || !addr.city) { this.setState({ addrError: 'Wybrany adres jest niekompletny.' }); return; }
+        this.setState({ addrError: '' });
+      }
+    }
+    this.setState(s => ({checkoutStep: Math.min(s.checkoutStep+1, 4)}));
+  };
   prevStep = () => this.setState(s => ({checkoutStep: Math.max(s.checkoutStep-1, 1)}));
   goToStep = (n) => this.setState({checkoutStep:n});
 
@@ -1378,6 +1404,7 @@ class Component extends DCLogic {
       backLabel: guestMode ? '← Sklep' : '← Panel',
       confirmBackLabel: guestMode ? 'Wróć do sklepu →' : 'Panel klienta →',
       guestMode,
+      addrError: this.state.addrError || '',
       showSavedAddresses: !guestMode,
       guestEmail: guestData.email,
       guestName: guestData.name,

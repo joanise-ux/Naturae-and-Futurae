@@ -60,6 +60,9 @@
         </span>
         Konto
       </a>
+      <a href="sklep.html#cart" style="display:inline-flex; align-items:center; gap:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:4px; padding:11px 16px;">
+        Koszyk <span style="display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:10px; background:rgba(122,170,114,.15); color:#8aba82; font-size:10.5px; border:1px solid rgba(122,170,114,.4);">{{ cartCount }}</span>
+      </a>
     </div>
   </div>
 
@@ -113,6 +116,21 @@
               {{ watchIcon }} {{ watchLabel }}
             </span>
           </div>
+
+          <sc-if value="{{ inCart }}">
+            <div style="margin-top:14px; padding:14px 18px; background:rgba(122,170,114,.08); border:1px solid rgba(122,170,114,.35); border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="width:7px; height:7px; border-radius:50%; background:#7aaa72; box-shadow:0 0 5px rgba(122,170,114,.7);"></span>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#7aaa72;">W koszyku:</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span onClick="{{ decFromCart }}" style="cursor:pointer; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(90,120,70,.5); border-radius:6px; color:#a9c0a0; font-family:'Space Mono',monospace; font-size:16px; line-height:1;">−</span>
+                <span style="font-family:'Space Mono',monospace; font-size:14px; color:#ddd8c6; min-width:20px; text-align:center; font-weight:700;">{{ cartQty }}</span>
+                <span onClick="{{ incInCart }}" style="cursor:pointer; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(90,120,70,.5); border-radius:6px; color:#a9c0a0; font-family:'Space Mono',monospace; font-size:16px; line-height:1;">+</span>
+              </div>
+              <a href="sklep.html#cart" style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.08em; color:#a9c0a0; border:1px solid rgba(90,120,70,.4); border-radius:5px; padding:7px 12px;">Koszyk →</a>
+            </div>
+          </sc-if>
 
           <sc-if value="{{ cartMsg }}">
             <div style="margin-top:14px; padding:12px 16px; background:rgba(122,170,114,.08); border:1px solid rgba(122,170,114,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#7aaa72;">{{ cartMsg }}</div>
@@ -179,6 +197,7 @@ class Component extends DCLogic {
     isWatched: false,
     cartMsg: '',
     user: null,
+    cart: [],
   };
 
   async componentDidMount() {
@@ -200,9 +219,16 @@ class Component extends DCLogic {
     const user = session?.user || null;
 
     let isWatched = false;
+    let cart = [];
     if (user) {
-      const { data: w } = await sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', productId).maybeSingle();
-      isWatched = !!w;
+      const [watchRes, cartRes] = await Promise.all([
+        sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', productId).maybeSingle(),
+        sb.from('cart_items').select('product_id, qty').eq('user_id', user.id),
+      ]);
+      isWatched = !!watchRes.data;
+      cart = (cartRes.data || []).map(c => ({ id: c.product_id, qty: c.qty }));
+    } else {
+      try { const c = JSON.parse(localStorage.getItem('nf-cart')||'[]'); if(Array.isArray(c)) cart = c; } catch(e){}
     }
 
     this.setState({
@@ -212,19 +238,26 @@ class Component extends DCLogic {
         stock: product.stock, unit: product.unit, desc: product.description,
         category: product.category,
       },
-      loaded: true, notFound: false, isWatched, user,
+      loaded: true, notFound: false, isWatched, user, cart,
     });
 
     sb.auth.onAuthStateChange(async (_event, session) => {
       const user = session?.user || null;
       this.setState({ user });
       if (user && this.state.product) {
-        const { data: w } = await sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', this.state.product.id).maybeSingle();
-        this.setState({ isWatched: !!w });
+        const [watchRes, cartRes] = await Promise.all([
+          sb.from('watched_products').select('id').eq('user_id', user.id).eq('product_id', this.state.product.id).maybeSingle(),
+          sb.from('cart_items').select('product_id, qty').eq('user_id', user.id),
+        ]);
+        this.setState({ isWatched: !!watchRes.data, cart: (cartRes.data||[]).map(c=>({id:c.product_id,qty:c.qty})) });
       } else {
         this.setState({ isWatched: false });
       }
     });
+  }
+
+  getLocalCart() {
+    try { const c = JSON.parse(localStorage.getItem('nf-cart')||'[]'); return Array.isArray(c)?c:[]; } catch(e){ return []; }
   }
 
   addToCart = () => {
@@ -233,21 +266,75 @@ class Component extends DCLogic {
     const sb = window.supabaseClient;
 
     if (user) {
-      sb.from('cart_items').upsert(
-        { user_id: user.id, product_id: product.id, qty: 1 },
-        { onConflict: 'user_id,product_id' }
-      ).then(() => {});
+      this.setState(s => {
+        const existing = s.cart.find(i => i.id === product.id);
+        const newQty = existing ? existing.qty + 1 : 1;
+        const cart = existing ? s.cart.map(i => i.id===product.id?{...i,qty:newQty}:i) : [...s.cart, {id:product.id,qty:1}];
+        sb.from('cart_items').upsert({user_id:user.id, product_id:product.id, qty:newQty},{onConflict:'user_id,product_id'}).then(()=>{});
+        return { cart };
+      });
     } else {
-      try {
-        const cart = JSON.parse(localStorage.getItem('nf-cart') || '[]');
-        const existing = cart.find(i => i.id === product.id);
-        if (existing) { existing.qty += 1; }
-        else { cart.push({ id: product.id, name: product.name, latin: product.latin, price: product.price, image: product.image, qty: 1 }); }
-        localStorage.setItem('nf-cart', JSON.stringify(cart));
-      } catch(e) {}
+      const cart = this.getLocalCart();
+      const existing = cart.find(i => i.id === product.id);
+      if (existing) { existing.qty += 1; }
+      else { cart.push({ id: product.id, name: product.name, latin: product.latin, price: product.price, image: product.image, qty: 1 }); }
+      localStorage.setItem('nf-cart', JSON.stringify(cart));
+      this.setState({ cart: cart.map(i=>({id:i.id,qty:i.qty})) });
     }
     this.setState({ cartMsg: 'Dodano do koszyka!' });
     setTimeout(() => this.setState({ cartMsg: '' }), 2500);
+  };
+
+  incInCart = () => {
+    const { product, user } = this.state;
+    if (!product) return;
+    const sb = window.supabaseClient;
+    if (user) {
+      this.setState(s => {
+        const cart = s.cart.map(i => i.id===product.id?{...i,qty:i.qty+1}:i);
+        const item = cart.find(i=>i.id===product.id);
+        if(item) sb.from('cart_items').upsert({user_id:user.id,product_id:product.id,qty:item.qty},{onConflict:'user_id,product_id'}).then(()=>{});
+        return { cart };
+      });
+    } else {
+      const cart = this.getLocalCart();
+      const item = cart.find(i=>i.id===product.id);
+      if(item) item.qty += 1;
+      localStorage.setItem('nf-cart', JSON.stringify(cart));
+      this.setState({ cart: cart.map(i=>({id:i.id,qty:i.qty})) });
+    }
+  };
+
+  decFromCart = () => {
+    const { product, user } = this.state;
+    if (!product) return;
+    const sb = window.supabaseClient;
+    if (user) {
+      this.setState(s => {
+        const item = s.cart.find(i=>i.id===product.id);
+        if(!item) return {};
+        if(item.qty <= 1) {
+          sb.from('cart_items').delete().eq('user_id',user.id).eq('product_id',product.id).then(()=>{});
+          return { cart: s.cart.filter(i=>i.id!==product.id) };
+        }
+        const cart = s.cart.map(i=>i.id===product.id?{...i,qty:i.qty-1}:i);
+        sb.from('cart_items').upsert({user_id:user.id,product_id:product.id,qty:item.qty-1},{onConflict:'user_id,product_id'}).then(()=>{});
+        return { cart };
+      });
+    } else {
+      const cart = this.getLocalCart();
+      const item = cart.find(i=>i.id===product.id);
+      if(!item) return;
+      if(item.qty <= 1) {
+        const filtered = cart.filter(i=>i.id!==product.id);
+        localStorage.setItem('nf-cart', JSON.stringify(filtered));
+        this.setState({ cart: filtered.map(i=>({id:i.id,qty:i.qty})) });
+      } else {
+        item.qty -= 1;
+        localStorage.setItem('nf-cart', JSON.stringify(cart));
+        this.setState({ cart: cart.map(i=>({id:i.id,qty:i.qty})) });
+      }
+    }
   };
 
   toggleWatch = async () => {
@@ -268,8 +355,11 @@ class Component extends DCLogic {
   };
 
   renderVals() {
-    const { product, loaded, notFound, isWatched, cartMsg } = this.state;
+    const { product, loaded, notFound, isWatched, cartMsg, cart } = this.state;
     const p = product || {};
+    const cartCount = cart.reduce((s,i)=>s+(i.qty||0),0);
+    const cartItem = p.id ? cart.find(i=>i.id===p.id) : null;
+    const cartQty = cartItem ? cartItem.qty : 0;
 
     return {
       loaded,
@@ -297,7 +387,12 @@ class Component extends DCLogic {
       toggleWatch: this.toggleWatch,
 
       addToCart: this.addToCart,
+      incInCart: this.incInCart,
+      decFromCart: this.decFromCart,
       cartMsg: cartMsg || '',
+      cartCount,
+      inCart: cartQty > 0,
+      cartQty,
     };
   }
 }
