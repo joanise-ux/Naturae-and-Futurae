@@ -99,8 +99,8 @@
         </div>
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.18em; color:#5d7a50;">STAN&nbsp;MAGAZYNOWY</div>
-          <div style="font-family:'Cinzel',serif; font-size:26px; font-weight:600; color:#ddd8c6; margin-top:4px;">12 odmian · 1840 szt.</div>
-          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e; margin-top:4px;">aktualizacja: dziś, 06:42</div>
+          <div style="font-family:'Cinzel',serif; font-size:26px; font-weight:600; color:#ddd8c6; margin-top:4px;">{{ stockVarieties }} odmian · {{ stockTotal }} szt.</div>
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e; margin-top:4px;">{{ stockUpdated }}</div>
         </div>
       </div>
     </div>
@@ -529,6 +529,11 @@ class Component extends DCLogic {
     const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
     const cartTotal = cart.reduce((sum, i) => sum + i.qty * i.price, 0);
 
+    const stockVarieties = products.filter(p => p.stock > 0).length;
+    const stockTotal = products.reduce((sum, p) => sum + (p.stock || 0), 0);
+    const now = new Date();
+    const stockUpdated = 'aktualizacja: dziś, ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+
     const akwaActive = category === 'akwariowe';
     const sadActive  = category === 'sadownicze';
 
@@ -537,6 +542,9 @@ class Component extends DCLogic {
       cart: cartWithHandlers,
       cartCount,
       cartTotal,
+      stockVarieties,
+      stockTotal,
+      stockUpdated,
       hasItems: cart.length > 0 && !orderJustPlaced,
       isEmpty: hydrated && cart.length === 0 && !orderJustPlaced,
       orderJustPlaced,
