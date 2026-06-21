@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Admin — Nature &amp; Future</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<link rel="stylesheet" href="assets/mobile.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #060906; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
+  ::view-transition-old(root) { animation-name: nf-vt-out; }
+  ::view-transition-new(root) { animation-name: nf-vt-in; }
+  @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
+  @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(120% 80% at 50% -10%, #0e1810, #060906 60%); color:#b8b0a0;">
+
+  <!-- NAV -->
+  <div style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.2); max-width:1440px; margin:0 auto;">
+    <a href="index.html" style="display:flex; align-items:center; gap:13px;">
+      <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+      <span style="line-height:1.1;"><span style="display:block; font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</span><span style="display:block; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</span></span>
+    </a>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:4px; padding:6px 12px;">ADMIN</span>
+      <sc-if value="{{ isAdmin }}">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">{{ adminName }}</span>
+        <span onClick="{{ logout }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; color:#a9c0a0; border:1px solid rgba(90,120,70,.4); border-radius:4px; padding:9px 13px;">Wyloguj</span>
+      </sc-if>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- LOGIN GATE -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ showLogin }}">
+    <div style="max-width:460px; margin:120px auto; padding:0 40px;">
+      <div style="text-align:center; margin-bottom:36px;">
+        <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#c69a4c; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <span style="width:24px; height:1px; background:#c69a4c; display:inline-block;"></span>
+          panel administratora
+          <span style="width:24px; height:1px; background:#c69a4c; display:inline-block;"></span>
+        </div>
+        <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:36px; color:#ddd8c6; margin:18px 0 0;">Logowanie</h1>
+      </div>
+
+      <div style="padding:30px; background:linear-gradient(180deg,#0e1610,#0a0805); border:1px solid rgba(198,154,76,.25); border-radius:14px;">
+        <sc-if value="{{ authError }}">
+          <div style="margin-bottom:14px; padding:12px 16px; background:rgba(180,60,60,.12); border:1px solid rgba(180,60,60,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#e07070;">{{ authError }}</div>
+        </sc-if>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL</div>
+          <input type="email" value="{{ email }}" onInput="{{ onEmail }}" placeholder="admin@nfplantbiotech.com" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; outline:none;">
+        </div>
+        <div style="margin-bottom:24px;">
+          <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">HASŁO</div>
+          <input type="password" value="{{ password }}" onInput="{{ onPassword }}" onKeyDown="{{ onKeyDown }}" placeholder="••••••••" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; outline:none;">
+        </div>
+        <span onClick="{{ doLogin }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#c69a4c,#9a7530); border:1px solid #c69a4c; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(220,200,140,.45), 0 0 24px rgba(198,154,76,.2);">
+          Zaloguj się →
+        </span>
+
+        <sc-if value="{{ showResetForm }}">
+          <div style="margin-top:18px; padding:18px; background:rgba(20,28,18,.4); border:1px solid rgba(198,154,76,.15); border-radius:8px;">
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">E-MAIL DO RESETU HASŁA</div>
+            <input type="email" value="{{ resetEmail }}" onInput="{{ onResetEmail }}" placeholder="twoj@email.com" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none; margin-bottom:10px;">
+            <span onClick="{{ sendReset }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:6px; padding:12px 18px;">
+              Wyślij link resetujący →
+            </span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ resetSuccess }}">
+          <div style="margin-top:14px; padding:12px 16px; background:rgba(122,170,114,.12); border:1px solid rgba(122,170,114,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#8aba82;">{{ resetSuccess }}</div>
+        </sc-if>
+
+        <div style="text-align:center; margin-top:18px;">
+          <span onClick="{{ toggleResetForm }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; letter-spacing:.04em;">{{ resetToggleLabel }}</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+
+  <!-- ============================================================ -->
+  <!-- ADMIN DASHBOARD -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ isAdmin }}">
+    <div style="max-width:1440px; margin:0 auto; padding:40px;">
+
+      <!-- STATS ROW -->
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:36px;">
+        <div style="padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(198,154,76,.2); border-radius:12px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.16em; color:#c69a4c;">PRODUKTY</div>
+          <div style="font-family:'Cinzel',serif; font-size:32px; font-weight:700; color:#ddd8c6; margin-top:6px;">{{ statProducts }}</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:4px;">w katalogu</div>
+        </div>
+        <div style="padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(198,154,76,.2); border-radius:12px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.16em; color:#c69a4c;">MAGAZYN</div>
+          <div style="font-family:'Cinzel',serif; font-size:32px; font-weight:700; color:#ddd8c6; margin-top:6px;">{{ statStock }}</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:4px;">sztuk łącznie</div>
+        </div>
+        <div style="padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(198,154,76,.2); border-radius:12px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.16em; color:#c69a4c;">ZAMÓWIENIA</div>
+          <div style="font-family:'Cinzel',serif; font-size:32px; font-weight:700; color:#ddd8c6; margin-top:6px;">{{ statOrders }}</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:4px;">złożone</div>
+        </div>
+        <div style="padding:22px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(198,154,76,.2); border-radius:12px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.16em; color:#c69a4c;">PRZYCHÓD</div>
+          <div style="font-family:'Cinzel',serif; font-size:32px; font-weight:700; color:#8aba82; margin-top:6px;">{{ statRevenue }}</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:4px;">PLN łącznie</div>
+        </div>
+      </div>
+
+      <!-- TAB NAVIGATION -->
+      <div style="display:flex; gap:0; align-items:stretch; background:rgba(8,12,8,.5); border:1px solid rgba(198,154,76,.2); border-radius:8px; padding:5px; margin-bottom:28px;">
+        <span onClick="{{ tabProducts }}" style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:14px 22px; border-radius:6px; background:{{ tabProductsBg }}; transition:background .25s;">
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:{{ tabProductsColor }}; letter-spacing:.04em;">Produkty</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ statProducts }}</span>
+        </span>
+        <span onClick="{{ tabOrders }}" style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:14px 22px; border-radius:6px; background:{{ tabOrdersBg }}; transition:background .25s;">
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:{{ tabOrdersColor }}; letter-spacing:.04em;">Zamówienia</span>
+          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ statOrders }}</span>
+        </span>
+        <span onClick="{{ tabUsers }}" style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:14px 22px; border-radius:6px; background:{{ tabUsersBg }}; transition:background .25s;">
+          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:15px; color:{{ tabUsersColor }}; letter-spacing:.04em;">Klienci</span>
+        </span>
+      </div>
+
+
+      <!-- ============================================================ -->
+      <!-- TAB: PRODUCTS -->
+      <!-- ============================================================ -->
+      <sc-if value="{{ showProducts }}">
+        <!-- Success message -->
+        <sc-if value="{{ successMsg }}">
+          <div style="margin-bottom:16px; padding:12px 16px; background:rgba(122,170,114,.12); border:1px solid rgba(122,170,114,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#8aba82;">{{ successMsg }}</div>
+        </sc-if>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ productRows }}" as="p">
+            <div style="display:grid; grid-template-columns:60px 1.2fr .7fr .5fr .5fr auto; gap:16px; align-items:center; padding:16px 20px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px;">
+              <!-- image -->
+              <div style="width:60px; height:60px; border-radius:8px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+                <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:cover;">
+              </div>
+              <!-- name -->
+              <div>
+                <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6;">{{ p.name }}</div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; font-style:italic;">{{ p.latin }}</div>
+                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#8c7d5e; margin-top:2px;">{{ p.category }}</div>
+              </div>
+              <!-- price -->
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; letter-spacing:.1em;">CENA</div>
+                <div style="font-family:'Cinzel',serif; font-size:20px; font-weight:600; color:#8aba82;">{{ p.price }} PLN</div>
+              </div>
+              <!-- stock -->
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; letter-spacing:.1em;">STAN</div>
+                <div style="font-family:'Cinzel',serif; font-size:20px; font-weight:600; color:{{ p.stockColor }};">{{ p.stock }}</div>
+              </div>
+              <!-- tag -->
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; letter-spacing:.1em;">TAG</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11px; color:#c69a4c;">{{ p.tag }}</div>
+              </div>
+              <!-- actions -->
+              <div style="display:flex; gap:8px;">
+                <span onClick="{{ p.onEdit }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.08em; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:5px; padding:8px 14px;">Edytuj</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+
+      <!-- ============================================================ -->
+      <!-- TAB: ORDERS -->
+      <!-- ============================================================ -->
+      <sc-if value="{{ showOrders }}">
+        <sc-if value="{{ noOrders }}">
+          <div style="text-align:center; padding:60px 20px;">
+            <div style="font-family:'Cinzel',serif; font-size:22px; color:#ddd8c6;">Brak zamówień</div>
+            <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#8c7d5e; margin-top:8px;">Jeszcze nikt nie złożył zamówienia.</div>
+          </div>
+        </sc-if>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <sc-for list="{{ orderRows }}" as="o">
+            <div style="padding:20px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:14px;">
+                  <span style="font-family:'Space Mono',monospace; font-size:12px; color:#c69a4c; letter-spacing:.06em;">{{ o.id }}</span>
+                  <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">{{ o.date }}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-family:'Cinzel',serif; font-size:18px; font-weight:600; color:#8aba82;">{{ o.total }} PLN</span>
+                  <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ o.statusColor }}; border:1px solid {{ o.statusBorder }}; border-radius:999px; padding:4px 12px;">{{ o.status }}</span>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#9a9480;">
+                <span>{{ o.customer }}</span>
+                <span style="color:#8c7d5e;">{{ o.delivery }}</span>
+                <span style="color:#8c7d5e;">{{ o.payment }}</span>
+              </div>
+              <sc-if value="{{ o.showItems }}">
+                <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(90,120,70,.15);">
+                  <sc-for list="{{ o.items }}" as="item">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; font-size:14px;">
+                      <span style="color:#b8b0a0;">{{ item.name }} <span style="color:#8c7d5e;">×{{ item.qty }}</span></span>
+                      <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8aba82;">{{ item.lineTotal }} PLN</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex; gap:8px; margin-top:12px;">
+                <span onClick="{{ o.onToggleItems }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; border:1px solid rgba(90,120,70,.3); border-radius:4px; padding:6px 12px;">{{ o.toggleLabel }}</span>
+                <span onClick="{{ o.onSetPakowanie }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#c69a4c; border:1px solid rgba(198,154,76,.3); border-radius:4px; padding:6px 12px;">Pakowanie</span>
+                <span onClick="{{ o.onSetWyslano }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; border:1px solid rgba(122,170,114,.3); border-radius:4px; padding:6px 12px;">Wysłano</span>
+                <span onClick="{{ o.onSetDostarczone }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#8aba82; border:1px solid rgba(122,170,114,.4); border-radius:4px; padding:6px 12px;">Dostarczone</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+
+      <!-- ============================================================ -->
+      <!-- TAB: USERS -->
+      <!-- ============================================================ -->
+      <sc-if value="{{ showUsers }}">
+        <sc-if value="{{ noUsers }}">
+          <div style="text-align:center; padding:60px 20px;">
+            <div style="font-family:'Cinzel',serif; font-size:22px; color:#ddd8c6;">Brak klientów</div>
+            <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#8c7d5e; margin-top:8px;">Jeszcze nikt się nie zarejestrował.</div>
+          </div>
+        </sc-if>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <sc-for list="{{ userRows }}" as="u">
+            <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:16px; align-items:center; padding:16px 20px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px;">
+              <div>
+                <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6;">{{ u.name }}</div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:2px;">{{ u.phone }}</div>
+              </div>
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.1em;">ZAREJESTROWANO</div>
+                <div style="font-family:'EB Garamond',serif; font-size:15px; color:#9a9480;">{{ u.created }}</div>
+              </div>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ u.roleColor }}; border:1px solid {{ u.roleBorder }}; border-radius:999px; padding:4px 12px;">{{ u.role }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </div>
+  </sc-if>
+
+
+  <!-- ============================================================ -->
+  <!-- EDIT PRODUCT MODAL -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ showEditModal }}">
+    <div onClick="{{ closeEditModal }}" style="position:fixed; inset:0; background:rgba(4,6,4,.85); backdrop-filter:blur(4px); z-index:200;"></div>
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:201; width:min(600px,90vw); max-height:85vh; overflow-y:auto; background:linear-gradient(180deg,#0e1610,#080c08); border:1px solid rgba(198,154,76,.35); border-radius:16px; padding:32px; box-shadow:0 30px 80px -20px rgba(0,0,0,.9);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6;">Edytuj produkt</div>
+        <span onClick="{{ closeEditModal }}" style="cursor:pointer; width:34px; height:34px; border-radius:50%; border:1px solid rgba(198,154,76,.4); display:inline-flex; align-items:center; justify-content:center; color:#c69a4c; font-family:'Space Mono',monospace; font-size:18px; line-height:1;">×</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">NAZWA</div>
+          <input type="text" value="{{ editName }}" onInput="{{ onEditName }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">ŁACIŃSKA</div>
+          <input type="text" value="{{ editLatin }}" onInput="{{ onEditLatin }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">CENA (PLN)</div>
+          <input type="number" value="{{ editPrice }}" onInput="{{ onEditPrice }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'Space Mono',monospace; font-size:16px; color:#8aba82; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">STAN MAGAZYNOWY</div>
+          <input type="number" value="{{ editStock }}" onInput="{{ onEditStock }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'Space Mono',monospace; font-size:16px; color:#ddd8c6; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">TAG</div>
+          <input type="text" value="{{ editTag }}" onInput="{{ onEditTag }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">JEDNOSTKA</div>
+          <input type="text" value="{{ editUnit }}" onInput="{{ onEditUnit }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none;">
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">OPIS</div>
+        <input type="text" value="{{ editDesc }}" onInput="{{ onEditDesc }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'EB Garamond',serif; font-size:16px; color:#ddd8c6; outline:none;">
+      </div>
+      <div style="margin-top:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">URL OBRAZKA</div>
+        <input type="text" value="{{ editImage }}" onInput="{{ onEditImage }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'Space Mono',monospace; font-size:13px; color:#ddd8c6; outline:none;">
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:24px;">
+        <span onClick="{{ saveProduct }}" style="cursor:pointer; flex:1; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#c69a4c,#9a7530); border:1px solid #c69a4c; border-radius:6px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(220,200,140,.45);">
+          Zapisz zmiany
+        </span>
+        <span onClick="{{ closeEditModal }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#8c7d5e; border:1px solid rgba(90,120,70,.3); border-radius:6px; padding:14px 24px;">
+          Anuluj
+        </span>
+      </div>
+    </div>
+  </sc-if>
+
+
+  <!-- FOOTER -->
+  <div style="border-top:1px solid rgba(90,120,70,.12); margin-top:60px;">
+    <div style="max-width:1440px; margin:0 auto; padding:30px 40px;">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">© 2026 Nature &amp; Future — Panel administratora</span>
+        <a href="index.html" style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:#5a5a4e;">← Wróć do strony</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    user: null,
+    isAdmin: false,
+    adminName: '',
+    email: '',
+    password: '',
+    authError: '',
+    successMsg: '',
+    showResetForm: false,
+    resetEmail: '',
+    resetSuccess: '',
+    tab: 'products',
+    products: [],
+    orders: [],
+    users: [],
+    expandedOrders: {},
+    // edit modal
+    editId: null,
+    editName: '',
+    editLatin: '',
+    editPrice: '',
+    editStock: '',
+    editTag: '',
+    editUnit: '',
+    editDesc: '',
+    editImage: '',
+  };
+
+  async componentDidMount() {
+    const sb = window.supabaseClient;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      await this.checkAdmin(session.user);
+    }
+    sb.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        await this.checkAdmin(session.user);
+      } else {
+        this.setState({ user: null, isAdmin: false });
+      }
+    });
+  }
+
+  async checkAdmin(user) {
+    const sb = window.supabaseClient;
+    const { data: profile } = await sb.from('profiles').select('full_name, role').eq('id', user.id).single();
+    if (profile && profile.role === 'admin') {
+      this.setState({ user, isAdmin: true, adminName: profile.full_name || user.email });
+      await this.loadData();
+    } else {
+      this.setState({ user, isAdmin: false, authError: 'To konto nie ma uprawnień administratora.' });
+      await sb.auth.signOut();
+    }
+  }
+
+  async loadData() {
+    const sb = window.supabaseClient;
+    const [productsRes, ordersRes, usersRes] = await Promise.all([
+      sb.from('products').select('*').order('category').order('name'),
+      sb.from('orders').select('*, order_items(*)').order('created_at', { ascending: false }),
+      sb.from('profiles').select('*').order('created_at', { ascending: false }),
+    ]);
+    this.setState({
+      products: productsRes.data || [],
+      orders: ordersRes.data || [],
+      users: usersRes.data || [],
+    });
+  }
+
+  doLogin = async () => {
+    const { email, password } = this.state;
+    if (!email || !password) { this.setState({ authError: 'Podaj e-mail i hasło.' }); return; }
+    this.setState({ authError: '' });
+    const sb = window.supabaseClient;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      this.setState({ authError: 'Nieprawidłowy e-mail lub hasło.' });
+    }
+  };
+
+  logout = async () => {
+    await window.supabaseClient.auth.signOut();
+    this.setState({ user: null, isAdmin: false, email: '', password: '' });
+  };
+
+  onEmail = (e) => this.setState({ email: e.target.value });
+  onPassword = (e) => this.setState({ password: e.target.value });
+  onKeyDown = (e) => { if (e.key === 'Enter') this.doLogin(); };
+
+  toggleResetForm = () => this.setState(s => ({ showResetForm: !s.showResetForm, resetSuccess: '' }));
+  onResetEmail = (e) => this.setState({ resetEmail: e.target.value });
+
+  sendReset = async () => {
+    const { resetEmail } = this.state;
+    if (!resetEmail) { this.setState({ authError: 'Podaj e-mail.' }); return; }
+    this.setState({ authError: '' });
+    const sb = window.supabaseClient;
+    const { error } = await sb.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin + '/admin.html',
+    });
+    if (error) {
+      this.setState({ authError: 'Błąd: ' + error.message });
+    } else {
+      this.setState({ resetSuccess: 'Link do resetu hasła został wysłany na ' + resetEmail + '. Sprawdź skrzynkę.', showResetForm: false });
+    }
+  };
+
+  setTab = (t) => this.setState({ tab: t, successMsg: '' });
+
+  // ---- PRODUCT EDITING ----
+  openEdit = (p) => {
+    this.setState({
+      editId: p.id, editName: p.name, editLatin: p.latin || '',
+      editPrice: String(p.price), editStock: String(p.stock),
+      editTag: p.tag || '', editUnit: p.unit || '',
+      editDesc: p.description || '', editImage: p.image || '',
+    });
+  };
+
+  closeEditModal = () => this.setState({ editId: null });
+
+  onEditName = (e) => this.setState({ editName: e.target.value });
+  onEditLatin = (e) => this.setState({ editLatin: e.target.value });
+  onEditPrice = (e) => this.setState({ editPrice: e.target.value });
+  onEditStock = (e) => this.setState({ editStock: e.target.value });
+  onEditTag = (e) => this.setState({ editTag: e.target.value });
+  onEditUnit = (e) => this.setState({ editUnit: e.target.value });
+  onEditDesc = (e) => this.setState({ editDesc: e.target.value });
+  onEditImage = (e) => this.setState({ editImage: e.target.value });
+
+  saveProduct = async () => {
+    const { editId, editName, editLatin, editPrice, editStock, editTag, editUnit, editDesc, editImage } = this.state;
+    const sb = window.supabaseClient;
+    const { error } = await sb.from('products').update({
+      name: editName, latin: editLatin, price: Number(editPrice),
+      stock: parseInt(editStock, 10), tag: editTag, unit: editUnit,
+      description: editDesc, image: editImage,
+    }).eq('id', editId);
+    if (error) {
+      this.setState({ authError: 'Błąd zapisu: ' + error.message });
+    } else {
+      this.setState({ editId: null, successMsg: 'Produkt "' + editName + '" zapisany.' });
+      await this.loadData();
+    }
+  };
+
+  // ---- ORDER STATUS ----
+  setOrderStatus = async (orderId, status) => {
+    const sb = window.supabaseClient;
+    await sb.from('orders').update({ status }).eq('id', orderId);
+    await this.loadData();
+  };
+
+  toggleOrderItems = (orderId) => {
+    this.setState(s => {
+      const expanded = { ...s.expandedOrders };
+      expanded[orderId] = !expanded[orderId];
+      return { expandedOrders: expanded };
+    });
+  };
+
+  renderVals() {
+    const { user, isAdmin, adminName, email, password, authError, successMsg, tab, products, orders, users, editId, expandedOrders } = this.state;
+
+    const showLogin = !isAdmin;
+    const showProducts = isAdmin && tab === 'products';
+    const showOrders = isAdmin && tab === 'orders';
+    const showUsers = isAdmin && tab === 'users';
+
+    const statProducts = products.length;
+    const statStock = products.reduce((s, p) => s + (p.stock || 0), 0);
+    const statOrders = orders.length;
+    const statRevenue = orders.reduce((s, o) => s + Number(o.total || 0), 0);
+
+    const tabActive = (t) => tab === t;
+
+    const productRows = products.map(p => ({
+      ...p,
+      price: Number(p.price),
+      stockColor: p.stock > 0 ? '#ddd8c6' : '#e07070',
+      onEdit: () => this.openEdit(p),
+    }));
+
+    const fmtDate = (d) => {
+      if (!d) return '—';
+      const dt = new Date(d);
+      return dt.toLocaleDateString('pl-PL') + ' ' + dt.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const statusColors = {
+      'Pakowanie': { color: '#c69a4c', border: 'rgba(198,154,76,.4)' },
+      'Wysłano': { color: '#7aaa72', border: 'rgba(122,170,114,.3)' },
+      'Dostarczone': { color: '#8aba82', border: 'rgba(122,170,114,.5)' },
+    };
+
+    const orderRows = orders.map(o => {
+      const sc = statusColors[o.status] || { color: '#8c7d5e', border: 'rgba(140,125,94,.3)' };
+      const items = (o.order_items || []).map(i => ({
+        ...i,
+        lineTotal: Number(i.price) * i.qty,
+      }));
+      const isExpanded = !!expandedOrders[o.id];
+      return {
+        ...o,
+        total: Number(o.total),
+        date: fmtDate(o.created_at),
+        customer: o.guest_name || o.guest_email || 'Zarejestrowany klient',
+        delivery: o.delivery_method || '—',
+        payment: o.payment_method || '—',
+        statusColor: sc.color,
+        statusBorder: sc.border,
+        items,
+        showItems: isExpanded,
+        toggleLabel: isExpanded ? 'Zwiń pozycje ▲' : 'Pozycje ▼',
+        onToggleItems: () => this.toggleOrderItems(o.id),
+        onSetPakowanie: () => this.setOrderStatus(o.id, 'Pakowanie'),
+        onSetWyslano: () => this.setOrderStatus(o.id, 'Wysłano'),
+        onSetDostarczone: () => this.setOrderStatus(o.id, 'Dostarczone'),
+      };
+    });
+
+    const userRows = users.map(u => ({
+      name: u.full_name || '(brak imienia)',
+      phone: u.phone || '—',
+      role: u.role || 'customer',
+      roleColor: u.role === 'admin' ? '#c69a4c' : '#8c7d5e',
+      roleBorder: u.role === 'admin' ? 'rgba(198,154,76,.4)' : 'rgba(140,125,94,.3)',
+      created: fmtDate(u.created_at),
+    }));
+
+    return {
+      showLogin,
+      isAdmin,
+      adminName,
+      email, password, authError, successMsg,
+      statProducts, statStock, statOrders,
+      statRevenue: statRevenue.toFixed(0),
+      showProducts, showOrders, showUsers,
+      noOrders: orders.length === 0,
+      noUsers: users.length === 0,
+      tabProducts: () => this.setTab('products'),
+      tabOrders: () => this.setTab('orders'),
+      tabUsers: () => this.setTab('users'),
+      tabProductsBg: tabActive('products') ? 'linear-gradient(180deg,#1a1610,#15110a)' : 'transparent',
+      tabProductsColor: tabActive('products') ? '#c69a4c' : '#8c7d5e',
+      tabOrdersBg: tabActive('orders') ? 'linear-gradient(180deg,#1a1610,#15110a)' : 'transparent',
+      tabOrdersColor: tabActive('orders') ? '#c69a4c' : '#8c7d5e',
+      tabUsersBg: tabActive('users') ? 'linear-gradient(180deg,#1a1610,#15110a)' : 'transparent',
+      tabUsersColor: tabActive('users') ? '#c69a4c' : '#8c7d5e',
+      productRows,
+      orderRows,
+      userRows,
+      showEditModal: editId !== null,
+      editName: this.state.editName,
+      editLatin: this.state.editLatin,
+      editPrice: this.state.editPrice,
+      editStock: this.state.editStock,
+      editTag: this.state.editTag,
+      editUnit: this.state.editUnit,
+      editDesc: this.state.editDesc,
+      editImage: this.state.editImage,
+      onEditName: this.onEditName,
+      onEditLatin: this.onEditLatin,
+      onEditPrice: this.onEditPrice,
+      onEditStock: this.onEditStock,
+      onEditTag: this.onEditTag,
+      onEditUnit: this.onEditUnit,
+      onEditDesc: this.onEditDesc,
+      onEditImage: this.onEditImage,
+      saveProduct: this.saveProduct,
+      closeEditModal: this.closeEditModal,
+      doLogin: this.doLogin,
+      logout: this.logout,
+      onEmail: this.onEmail,
+      onPassword: this.onPassword,
+      onKeyDown: this.onKeyDown,
+      showResetForm: this.state.showResetForm,
+      resetEmail: this.state.resetEmail,
+      resetSuccess: this.state.resetSuccess,
+      onResetEmail: this.onResetEmail,
+      sendReset: this.sendReset,
+      toggleResetForm: this.toggleResetForm,
+      resetToggleLabel: this.state.showResetForm ? 'Wróć do logowania' : 'Nie pamiętam hasła',
+    };
+  }
+}
+</script>
+</body>
+</html>

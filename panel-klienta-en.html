@@ -332,21 +332,54 @@
                 <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 03</span>
                 <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Shipping addresses</h3>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">+ add</span>
+              <span onClick="{{ toggleAddressForm }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">+ add</span>
             </div>
-            <div style="display:flex; flex-direction:column; gap:12px;">
-              <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(122,170,114,.4); border-radius:8px; position:relative;">
-                <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DEFAULT</span>
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">HOME</div>
-                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">14/3 Sienkiewicza St.<br>58-300 Wałbrzych</div>
+
+            <sc-if value="{{ showAddressForm }}">
+              <div style="padding:16px; background:rgba(14,22,14,.55); border:1px solid rgba(122,170,114,.4); border-radius:8px; margin-bottom:14px;">
+                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#7aaa72; letter-spacing:.06em; margin-bottom:12px;">{{ addressFormTitle }}</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <input type="text" placeholder="Label (e.g. HOME)" value="{{ addrForm.label }}" onInput="{{ onAddrLabel }}" style="width:100%; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'Space Mono',monospace; font-size:11px; outline:none;">
+                  <input type="text" placeholder="Full name" value="{{ addrForm.full_name }}" onInput="{{ onAddrName }}" style="width:100%; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:15px; outline:none;">
+                  <input type="text" placeholder="Street and number" value="{{ addrForm.street }}" onInput="{{ onAddrStreet }}" style="width:100%; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:15px; outline:none;">
+                  <div style="display:flex; gap:10px;">
+                    <input type="text" placeholder="Postal code" value="{{ addrForm.postal }}" onInput="{{ onAddrPostal }}" style="flex:1; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:15px; outline:none;">
+                    <input type="text" placeholder="City" value="{{ addrForm.city }}" onInput="{{ onAddrCity }}" style="flex:2; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:15px; outline:none;">
+                  </div>
+                  <input type="text" placeholder="Phone (optional)" value="{{ addrForm.phone }}" onInput="{{ onAddrPhone }}" style="width:100%; padding:10px 12px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:15px; outline:none;">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:14px;">
+                  <span onClick="{{ saveAddress }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:10px 16px;">Save</span>
+                  <span onClick="{{ toggleAddressForm }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:10px 16px;">Cancel</span>
+                </div>
               </div>
-              <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.18); border-radius:8px;">
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">ORCHARD · WALIM</div>
-                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska — orchard</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">7 Boczna St.<br>58-320 Walim</div>
+            </sc-if>
+
+            <sc-if value="{{ hasAddresses }}">
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <sc-for list="{{ addresses }}" as="addr">
+                  <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid {{ addr.borderColor }}; border-radius:8px; position:relative;">
+                    <sc-if value="{{ addr.is_default }}">
+                      <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DEFAULT</span>
+                    </sc-if>
+                    <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">{{ addr.label }}</div>
+                    <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">{{ addr.full_name }}</div>
+                    <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">{{ addr.streetLine }}</div>
+                    <div style="display:flex; gap:12px; margin-top:10px;">
+                      <span onClick="{{ addr.onEdit }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:9px; color:#a9c0a0;">edit</span>
+                      <span onClick="{{ addr.onDelete }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e;">delete</span>
+                      <sc-if value="{{ !addr.is_default }}">
+                        <span onClick="{{ addr.onSetDefault }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:9px; color:#7aaa72;">set default</span>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
               </div>
-            </div>
+            </sc-if>
+
+            <sc-if value="{{ noAddresses }}">
+              <div style="text-align:center; padding:20px; font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e;">No saved addresses. Click "+ add" to add your first.</div>
+            </sc-if>
           </div>
 
           <!-- Newsletter -->
@@ -374,29 +407,65 @@
           <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 05</span>
           <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:22px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Account details</h3>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px;">
-          <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Full name</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">Anna Kowalska</div>
+
+        <sc-if value="{{ !editingProfile }}">
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:24px;">
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Full name</div>
+              <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ profileFullName }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">E-mail</div>
+              <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ userEmail }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Phone</div>
+              <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ profilePhone }}</div>
+            </div>
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Member since</div>
+              <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">{{ accountSince }}</div>
+            </div>
           </div>
-          <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">E-mail</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">anna.kowalska@gmail.com</div>
+          <div style="display:flex; gap:10px; margin-top:22px;">
+            <span onClick="{{ startEditProfile }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Edit details</span>
+            <span onClick="{{ startChangePassword }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Change password</span>
           </div>
-          <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Phone</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">+48 612 884 027</div>
+        </sc-if>
+
+        <sc-if value="{{ editingProfile }}">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e; margin-bottom:8px;">Full name</div>
+              <input type="text" value="{{ editForm.full_name }}" onInput="{{ onEditName }}" style="width:100%; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:16px; outline:none;">
+            </div>
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e; margin-bottom:8px;">Phone</div>
+              <input type="text" value="{{ editForm.phone }}" onInput="{{ onEditPhone }}" placeholder="+48 000 000 000" style="width:100%; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'EB Garamond',serif; font-size:16px; outline:none;">
+            </div>
           </div>
-          <div>
-            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8c7d5e;">Member since</div>
-            <div style="font-family:'EB Garamond',serif; font-size:17px; color:#ddd8c6; margin-top:6px;">March 2025</div>
+          <sc-if value="{{ profileSaveError }}">
+            <div style="margin-top:12px; padding:10px 14px; background:rgba(180,60,60,.12); border:1px solid rgba(180,60,60,.35); border-radius:6px; font-family:'Space Mono',monospace; font-size:11px; color:#e07070;">{{ profileSaveError }}</div>
+          </sc-if>
+          <div style="display:flex; gap:10px; margin-top:18px;">
+            <span onClick="{{ saveProfile }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:11px 18px;">Save</span>
+            <span onClick="{{ cancelEditProfile }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Cancel</span>
           </div>
-        </div>
-        <div style="display:flex; gap:10px; margin-top:22px;">
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Edit details</span>
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Change password</span>
-          <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#5a5a4e; border:1px solid rgba(140,125,94,.3); border-radius:5px; padding:11px 18px;">Delete account</span>
-        </div>
+        </sc-if>
+
+        <sc-if value="{{ changingPassword }}">
+          <div style="margin-top:20px; padding:20px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.25); border-radius:8px;">
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#7aaa72; margin-bottom:12px;">CHANGE PASSWORD</div>
+            <input type="password" placeholder="New password (min. 6 characters)" value="{{ newPassword }}" onInput="{{ onNewPassword }}" style="width:100%; max-width:360px; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:5px; color:#ddd8c6; font-family:'Space Mono',monospace; font-size:14px; letter-spacing:.1em; outline:none;">
+            <sc-if value="{{ passwordMsg }}">
+              <div style="margin-top:10px; font-family:'Space Mono',monospace; font-size:11px; color:{{ passwordMsgColor }};">{{ passwordMsg }}</div>
+            </sc-if>
+            <div style="display:flex; gap:10px; margin-top:14px;">
+              <span onClick="{{ savePassword }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:11px 18px;">Change password</span>
+              <span onClick="{{ cancelChangePassword }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:11px 18px;">Cancel</span>
+            </div>
+          </div>
+        </sc-if>
       </div>
 
     </div>
@@ -440,6 +509,7 @@ class Component extends DCLogic {
     user: null,
     profile: null,
     orders: [],
+    addresses: [],
     cartCount: 0,
     hydrated: false,
     authError: '',
@@ -448,6 +518,16 @@ class Component extends DCLogic {
     registerName: '',
     isRegisterMode: false,
     authLoading: false,
+    showAddressForm: false,
+    editingAddrId: null,
+    addrForm: { label:'', full_name:'', street:'', postal:'', city:'', phone:'' },
+    editingProfile: false,
+    editForm: { full_name:'', phone:'' },
+    profileSaveError: '',
+    changingPassword: false,
+    newPassword: '',
+    passwordMsg: '',
+    passwordMsgColor: '#7aaa72',
   };
 
   async componentDidMount() {
@@ -468,18 +548,19 @@ class Component extends DCLogic {
       if (user && !this.state.user) {
         await this.loadUserData(user);
       } else if (!user) {
-        this.setState({ user: null, profile: null, orders: [], cartCount: 0 });
+        this.setState({ user: null, profile: null, orders: [], addresses: [], cartCount: 0 });
       }
     });
   }
 
   async loadUserData(user) {
     const sb = window.supabaseClient;
-    const [profileRes, ordersRes, itemsRes, cartRes] = await Promise.all([
+    const [profileRes, ordersRes, itemsRes, cartRes, addrRes] = await Promise.all([
       sb.from('profiles').select('*').eq('id', user.id).single(),
       sb.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
       sb.from('order_items').select('*, orders!inner(user_id)').eq('orders.user_id', user.id),
       sb.from('cart_items').select('qty').eq('user_id', user.id),
+      sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false }),
     ]);
 
     const profile = profileRes.data || {};
@@ -491,7 +572,8 @@ class Component extends DCLogic {
     });
 
     const cartCount = (cartRes.data || []).reduce((s,i) => s + (i.qty||0), 0);
-    this.setState({ user, profile, orders, cartCount, hydrated: true });
+    const addresses = addrRes.data || [];
+    this.setState({ user, profile, orders, addresses, cartCount, hydrated: true });
   }
 
   onLoginEmail = (e) => this.setState({ loginEmail: e.target.value, authError: '' });
@@ -508,17 +590,25 @@ class Component extends DCLogic {
     this.setState({ authLoading: true, authError: '' });
     const sb = window.supabaseClient;
 
-    if (isRegisterMode) {
-      const { error } = await sb.auth.signUp({
-        email: loginEmail, password: loginPassword,
-        options: { data: { full_name: registerName } }
-      });
-      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
-    } else {
-      const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+    try {
+      if (isRegisterMode) {
+        const { data, error } = await sb.auth.signUp({
+          email: loginEmail, password: loginPassword,
+          options: { data: { full_name: registerName } }
+        });
+        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+        if (data?.user?.identities?.length === 0) {
+          this.setState({ authError: 'An account with this email already exists.', authLoading: false });
+          return;
+        }
+      } else {
+        const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+      }
+      this.setState({ authLoading: false });
+    } catch (err) {
+      this.setState({ authError: 'Connection error. Please try again.', authLoading: false });
     }
-    this.setState({ authLoading: false });
   };
 
   loginWithGoogle = async () => {
@@ -531,7 +621,106 @@ class Component extends DCLogic {
 
   logout = async () => {
     await window.supabaseClient.auth.signOut();
-    this.setState({ user: null, profile: null, orders: [], cartCount: 0 });
+    this.setState({ user: null, profile: null, orders: [], addresses: [], cartCount: 0 });
+  };
+
+  // --- Address management ---
+  toggleAddressForm = () => {
+    this.setState(s => ({
+      showAddressForm: !s.showAddressForm,
+      editingAddrId: null,
+      addrForm: { label:'', full_name: s.profile?.full_name || '', street:'', postal:'', city:'', phone: s.profile?.phone || '' },
+    }));
+  };
+
+  onAddrLabel = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, label: e.target.value } }));
+  onAddrName = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, full_name: e.target.value } }));
+  onAddrStreet = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, street: e.target.value } }));
+  onAddrPostal = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, postal: e.target.value } }));
+  onAddrCity = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, city: e.target.value } }));
+  onAddrPhone = (e) => this.setState(s => ({ addrForm: { ...s.addrForm, phone: e.target.value } }));
+
+  saveAddress = async () => {
+    const { addrForm, editingAddrId, user, addresses } = this.state;
+    if (!addrForm.full_name || !addrForm.street || !addrForm.city) return;
+    const sb = window.supabaseClient;
+    const payload = {
+      user_id: user.id,
+      label: addrForm.label || 'NEW',
+      full_name: addrForm.full_name,
+      street: addrForm.street,
+      postal: addrForm.postal,
+      city: addrForm.city,
+      phone: addrForm.phone,
+      is_default: addresses.length === 0,
+    };
+
+    if (editingAddrId) {
+      await sb.from('addresses').update(payload).eq('id', editingAddrId);
+    } else {
+      await sb.from('addresses').insert(payload);
+    }
+
+    const { data } = await sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false });
+    this.setState({ addresses: data || [], showAddressForm: false, editingAddrId: null, addrForm: { label:'', full_name:'', street:'', postal:'', city:'', phone:'' } });
+  };
+
+  editAddress = (addr) => {
+    this.setState({
+      showAddressForm: true,
+      editingAddrId: addr.id,
+      addrForm: { label: addr.label, full_name: addr.full_name, street: addr.street, postal: addr.postal || '', city: addr.city, phone: addr.phone || '' },
+    });
+  };
+
+  deleteAddress = async (addrId) => {
+    const sb = window.supabaseClient;
+    const { user } = this.state;
+    await sb.from('addresses').delete().eq('id', addrId);
+    const { data } = await sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false });
+    this.setState({ addresses: data || [] });
+  };
+
+  setDefaultAddress = async (addrId) => {
+    const sb = window.supabaseClient;
+    const { user } = this.state;
+    await sb.from('addresses').update({ is_default: false }).eq('user_id', user.id);
+    await sb.from('addresses').update({ is_default: true }).eq('id', addrId);
+    const { data } = await sb.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false });
+    this.setState({ addresses: data || [] });
+  };
+
+  // --- Profile editing ---
+  startEditProfile = () => {
+    const { profile } = this.state;
+    this.setState({ editingProfile: true, profileSaveError: '', editForm: { full_name: profile?.full_name || '', phone: profile?.phone || '' } });
+  };
+  cancelEditProfile = () => this.setState({ editingProfile: false, profileSaveError: '' });
+  onEditName = (e) => this.setState(s => ({ editForm: { ...s.editForm, full_name: e.target.value } }));
+  onEditPhone = (e) => this.setState(s => ({ editForm: { ...s.editForm, phone: e.target.value } }));
+
+  saveProfile = async () => {
+    const { editForm, user } = this.state;
+    if (!editForm.full_name) { this.setState({ profileSaveError: 'Please enter your name.' }); return; }
+    const sb = window.supabaseClient;
+    const { error } = await sb.from('profiles').update({ full_name: editForm.full_name, phone: editForm.phone }).eq('id', user.id);
+    if (error) { this.setState({ profileSaveError: error.message }); return; }
+    this.setState(s => ({ profile: { ...s.profile, full_name: editForm.full_name, phone: editForm.phone }, editingProfile: false, profileSaveError: '' }));
+  };
+
+  // --- Password ---
+  startChangePassword = () => this.setState({ changingPassword: true, newPassword: '', passwordMsg: '' });
+  cancelChangePassword = () => this.setState({ changingPassword: false, newPassword: '', passwordMsg: '' });
+  onNewPassword = (e) => this.setState({ newPassword: e.target.value });
+
+  savePassword = async () => {
+    const { newPassword } = this.state;
+    if (!newPassword || newPassword.length < 6) { this.setState({ passwordMsg: 'Password must be at least 6 characters.', passwordMsgColor: '#e07070' }); return; }
+    const sb = window.supabaseClient;
+    const { error } = await sb.auth.updateUser({ password: newPassword });
+    if (error) { this.setState({ passwordMsg: error.message, passwordMsgColor: '#e07070' }); return; }
+    this.setState({ passwordMsg: 'Password changed successfully!', passwordMsgColor: '#7aaa72', newPassword: '' });
+    setTimeout(() => this.setState({ changingPassword: false, passwordMsg: '' }), 2000);
   };
 
   fmtDate(iso) {
@@ -539,6 +728,13 @@ class Component extends DCLogic {
     const d = new Date(iso);
     if (isNaN(d.getTime())) return iso;
     return d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+  }
+
+  fmtMonth(iso) {
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return months[d.getMonth()]+' '+d.getFullYear();
   }
 
   statusStyle(status) {
@@ -550,7 +746,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { user, profile, orders, cartCount, hydrated, authError, loginEmail, loginPassword, registerName, isRegisterMode, authLoading } = this.state;
+    const { user, profile, orders, addresses, cartCount, hydrated, authError, loginEmail, loginPassword, registerName, isRegisterMode, authLoading, showAddressForm, editingAddrId, addrForm, editingProfile, editForm, profileSaveError, changingPassword, newPassword, passwordMsg, passwordMsgColor } = this.state;
     const loggedIn = !!user;
     const ordersCount = orders.length;
     const totalSpent = orders.reduce((s,o) => s + (o.total || 0), 0);
@@ -571,6 +767,15 @@ class Component extends DCLogic {
 
     const fullName = profile?.full_name || user?.user_metadata?.full_name || '';
     const firstName = fullName.split(' ')[0] || user?.email?.split('@')[0] || '';
+
+    const addressesFmt = addresses.map(a => ({
+      ...a,
+      streetLine: a.street + (a.postal || a.city ? '\n' + (a.postal ? a.postal + ' ' : '') + (a.city || '') : ''),
+      borderColor: a.is_default ? 'rgba(122,170,114,.4)' : 'rgba(90,120,70,.18)',
+      onEdit: () => this.editAddress(a),
+      onDelete: () => this.deleteAddress(a.id),
+      onSetDefault: () => this.setDefaultAddress(a.id),
+    }));
 
     return {
       showLogin: hydrated && !loggedIn,
@@ -596,6 +801,45 @@ class Component extends DCLogic {
 
       userFirstName: firstName,
       userEmail: user?.email || '',
+
+      // addresses
+      addresses: addressesFmt,
+      hasAddresses: addressesFmt.length > 0,
+      noAddresses: hydrated && loggedIn && addressesFmt.length === 0,
+      showAddressForm,
+      addressFormTitle: editingAddrId ? 'EDIT ADDRESS' : 'NEW ADDRESS',
+      addrForm,
+      toggleAddressForm: this.toggleAddressForm,
+      onAddrLabel: this.onAddrLabel,
+      onAddrName: this.onAddrName,
+      onAddrStreet: this.onAddrStreet,
+      onAddrPostal: this.onAddrPostal,
+      onAddrCity: this.onAddrCity,
+      onAddrPhone: this.onAddrPhone,
+      saveAddress: this.saveAddress,
+
+      // profile edit
+      profileFullName: fullName || '—',
+      profilePhone: profile?.phone || '—',
+      accountSince: user?.created_at ? this.fmtMonth(user.created_at) : '',
+      editingProfile,
+      editForm,
+      profileSaveError: profileSaveError || '',
+      startEditProfile: this.startEditProfile,
+      cancelEditProfile: this.cancelEditProfile,
+      onEditName: this.onEditName,
+      onEditPhone: this.onEditPhone,
+      saveProfile: this.saveProfile,
+
+      // password
+      changingPassword,
+      newPassword,
+      passwordMsg: passwordMsg || '',
+      passwordMsgColor,
+      startChangePassword: this.startChangePassword,
+      cancelChangePassword: this.cancelChangePassword,
+      onNewPassword: this.onNewPassword,
+      savePassword: this.savePassword,
     };
   }
 }

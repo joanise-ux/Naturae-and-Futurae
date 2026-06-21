@@ -458,21 +458,25 @@
                 <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#5d8a5d;">§ 03</span>
                 <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:18px; color:#ddd8c6; margin:0; letter-spacing:.02em;">Shipping addresses</h3>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">+ add</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0;">{{ dashAddrCount }} saved</span>
             </div>
-            <div style="display:flex; flex-direction:column; gap:12px;">
-              <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(122,170,114,.4); border-radius:8px; position:relative;">
-                <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DEFAULT</span>
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">HOME</div>
-                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">14/3 Sienkiewicza St.<br>58-300 Wałbrzych</div>
+            <sc-if value="{{ hasDashAddresses }}">
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <sc-for list="{{ dashAddresses }}" as="addr">
+                  <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid {{ addr.borderColor }}; border-radius:8px; position:relative;">
+                    <sc-if value="{{ addr.is_default }}">
+                      <span style="position:absolute; right:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:3px 8px; letter-spacing:.06em;">DEFAULT</span>
+                    </sc-if>
+                    <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">{{ addr.label }}</div>
+                    <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">{{ addr.full_name }}</div>
+                    <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">{{ addr.streetLine }}</div>
+                  </div>
+                </sc-for>
               </div>
-              <div style="padding:14px; background:rgba(14,22,14,.55); border:1px solid rgba(90,120,70,.18); border-radius:8px;">
-                <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#5d7a50; letter-spacing:.06em;">ORCHARD · WALIM</div>
-                <div style="font-family:'Cinzel',serif; font-size:15px; color:#ddd8c6; margin-top:4px;">Anna Kowalska — orchard</div>
-                <div style="font-family:'EB Garamond',serif; font-size:14px; color:#9a9480; line-height:1.5; margin-top:4px;">7 Boczna St.<br>58-320 Walim</div>
-              </div>
-            </div>
+            </sc-if>
+            <sc-if value="{{ !hasDashAddresses }}">
+              <div style="text-align:center; padding:16px; font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#8c7d5e;">No saved addresses.</div>
+            </sc-if>
           </div>
 
           <!-- Newsletter -->
@@ -1028,19 +1032,27 @@ class Component extends DCLogic {
     this.setState({ authLoading: true, authError: '' });
     const sb = window.supabaseClient;
 
-    if (isRegisterMode) {
-      const { error } = await sb.auth.signUp({
-        email: loginEmail, password: loginPassword,
-        options: { data: { full_name: registerName } }
-      });
-      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
-      this.setState({ authLoading: false, registerSuccess: true });
-      return;
-    } else {
-      const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-      if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+    try {
+      if (isRegisterMode) {
+        const { data, error } = await sb.auth.signUp({
+          email: loginEmail, password: loginPassword,
+          options: { data: { full_name: registerName } }
+        });
+        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+        if (data?.user?.identities?.length === 0) {
+          this.setState({ authError: 'An account with this email already exists.', authLoading: false });
+          return;
+        }
+        this.setState({ authLoading: false, registerSuccess: true });
+        return;
+      } else {
+        const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+      }
+      this.setState({ authLoading: false });
+    } catch (err) {
+      this.setState({ authError: 'Connection error. Please try again.', authLoading: false });
     }
-    this.setState({ authLoading: false });
   };
 
   loginAndCheckout = async () => {
@@ -1298,6 +1310,11 @@ class Component extends DCLogic {
       profileName: fullName || '—',
       profilePhone: profile?.phone || '—',
       accountSince: user ? this.fmtMonth(user.created_at) : '',
+
+      // dashboard addresses preview
+      dashAddresses: addresses.map(a => ({ ...a, streetLine: a.street + (a.postal || a.city ? '\n' + (a.postal ? a.postal + ' ' : '') + (a.city || '') : ''), borderColor: a.is_default ? 'rgba(122,170,114,.4)' : 'rgba(90,120,70,.18)' })),
+      hasDashAddresses: addresses.length > 0,
+      dashAddrCount: addresses.length,
 
       cartCount, cartSubtotal,
       hasCartItems: hydrated && cart.length>0 && !inCheckout,
