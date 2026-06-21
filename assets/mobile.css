@@ -21,9 +21,10 @@ html { scrollbar-gutter: stable; }
   -webkit-tap-highlight-color:transparent;
 }
 
-/* Przełącznik języka PL/EN — na desktopie ukryty (jest już w prawej grupie nav),
-   na mobile pokazywany w pasku tuż przy hamburgerze. */
-.nf-lang{ display:none; }
+/* Przełącznik języka PL/EN — mobilny (bezpośredni child .nf-nav)
+   jest ukryty na desktopie, natomiast ten w prawej grupie akcji (zagnieżdżony
+   głębiej) jest widoczny. Na mobile oba widoczne. */
+.nf-nav > .nf-lang{ display:none; }
 
 @media (max-width: 860px){
 
