@@ -1,0 +1,26 @@
+name: Deploy to OVH
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.cluster100.hosting.ovh.net
+          username: nfplano
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /www/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            upload-to-ovh.ps1
+            .claude/**
+            admin.html
