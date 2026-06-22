@@ -33,10 +33,15 @@
   @keyframes sp-glow { 0%,100%{opacity:.5} 50%{opacity:1} }
   @keyframes nf-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(122,170,114,.55); } 70% { box-shadow: 0 0 0 10px rgba(122,170,114,0); } 100% { box-shadow: 0 0 0 0 rgba(122,170,114,0); } }
   @media (prefers-reduced-motion: reduce){ .nf-anim{ animation:none !important } }
+  @keyframes nf-fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes nf-spin { to { transform:rotate(360deg); } }
+  .nf-dash-sidebar::-webkit-scrollbar { width:4px; }
+  .nf-dash-sidebar::-webkit-scrollbar-track { background:transparent; }
+  .nf-dash-sidebar::-webkit-scrollbar-thumb { background:rgba(138,186,130,.15); border-radius:2px; }
 </style>
 </helmet>
 
-<div style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(120% 80% at 50% -10%, #1a2e20, #111812 60%); color:#b8b0a0;">
+<div style="min-height:100vh; font-family:'EB Garamond',serif; background:#1A3636; color:#b8b0a0;">
 
   <!-- ============================================================ -->
   <!-- NAV -->
@@ -63,6 +68,12 @@
         </span>
         Konto
       </a>
+      <sc-if value="{{ isAdminUser }}">
+        <span onClick="{{ toggleDashboard }}" style="cursor:pointer; display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:4px; padding:9px 13px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#c69a4c;"></span>
+          {{ dashboardBtnLabel }}
+        </span>
+      </sc-if>
       <span onClick="{{ openDrawer }}" style="cursor:pointer; position:relative; display:inline-flex; align-items:center; gap:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:11px 16px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 18px rgba(90,120,70,.25);">
         Koszyk
         <span style="display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:11px; background:#060906; color:#8aba82; font-family:'Space Mono',monospace; font-size:11px; font-weight:700; border:1px solid #8aba82;">{{ cartCount }}</span>
@@ -72,8 +83,11 @@
 
 
   <!-- ============================================================ -->
-  <!-- HERO + CATEGORY TABS -->
+  <!-- SHOP CONTENT (hidden when dashboard is active) -->
   <!-- ============================================================ -->
+  <sc-if value="{{ !dashboardMode }}">
+
+  <!-- HERO + CATEGORY TABS -->
   <div style="position:relative; max-width:1440px; margin:0 auto; padding:70px 40px 40px;">
     <div style="display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:end;">
       <div>
@@ -268,6 +282,374 @@
   </div>
 
 
+  </sc-if>
+  <!-- END SHOP CONTENT -->
+
+
+  <!-- ============================================================ -->
+  <!-- ADMIN DASHBOARD (shown when dashboardMode is active) -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ dashboardMode }}">
+  <div style="display:flex; width:100%; min-height:calc(100vh - 80px); background:#060906; font-family:'EB Garamond',serif; color:#DDD8C6;">
+
+    <!-- SIDEBAR -->
+    <div class="nf-dash-sidebar" style="width:256px; flex:none; background:rgba(10,18,12,.92); backdrop-filter:blur(24px); border-right:1px solid rgba(138,186,130,.08); display:flex; flex-direction:column; padding:24px 14px; min-height:calc(100vh - 80px); box-sizing:border-box; overflow-y:auto;">
+
+      <!-- Logo -->
+      <div style="display:flex; align-items:center; gap:12px; padding:0 6px; margin-bottom:8px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#8ABA82,#6A9A62); display:flex; align-items:center; justify-content:center; flex:none;">
+          <span style="font-family:Cinzel,serif; font-size:13px; font-weight:700; color:#060906;">NF</span>
+        </div>
+        <div>
+          <div style="font-family:Cinzel,serif; font-size:13px; font-weight:600; color:#DDD8C6; letter-spacing:0.3px;">Nature & Future</div>
+          <div style="font-family:'Space Mono',monospace; font-size:8px; color:#8C7D5E; letter-spacing:1.5px;">PLANT BIOTECH</div>
+        </div>
+      </div>
+
+      <!-- Role badge -->
+      <div style="margin:12px 6px 16px; padding:8px 12px; background:rgba(198,154,76,.08); border:1px solid rgba(198,154,76,.15); border-radius:8px; display:flex; align-items:center; gap:8px;">
+        <div style="width:8px; height:8px; border-radius:50%; background:#C69A4C;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#B8B0A0; letter-spacing:0.5px;">Administrator</span>
+      </div>
+
+      <!-- Nav -->
+      <div style="display:flex; flex-direction:column; gap:2px; flex:1; padding:0 2px;">
+        <div onClick="{{ dashGoOverview }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOverviewBg }}; border:1px solid {{ dNavOverviewBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="{{ dNavOverviewClr }}"><rect x="1" y="1" width="7" height="7" rx="1.5"/><rect x="10" y="1" width="7" height="7" rx="1.5"/><rect x="1" y="10" width="7" height="7" rx="1.5"/><rect x="10" y="10" width="7" height="7" rx="1.5"/></svg>
+          <span style="font-size:15px; color:{{ dNavOverviewClr }};">Przegląd</span>
+        </div>
+        <div onClick="{{ dashGoProducts }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavProductsBg }}; border:1px solid {{ dNavProductsBrd }};">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="{{ dNavProductsClr }}"><path d="M16 4c-5 0-10 3-10 8 0 1 .3 2 .8 2.8.5-3 2-5.5 4.2-7.3 1.5 2.5 2.2 5.2 2 8 1.5-1 2.8-2.5 3.5-4.2C17.5 9 17.8 6.5 16 4z"/></svg>
+          <span style="font-size:15px; color:{{ dNavProductsClr }};">Produkty</span>
+        </div>
+        <div onClick="{{ dashGoOrders }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOrdersBg }}; border:1px solid {{ dNavOrdersBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavOrdersClr }}" stroke-width="1.5"><path d="M9 2L3 5v7l6 4 6-4V5L9 2z"/><path d="M3 5l6 4 6-4M9 9v8"/></svg>
+          <span style="font-size:15px; color:{{ dNavOrdersClr }};">Zamówienia</span>
+          <sc-if value="{{ dUnpaidCount }}">
+            <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:9px; color:#C69A4C; background:rgba(198,154,76,.15); padding:2px 7px; border-radius:10px;">{{ dUnpaidCount }}</span>
+          </sc-if>
+        </div>
+        <div onClick="{{ dashGoUsers }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavUsersBg }}; border:1px solid {{ dNavUsersBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="{{ dNavUsersClr }}"><circle cx="9" cy="5.5" r="3"/><path d="M3 16.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          <span style="font-size:15px; color:{{ dNavUsersClr }};">Użytkownicy</span>
+        </div>
+        <div onClick="{{ dashGoAnalytics }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavAnalyticsBg }}; border:1px solid {{ dNavAnalyticsBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavAnalyticsClr }}" stroke-width="1.5"><path d="M2 14l4-5 3 3 7-9"/><path d="M13 3h3v3"/></svg>
+          <span style="font-size:15px; color:{{ dNavAnalyticsClr }};">Analiza Sklepu</span>
+        </div>
+        <div onClick="{{ dashGoBackups }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavBackupsBg }}; border:1px solid {{ dNavBackupsBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavBackupsClr }}" stroke-width="1.5"><path d="M3 9a6 6 0 1 1 1.1 3.4"/><path d="M3 13V9h4"/><path d="M9 5v4l2.5 1.5"/></svg>
+          <span style="font-size:15px; color:{{ dNavBackupsClr }};">Kopie zapasowe</span>
+        </div>
+      </div>
+
+      <!-- User info -->
+      <div style="display:flex; align-items:center; gap:10px; padding:14px 8px 4px; margin:8px 2px 0; border-top:1px solid rgba(138,186,130,.08);">
+        <div style="width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#C69A4C,#8C7D5E); display:flex; align-items:center; justify-content:center; flex:none;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; color:#060906; font-weight:700;">{{ dUserInitials }}</span>
+        </div>
+        <div>
+          <div style="font-size:14px; color:#DDD8C6;">{{ dUserName }}</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">{{ dUserEmail }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div style="flex:1; padding:28px 36px; min-height:calc(100vh - 80px); box-sizing:border-box; overflow-y:auto;">
+
+      <!-- Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Panel Administrator</div>
+          <div style="font-family:Cinzel,serif; font-size:24px; font-weight:600; color:#DDD8C6;">{{ dSectionTitle }}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E;">{{ dDateStr }}</div>
+        </div>
+      </div>
+
+      <!-- ===== OVERVIEW ===== -->
+      <sc-if value="{{ dIsOverview }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <!-- Stat cards -->
+          <div style="display:flex; flex-wrap:wrap; gap:16px; margin-bottom:28px;">
+            <div style="flex:1; min-width:180px; padding:20px; background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22);">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8ABA82; letter-spacing:1.5px; margin-bottom:8px;">ZAMÓWIENIA</div>
+              <div style="font-family:Cinzel,serif; font-size:32px; font-weight:700; color:#DDD8C6;">{{ dTotalOrders }}</div>
+            </div>
+            <div style="flex:1; min-width:180px; padding:20px; background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22);">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#7AAA72; letter-spacing:1.5px; margin-bottom:8px;">PRODUKTY AKTYWNE</div>
+              <div style="font-family:Cinzel,serif; font-size:32px; font-weight:700; color:#DDD8C6;">{{ dActiveProducts }}</div>
+            </div>
+            <div style="flex:1; min-width:180px; padding:20px; background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22);">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#6A9A62; letter-spacing:1.5px; margin-bottom:8px;">KLIENCI</div>
+              <div style="font-family:Cinzel,serif; font-size:32px; font-weight:700; color:#DDD8C6;">{{ dTotalClients }}</div>
+            </div>
+            <div style="flex:1; min-width:180px; padding:20px; background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.25);">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#C69A4C; letter-spacing:1.5px; margin-bottom:8px;">PRZYCHÓD</div>
+              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dTotalRevenue }}</div>
+            </div>
+          </div>
+
+          <!-- Recent orders -->
+          <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); overflow:hidden;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid rgba(138,186,130,.18);">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Ostatnie zamówienia</div>
+              <div onClick="{{ dashGoOrders }}" style="font-family:'Space Mono',monospace; font-size:10px; color:#8ABA82; cursor:pointer; letter-spacing:0.5px;">ZOBACZ WSZYSTKIE →</div>
+            </div>
+            <sc-for list="{{ dRecentOrders }}" as="ro" hint-placeholder-count="3">
+              <div style="display:flex; align-items:center; padding:14px 22px; border-bottom:1px solid rgba(138,186,130,.12); gap:16px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:{{ ro.statusColor }}; flex:none;"></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#B8B0A0; width:80px; flex:none;">{{ ro.id }}</span>
+                <span style="font-size:14px; color:#DDD8C6; flex:1;">{{ ro.client }}</span>
+                <span style="font-size:13px; color:#9A9480; flex:1;">{{ ro.products }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6; width:90px; flex:none; text-align:right;">{{ ro.amountStr }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:10px; color:{{ ro.statusColor }}; width:90px; flex:none; text-align:right;">{{ ro.status }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== PRODUCTS ===== -->
+      <sc-if value="{{ dIsProducts }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+            <sc-for list="{{ dProductsList }}" as="dp" hint-placeholder-count="4">
+              <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); overflow:hidden;">
+                <div style="height:120px; background:linear-gradient(135deg,#0E1810,#1A2014); display:flex; align-items:center; justify-content:center; border-bottom:1px solid rgba(138,186,130,.18); position:relative; overflow:hidden;">
+                  <sc-if value="{{ dp.hasImage }}">
+                    <img src="{{ dp.image }}" alt="" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                  </sc-if>
+                  <sc-if value="{{ dp.noImage }}">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#2A3A2C" stroke-width="1"><path d="M20 8c-6 0-14 4-14 12 0 2 .5 3.5 1.2 4.8 1-5 3.5-9 7-12-1 5-1.5 10-.5 14 2.5-1.5 4.5-4 5.8-7 1.3 3 1.5 6.5.5 10 2-1.5 3.8-3.5 5-6 1 2 1.5 4 1.5 6.2C29 26 32 22 32 17.5 32 12 26 8 20 8z"/></svg>
+                  </sc-if>
+                  <div style="position:absolute; top:10px; right:10px; font-family:'Space Mono',monospace; font-size:9px; color:{{ dp.availColor }}; background:{{ dp.availBg }}; padding:3px 10px; border-radius:12px; border:1px solid {{ dp.availBorder }};">{{ dp.availText }}</div>
+                </div>
+                <div style="padding:18px;">
+                  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px;">
+                    <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">{{ dp.name }}</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:14px; color:#C69A4C; font-weight:700; flex:none;">{{ dp.priceStr }}</div>
+                  </div>
+                  <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8ABA82; letter-spacing:1px; margin-bottom:8px;">{{ dp.category }}</div>
+                  <div style="font-size:13px; color:#9A9480; line-height:1.5; margin-bottom:16px;">{{ dp.desc }}</div>
+                  <div style="display:flex; gap:8px;">
+                    <div onClick="{{ dp.onToggle }}" style="flex:1; padding:8px; text-align:center; font-family:'Space Mono',monospace; font-size:10px; color:#C69A4C; background:rgba(198,154,76,.06); border:1px solid rgba(198,154,76,.15); border-radius:6px; cursor:pointer; letter-spacing:0.5px;">{{ dp.toggleLabel }}</div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== ORDERS ===== -->
+      <sc-if value="{{ dIsOrders }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <!-- Filters -->
+          <div style="display:flex; gap:8px; margin-bottom:20px;">
+            <div onClick="{{ dSetFilterAll }}" style="padding:8px 18px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:6px; background:{{ dFilterAllBg }}; color:{{ dFilterAllClr }}; border:1px solid {{ dFilterAllBrd }};">Wszystkie ({{ dTotalOrders }})</div>
+            <div onClick="{{ dSetFilterNew }}" style="padding:8px 18px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:6px; background:{{ dFilterNewBg }}; color:{{ dFilterNewClr }}; border:1px solid {{ dFilterNewBrd }};">Nowe ({{ dNewCount }})</div>
+            <div onClick="{{ dSetFilterUnpaid }}" style="padding:8px 18px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:6px; background:{{ dFilterUnpaidBg }}; color:{{ dFilterUnpaidClr }}; border:1px solid {{ dFilterUnpaidBrd }};">Nieopłacone ({{ dUnpaidCount }})</div>
+          </div>
+
+          <!-- Orders table -->
+          <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); overflow:hidden;">
+            <div style="display:flex; padding:12px 22px; border-bottom:1px solid rgba(138,186,130,.18); gap:12px;">
+              <span style="width:80px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">NR</span>
+              <span style="width:140px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">KLIENT</span>
+              <span style="flex:1; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">PRODUKTY</span>
+              <span style="width:90px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">KWOTA</span>
+              <span style="width:60px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">DATA</span>
+              <span style="width:130px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">STATUS</span>
+              <span style="width:130px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">PŁATNOŚĆ</span>
+            </div>
+            <sc-for list="{{ dOrdersList }}" as="do" hint-placeholder-count="4">
+              <div style="display:flex; padding:14px 22px; border-bottom:1px solid rgba(138,186,130,.12); gap:12px; align-items:center;">
+                <span style="width:80px; font-family:'Space Mono',monospace; font-size:12px; color:#B8B0A0;">{{ do.id }}</span>
+                <span style="width:140px; font-size:14px; color:#DDD8C6;">{{ do.client }}</span>
+                <span style="flex:1; font-size:13px; color:#9A9480;">{{ do.products }}</span>
+                <span style="width:90px; font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ do.amountStr }}</span>
+                <span style="width:60px; font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E;">{{ do.date }}</span>
+                <span style="width:130px;">
+                  <select value="{{ do.status }}" onChange="{{ do.onStatusChange }}" style="width:100%; padding:5px 8px; background:#1A2014; color:#DDD8C6; border:1px solid rgba(138,186,130,.15); border-radius:4px; font-size:12px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
+                    <option value="Nowe">Nowe</option>
+                    <option value="W realizacji">W realizacji</option>
+                    <option value="Wysłane">Wysłane</option>
+                    <option value="Dostarczone">Dostarczone</option>
+                    <option value="Anulowane">Anulowane</option>
+                  </select>
+                </span>
+                <span style="width:130px;">
+                  <select value="{{ do.payment }}" onChange="{{ do.onPaymentChange }}" style="width:100%; padding:5px 8px; background:#1A2014; color:{{ do.payColor }}; border:1px solid rgba(138,186,130,.15); border-radius:4px; font-size:12px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
+                    <option value="Nieopłacone">Nieopłacone</option>
+                    <option value="Opłacone">Opłacone</option>
+                  </select>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== USERS ===== -->
+      <sc-if value="{{ dIsUsers }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); overflow:hidden;">
+            <div style="display:flex; padding:12px 22px; border-bottom:1px solid rgba(138,186,130,.18); gap:12px;">
+              <span style="width:44px;"></span>
+              <span style="flex:1; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">UŻYTKOWNIK</span>
+              <span style="width:200px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">EMAIL</span>
+              <span style="width:160px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">ROLA</span>
+            </div>
+            <sc-for list="{{ dUsersList }}" as="du" hint-placeholder-count="4">
+              <div style="display:flex; padding:14px 22px; border-bottom:1px solid rgba(138,186,130,.12); gap:12px; align-items:center;">
+                <div style="width:36px; height:36px; border-radius:8px; background:{{ du.roleBg }}; display:flex; align-items:center; justify-content:center; flex:none;">
+                  <span style="font-family:'Space Mono',monospace; font-size:10px; color:{{ du.roleColor }}; font-weight:700;">{{ du.initials }}</span>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:15px; color:#DDD8C6;">{{ du.name }}</div>
+                </div>
+                <span style="width:200px; font-family:'Space Mono',monospace; font-size:12px; color:#9A9480;">{{ du.email }}</span>
+                <span style="width:160px;">
+                  <select value="{{ du.role }}" onChange="{{ du.onRoleChange }}" style="width:100%; padding:6px 10px; background:#1A2014; color:{{ du.roleColor }}; border:1px solid {{ du.roleBorderColor }}; border-radius:6px; font-size:13px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
+                    <option value="client">Klient</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="admin">Administrator</option>
+                  </select>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== ANALYTICS ===== -->
+      <sc-if value="{{ dIsAnalytics }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <!-- KPI Cards -->
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px;">
+            <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">PRODUKTY AKTYWNE</div>
+              <div style="font-family:Cinzel,serif; font-size:32px; font-weight:700; color:#DDD8C6;">{{ dActiveProducts }}</div>
+            </div>
+            <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">PRZYCHÓD ŁĄCZNY</div>
+              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dTotalRevenue }}</div>
+            </div>
+            <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">ZAMÓWIENIA</div>
+              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dTotalOrders }}</div>
+            </div>
+            <div style="background:#122014; border-radius:12px; border:1px solid rgba(198,154,76,.25); padding:20px 16px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">ŚREDNIA ZAMÓWIENIA</div>
+              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#C69A4C;">{{ dAvgOrder }}</div>
+            </div>
+          </div>
+
+          <!-- Revenue by status -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Zamówienia wg statusu</div>
+              <sc-for list="{{ dOrdersByStatus }}" as="obs" hint-placeholder-count="4">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(138,186,130,.08);">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background:{{ obs.color }};"></div>
+                    <span style="font-size:14px; color:#DDD8C6;">{{ obs.label }}</span>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:13px; color:#B8B0A0;">{{ obs.count }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Produkty wg kategorii</div>
+              <sc-for list="{{ dProductsByCategory }}" as="pbc" hint-placeholder-count="2">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(138,186,130,.08);">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#8ABA82;"></div>
+                    <span style="font-size:14px; color:#DDD8C6;">{{ pbc.label }}</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-family:'Space Mono',monospace; font-size:13px; color:#B8B0A0;">{{ pbc.count }} szt.</span>
+                    <span style="font-family:'Space Mono',monospace; font-size:11px; color:#C69A4C;">{{ pbc.revenue }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- Top products -->
+          <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+            <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Top produkty wg sprzedaży</div>
+            <sc-for list="{{ dTopProducts }}" as="tp" hint-placeholder-count="5">
+              <div style="display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E; width:24px;">{{ tp.rank }}.</span>
+                <span style="font-size:15px; color:#DDD8C6; flex:1;">{{ tp.name }}</span>
+                <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8ABA82;">{{ tp.soldCount }} szt.</span>
+                <span style="font-family:'Space Mono',monospace; font-size:13px; color:#C69A4C; width:100px; text-align:right;">{{ tp.totalRevenue }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== BACKUPS ===== -->
+      <sc-if value="{{ dIsBackups }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+          <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:24px; margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#8ABA82" stroke-width="1.5"><path d="M4 11a7 7 0 1 1 1.3 4.1"/><path d="M4 16V11h5"/><path d="M11 6v5l3 1.8"/></svg>
+              <div style="font-family:Cinzel,serif; font-size:18px; font-weight:600; color:#DDD8C6;">Kopie zapasowe</div>
+            </div>
+            <div style="font-size:14px; color:#9A9480; line-height:1.6; padding-left:34px;">Kopie zapasowe danych sklepu. Tworzenie i przywracanie kopii wymaga uprawnień administratora.</div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <sc-for list="{{ dBackupsList }}" as="bk" hint-placeholder-count="3">
+              <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:20px 24px; display:flex; align-items:center; gap:20px;">
+                <div style="width:44px; height:44px; border-radius:10px; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); display:flex; align-items:center; justify-content:center; flex:none;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8ABA82" stroke-width="1.3"><path d="M4 15h12M4 10h12M4 5h12"/><rect x="2" y="2" width="16" height="16" rx="3"/></svg>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:15px; color:#DDD8C6; margin-bottom:4px;">{{ bk.label }}</div>
+                  <div style="display:flex; gap:16px;">
+                    <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E;">{{ bk.date }}</span>
+                    <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E;">{{ bk.size }}</span>
+                  </div>
+                </div>
+                <sc-if value="{{ bk.isRestoring }}">
+                  <div style="padding:10px 24px; font-family:'Space Mono',monospace; font-size:11px; color:#C69A4C; background:rgba(198,154,76,.08); border:1px solid rgba(198,154,76,.2); border-radius:8px; display:flex; align-items:center; gap:8px;">
+                    <div style="width:14px; height:14px; border:2px solid #C69A4C; border-top-color:transparent; border-radius:50%; animation:nf-spin 1s linear infinite;"></div>
+                    PRZYWRACANIE...
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bk.isRestored }}">
+                  <div style="padding:10px 24px; font-family:'Space Mono',monospace; font-size:11px; color:#8ABA82; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.2); border-radius:8px; display:flex; align-items:center; gap:8px;">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#8ABA82" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg>
+                    PRZYWRÓCONO
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bk.showAction }}">
+                  <div onClick="{{ bk.onRestore }}" style="padding:10px 24px; font-family:'Space Mono',monospace; font-size:11px; color:#DDD8C6; background:rgba(138,186,130,.1); border:1px solid rgba(138,186,130,.2); border-radius:8px; cursor:pointer; letter-spacing:0.5px;">PRZYWRÓĆ</div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:20px; padding:16px 20px; background:rgba(198,154,76,.06); border:1px solid rgba(198,154,76,.15); border-radius:10px; display:flex; align-items:flex-start; gap:12px;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="#C69A4C" style="flex:none; margin-top:2px;"><path d="M9 1L1 16h16L9 1zm0 5v5m0 2v1"/></svg>
+            <div style="font-size:13px; color:#B8B0A0; line-height:1.6;">Uwaga: Przywrócenie kopii zapasowej nadpisze wszystkie bieżące dane. Zalecamy utworzenie aktualnej kopii przed przywróceniem starszej wersji.</div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+  <!-- END ADMIN DASHBOARD -->
+
+
   <!-- ============================================================ -->
   <!-- CART DRAWER + OVERLAY -->
   <!-- ============================================================ -->
@@ -374,6 +756,8 @@
 </script>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
+  ADMIN_EMAILS = ['joannau90@gmail.com', 'kzuczek@gmail.com'];
+
   state = {
     cart: [],
     products: [],
@@ -385,6 +769,19 @@ class Component extends DCLogic {
     hydrated: false,
     user: null,
     watchedIds: [],
+    // Dashboard
+    dashboardMode: false,
+    dashSection: 'overview',
+    dashOrders: [],
+    dashUsers: [],
+    dashOrderFilter: 'all',
+    dashBackupRestoring: null,
+    dashBackupRestored: null,
+    dashBackups: [
+      { id: 1, date: new Date().toLocaleDateString('pl-PL') + ', 03:00', size: '24.8 MB', label: 'Automatyczna kopia (dziś)' },
+      { id: 2, date: new Date(Date.now()-86400000).toLocaleDateString('pl-PL') + ', 03:00', size: '24.5 MB', label: 'Automatyczna kopia (wczoraj)' },
+      { id: 3, date: new Date(Date.now()-172800000).toLocaleDateString('pl-PL') + ', 03:00', size: '24.1 MB', label: 'Automatyczna kopia (2 dni temu)' },
+    ],
   };
 
   async componentDidMount() {
@@ -422,15 +819,20 @@ class Component extends DCLogic {
     }
 
     const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
-    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds });
+    const wantsDash = window.location.hash === '#dashboard';
+    const isAdmin = user && this.ADMIN_EMAILS.includes(user.email);
+    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds, dashboardMode: wantsDash && isAdmin });
+
+    if (isAdmin) this.loadDashboardData();
 
     sb.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user || null;
       if (u) {
         const { data: wd } = await sb.from('watched_products').select('product_id').eq('user_id', u.id);
         this.setState({ user: u, watchedIds: (wd || []).map(w => w.product_id) });
+        if (this.ADMIN_EMAILS.includes(u.email)) this.loadDashboardData();
       } else {
-        this.setState({ user: u, watchedIds: [] });
+        this.setState({ user: u, watchedIds: [], dashboardMode: false, dashOrders: [], dashUsers: [] });
       }
     });
   }
@@ -525,6 +927,67 @@ class Component extends DCLogic {
     }
   };
 
+  // === DASHBOARD METHODS ===
+  async loadDashboardData() {
+    const sb = window.supabaseClient;
+    const [ordersRes, usersRes, itemsRes] = await Promise.all([
+      sb.from('orders').select('*').order('created_at', { ascending: false }),
+      sb.from('profiles').select('*'),
+      sb.from('order_items').select('*'),
+    ]);
+    const orders = (ordersRes.data || []).map(o => {
+      const oItems = (itemsRes.data || []).filter(i => i.order_id === o.id);
+      const productsStr = oItems.map(i => i.name + ' ×' + i.qty).join(', ') || '—';
+      return { ...o, total: Number(o.total), productsStr, items: oItems };
+    });
+    this.setState({ dashOrders: orders, dashUsers: usersRes.data || [] });
+  }
+
+  toggleDashboard = () => {
+    this.setState(s => {
+      const next = !s.dashboardMode;
+      window.location.hash = next ? 'dashboard' : '';
+      return { dashboardMode: next, dashSection: 'overview' };
+    });
+  };
+
+  dashSetSection = (section) => this.setState({ dashSection: section });
+
+  dashUpdateOrderStatus = async (orderId, field, value) => {
+    const sb = window.supabaseClient;
+    await sb.from('orders').update({ [field]: value }).eq('id', orderId);
+    this.setState(s => ({
+      dashOrders: s.dashOrders.map(o => o.id === orderId ? { ...o, [field]: value } : o)
+    }));
+  };
+
+  dashUpdateUserRole = async (userId, role) => {
+    const sb = window.supabaseClient;
+    await sb.from('profiles').update({ role }).eq('id', userId);
+    this.setState(s => ({
+      dashUsers: s.dashUsers.map(u => u.id === userId ? { ...u, role } : u)
+    }));
+  };
+
+  dashToggleProductAvail = async (productId) => {
+    const sb = window.supabaseClient;
+    const product = this.state.products.find(p => p.id === productId);
+    if (!product) return;
+    const newStock = product.stock > 0 ? 0 : 10;
+    await sb.from('products').update({ stock: newStock }).eq('id', productId);
+    this.setState(s => ({
+      products: s.products.map(p => p.id === productId ? { ...p, stock: newStock } : p)
+    }));
+  };
+
+  dashRestoreBackup = (backupId) => {
+    this.setState({ dashBackupRestoring: backupId, dashBackupRestored: null });
+    setTimeout(() => {
+      this.setState({ dashBackupRestoring: null, dashBackupRestored: backupId });
+      setTimeout(() => this.setState({ dashBackupRestored: null }), 3000);
+    }, 2000);
+  };
+
   setCategory = (cat) => this.setState({ category: cat });
   setSortMode = (mode) => this.setState({ sortMode: mode });
   openDrawer  = () => this.setState({ drawerOpen: true, orderJustPlaced: false });
@@ -604,6 +1067,240 @@ class Component extends DCLogic {
       openDrawer:  this.openDrawer,
       closeDrawer: this.closeDrawer,
       checkout:    this.checkout,
+
+      // === DASHBOARD ===
+      isAdminUser: !!(this.state.user && this.ADMIN_EMAILS.includes(this.state.user.email)),
+      dashboardMode: this.state.dashboardMode,
+      toggleDashboard: this.toggleDashboard,
+      dashboardBtnLabel: this.state.dashboardMode ? 'Sklep' : 'Dashboard',
+
+      ...this._dashRenderVals(),
+    };
+  }
+
+  _dashRenderVals() {
+    const { dashboardMode, dashSection, dashOrders, dashUsers, dashOrderFilter, dashBackupRestoring, dashBackupRestored, dashBackups, products, user } = this.state;
+    if (!dashboardMode) return {};
+
+    const navStyle = (section) => {
+      const active = dashSection === section;
+      return {
+        bg: active ? 'rgba(138,186,130,.12)' : 'transparent',
+        brd: active ? 'rgba(138,186,130,.15)' : 'transparent',
+        clr: active ? '#8ABA82' : '#9A9480',
+      };
+    };
+    const ov = navStyle('overview'), pr = navStyle('products'), or_ = navStyle('orders');
+    const us = navStyle('users'), an = navStyle('analytics'), bk = navStyle('backups');
+
+    const statusColor = (st) => {
+      const s = (st || '').toLowerCase();
+      if (s.includes('now')) return '#8ABA82';
+      if (s.includes('wysy') || s.includes('wysł')) return '#7AAA72';
+      if (s.includes('realiz')) return '#C69A4C';
+      if (s.includes('dostar')) return '#6A9A62';
+      return '#9A9480';
+    };
+    const payColor = (p) => (p || '').includes('Nieopł') ? '#C69A4C' : '#8ABA82';
+
+    const fmtDate = (iso) => {
+      if (!iso) return '';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0');
+    };
+
+    const fStyle = (f) => {
+      const active = dashOrderFilter === f;
+      return { bg: active ? '#8ABA82' : 'transparent', clr: active ? '#060906' : '#9A9480', brd: active ? '#8ABA82' : 'rgba(138,186,130,.15)' };
+    };
+    const fa = fStyle('all'), fn = fStyle('new'), fu = fStyle('unpaid');
+
+    let filteredOrders = dashOrders;
+    if (dashOrderFilter === 'new') filteredOrders = dashOrders.filter(o => (o.status || '').includes('Now'));
+    if (dashOrderFilter === 'unpaid') filteredOrders = dashOrders.filter(o => (o.payment || '').includes('Nieopł'));
+
+    const newCount = dashOrders.filter(o => (o.status || '').includes('Now')).length;
+    const unpaidCount = dashOrders.filter(o => (o.payment || '').includes('Nieopł')).length;
+    const totalRevenue = dashOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const activeProducts = products.filter(p => p.stock > 0).length;
+    const clientUsers = dashUsers.filter(u => !u.role || u.role === 'client');
+
+    const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
+    const initials = fullName.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0,2) || 'AD';
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
+
+    const titles = { overview:'Przegląd', products:'Produkty', orders:'Zamówienia', users:'Użytkownicy', analytics:'Analiza Sklepu', backups:'Kopie zapasowe' };
+
+    // Analytics: orders by status
+    const statusLabels = ['Nowe','W realizacji','Wysłane','Dostarczone','Anulowane'];
+    const statusColors = ['#8ABA82','#C69A4C','#7AAA72','#6A9A62','#9A9480'];
+    const ordersByStatus = statusLabels.map((label, i) => ({
+      label,
+      color: statusColors[i],
+      count: dashOrders.filter(o => o.status === label).length,
+    }));
+
+    // Analytics: products by category
+    const catMap = {};
+    products.forEach(p => {
+      const cat = p.cat || p.category || 'Inne';
+      if (!catMap[cat]) catMap[cat] = { count: 0, revenue: 0 };
+      catMap[cat].count++;
+    });
+    dashOrders.forEach(o => {
+      (o.items || []).forEach(item => {
+        const prod = products.find(p => p.id === item.product_id);
+        const cat = prod ? (prod.cat || prod.category) : 'Inne';
+        if (catMap[cat]) catMap[cat].revenue += Number(item.price || 0) * (item.qty || 0);
+      });
+    });
+    const productsByCategory = Object.entries(catMap).map(([label, data]) => ({
+      label: label === 'akwariowe' ? 'Akwariowe' : label === 'sadownicze' ? 'Drzewa owocowe' : label,
+      count: data.count,
+      revenue: data.revenue.toLocaleString('pl-PL') + ' zł',
+    }));
+
+    // Analytics: top products
+    const soldMap = {};
+    dashOrders.forEach(o => {
+      (o.items || []).forEach(item => {
+        const key = item.product_id || item.name;
+        if (!soldMap[key]) soldMap[key] = { name: item.name || '—', qty: 0, revenue: 0 };
+        soldMap[key].qty += (item.qty || 0);
+        soldMap[key].revenue += Number(item.price || 0) * (item.qty || 0);
+      });
+    });
+    const topProducts = Object.values(soldMap).sort((a, b) => b.revenue - a.revenue).slice(0, 5).map((tp, i) => ({
+      rank: i + 1,
+      name: tp.name,
+      soldCount: tp.qty,
+      totalRevenue: tp.revenue.toLocaleString('pl-PL') + ' zł',
+    }));
+
+    return {
+      // Nav
+      dNavOverviewBg: ov.bg, dNavOverviewBrd: ov.brd, dNavOverviewClr: ov.clr,
+      dNavProductsBg: pr.bg, dNavProductsBrd: pr.brd, dNavProductsClr: pr.clr,
+      dNavOrdersBg: or_.bg, dNavOrdersBrd: or_.brd, dNavOrdersClr: or_.clr,
+      dNavUsersBg: us.bg, dNavUsersBrd: us.brd, dNavUsersClr: us.clr,
+      dNavAnalyticsBg: an.bg, dNavAnalyticsBrd: an.brd, dNavAnalyticsClr: an.clr,
+      dNavBackupsBg: bk.bg, dNavBackupsBrd: bk.brd, dNavBackupsClr: bk.clr,
+
+      // Section handlers
+      dashGoOverview: () => this.dashSetSection('overview'),
+      dashGoProducts: () => this.dashSetSection('products'),
+      dashGoOrders: () => this.dashSetSection('orders'),
+      dashGoUsers: () => this.dashSetSection('users'),
+      dashGoAnalytics: () => this.dashSetSection('analytics'),
+      dashGoBackups: () => this.dashSetSection('backups'),
+
+      // Section flags
+      dIsOverview: dashSection === 'overview',
+      dIsProducts: dashSection === 'products',
+      dIsOrders: dashSection === 'orders',
+      dIsUsers: dashSection === 'users',
+      dIsAnalytics: dashSection === 'analytics',
+      dIsBackups: dashSection === 'backups',
+
+      dSectionTitle: titles[dashSection] || 'Przegląd',
+      dDateStr: dateStr,
+      dUserInitials: initials,
+      dUserName: fullName,
+      dUserEmail: user?.email || '',
+
+      // Stats
+      dTotalOrders: dashOrders.length,
+      dActiveProducts: activeProducts,
+      dTotalClients: clientUsers.length,
+      dTotalRevenue: totalRevenue.toLocaleString('pl-PL') + ' zł',
+      dNewCount: newCount,
+      dUnpaidCount: unpaidCount,
+      dAvgOrder: dashOrders.length > 0 ? Math.round(totalRevenue / dashOrders.length).toLocaleString('pl-PL') + ' zł' : '0 zł',
+
+      // Recent orders (overview)
+      dRecentOrders: dashOrders.slice(0, 5).map(o => ({
+        id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
+        client: o.client_name || o.full_name || '—',
+        products: o.productsStr || '—',
+        amountStr: (o.total || 0).toFixed(2) + ' zł',
+        status: o.status || 'Nowe',
+        statusColor: statusColor(o.status),
+      })),
+
+      // Products list
+      dProductsList: products.map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.image,
+        priceStr: p.price.toFixed(2) + ' zł',
+        category: p.cat === 'akwariowe' ? 'Akwariowe' : p.cat === 'sadownicze' ? 'Drzewa owocowe' : (p.cat || ''),
+        desc: p.desc || '',
+        hasImage: !!p.image,
+        noImage: !p.image,
+        availText: p.stock > 0 ? 'Dostępny' : 'Niedostępny',
+        availColor: p.stock > 0 ? '#8ABA82' : '#C69A4C',
+        availBg: p.stock > 0 ? 'rgba(138,186,130,.1)' : 'rgba(198,154,76,.1)',
+        availBorder: p.stock > 0 ? 'rgba(138,186,130,.2)' : 'rgba(198,154,76,.2)',
+        toggleLabel: p.stock > 0 ? 'UKRYJ' : 'AKTYWUJ',
+        onToggle: () => this.dashToggleProductAvail(p.id),
+      })),
+
+      // Orders list
+      dOrdersList: filteredOrders.map(o => ({
+        id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
+        client: o.client_name || o.full_name || '—',
+        products: o.productsStr || '—',
+        amountStr: (o.total || 0).toFixed(2) + ' zł',
+        date: fmtDate(o.created_at),
+        status: o.status || 'Nowe',
+        payment: o.payment || 'Nieopłacone',
+        payColor: payColor(o.payment),
+        onStatusChange: (e) => this.dashUpdateOrderStatus(o.id, 'status', e.target.value),
+        onPaymentChange: (e) => this.dashUpdateOrderStatus(o.id, 'payment', e.target.value),
+      })),
+
+      // Filters
+      dFilterAllBg: fa.bg, dFilterAllClr: fa.clr, dFilterAllBrd: fa.brd,
+      dFilterNewBg: fn.bg, dFilterNewClr: fn.clr, dFilterNewBrd: fn.brd,
+      dFilterUnpaidBg: fu.bg, dFilterUnpaidClr: fu.clr, dFilterUnpaidBrd: fu.brd,
+      dSetFilterAll: () => this.setState({ dashOrderFilter: 'all' }),
+      dSetFilterNew: () => this.setState({ dashOrderFilter: 'new' }),
+      dSetFilterUnpaid: () => this.setState({ dashOrderFilter: 'unpaid' }),
+
+      // Users list
+      dUsersList: dashUsers.map(u => {
+        const role = u.role || 'client';
+        const name = u.full_name || u.email?.split('@')[0] || '—';
+        const roleColor = role === 'admin' ? '#C69A4C' : role === 'moderator' ? '#8ABA82' : '#9A9480';
+        return {
+          id: u.id,
+          name,
+          email: u.email || '—',
+          role,
+          initials: name.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0,2),
+          roleColor,
+          roleBg: role === 'admin' ? 'rgba(198,154,76,.12)' : role === 'moderator' ? 'rgba(138,186,130,.12)' : 'rgba(154,148,128,.12)',
+          roleBorderColor: role === 'admin' ? 'rgba(198,154,76,.2)' : role === 'moderator' ? 'rgba(138,186,130,.2)' : 'rgba(154,148,128,.2)',
+          onRoleChange: (e) => this.dashUpdateUserRole(u.id, e.target.value),
+        };
+      }),
+
+      // Analytics
+      dOrdersByStatus: ordersByStatus,
+      dProductsByCategory: productsByCategory,
+      dTopProducts: topProducts,
+
+      // Backups
+      dBackupsList: dashBackups.map(b => ({
+        ...b,
+        isRestoring: dashBackupRestoring === b.id,
+        isRestored: dashBackupRestored === b.id,
+        showAction: dashBackupRestoring !== b.id && dashBackupRestored !== b.id,
+        onRestore: () => this.dashRestoreBackup(b.id),
+      })),
     };
   }
 }
