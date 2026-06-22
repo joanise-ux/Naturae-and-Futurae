@@ -393,7 +393,7 @@ class Component extends DCLogic {
   async checkAdmin(user) {
     const sb = window.supabaseClient;
     const { data: profile } = await sb.from('profiles').select('full_name, role').eq('id', user.id).single();
-    if (profile && profile.role === 'admin') {
+    if (profile && (profile.role === 'admin' || profile.role === 'moderator')) {
       this.setState({ user, isAdmin: true, adminName: profile.full_name || user.email });
       await this.loadData();
     } else {

@@ -506,7 +506,7 @@
 </script>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  ADMIN_EMAILS = ['joannau90@gmail.com', 'knzuczek@gmail.com'];
+  DASHBOARD_ROLES = ['admin', 'moderator'];
 
   state = {
     user: null,
@@ -800,7 +800,7 @@ class Component extends DCLogic {
     return {
       showLogin: hydrated && !loggedIn,
       showDashboard: hydrated && loggedIn,
-      isAdminUser: loggedIn && this.ADMIN_EMAILS.includes(user?.email),
+      isAdminUser: loggedIn && this.DASHBOARD_ROLES.includes(profile?.role),
       orders: ordersFmt,
       ordersCount,
       totalSpent,

@@ -756,7 +756,7 @@
 </script>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  ADMIN_EMAILS = ['joannau90@gmail.com', 'knzuczek@gmail.com'];
+  DASHBOARD_ROLES = ['admin', 'moderator'];
 
   state = {
     cart: [],
@@ -768,6 +768,7 @@ class Component extends DCLogic {
     lastOrderId: null,
     hydrated: false,
     user: null,
+    userRole: null,
     watchedIds: [],
     // Dashboard
     dashboardMode: false,
@@ -799,10 +800,12 @@ class Component extends DCLogic {
 
     let cart = [];
     let watchedIds = [];
+    let userRole = null;
     if (user) {
-      const [cartRes, watchRes] = await Promise.all([
+      const [cartRes, watchRes, profileRes] = await Promise.all([
         sb.from('cart_items').select('product_id, qty, products(name, latin, price, image)').eq('user_id', user.id),
         sb.from('watched_products').select('product_id').eq('user_id', user.id),
+        sb.from('profiles').select('role').eq('id', user.id).single(),
       ]);
       cart = (cartRes.data || []).map(c => ({
         id: c.product_id, qty: c.qty,
@@ -810,6 +813,7 @@ class Component extends DCLogic {
         price: Number(c.products.price), image: c.products.image
       }));
       watchedIds = (watchRes.data || []).map(w => w.product_id);
+      userRole = profileRes.data?.role || null;
       this.saveCartLocal(cart);
     } else {
       try {
@@ -820,19 +824,23 @@ class Component extends DCLogic {
 
     const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
     const wantsDash = window.location.hash === '#dashboard';
-    const isAdmin = user && this.ADMIN_EMAILS.includes(user.email);
-    this.setState({ products: mapped, cart, user, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds, dashboardMode: wantsDash && isAdmin });
+    const isDashUser = user && this.DASHBOARD_ROLES.includes(userRole);
+    this.setState({ products: mapped, cart, user, userRole, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds, dashboardMode: wantsDash && isDashUser });
 
-    if (isAdmin) this.loadDashboardData();
+    if (isDashUser) this.loadDashboardData();
 
     sb.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user || null;
       if (u) {
-        const { data: wd } = await sb.from('watched_products').select('product_id').eq('user_id', u.id);
-        this.setState({ user: u, watchedIds: (wd || []).map(w => w.product_id) });
-        if (this.ADMIN_EMAILS.includes(u.email)) this.loadDashboardData();
+        const [wdRes, profRes] = await Promise.all([
+          sb.from('watched_products').select('product_id').eq('user_id', u.id),
+          sb.from('profiles').select('role').eq('id', u.id).single(),
+        ]);
+        const role = profRes.data?.role || null;
+        this.setState({ user: u, userRole: role, watchedIds: (wdRes.data || []).map(w => w.product_id) });
+        if (this.DASHBOARD_ROLES.includes(role)) this.loadDashboardData();
       } else {
-        this.setState({ user: u, watchedIds: [], dashboardMode: false, dashOrders: [], dashUsers: [] });
+        this.setState({ user: u, userRole: null, watchedIds: [], dashboardMode: false, dashOrders: [], dashUsers: [] });
       }
     });
   }
@@ -1069,7 +1077,7 @@ class Component extends DCLogic {
       checkout:    this.checkout,
 
       // === DASHBOARD ===
-      isAdminUser: !!(this.state.user && this.ADMIN_EMAILS.includes(this.state.user.email)),
+      isAdminUser: !!(this.state.user && this.DASHBOARD_ROLES.includes(this.state.userRole)),
       dashboardMode: this.state.dashboardMode,
       toggleDashboard: this.toggleDashboard,
       dashboardBtnLabel: this.state.dashboardMode ? 'Sklep' : 'Dashboard',
