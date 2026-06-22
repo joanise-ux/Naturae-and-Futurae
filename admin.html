@@ -265,7 +265,11 @@
                 <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.1em;">ZAREJESTROWANO</div>
                 <div style="font-family:'EB Garamond',serif; font-size:15px; color:#9a9480;">{{ u.created }}</div>
               </div>
-              <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ u.roleColor }}; border:1px solid {{ u.roleBorder }}; border-radius:999px; padding:4px 12px;">{{ u.role }}</span>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span onClick="{{ u.onSetCustomer }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ u.customerBtnColor }}; background:{{ u.customerBtnBg }}; border:1px solid {{ u.customerBtnBorder }}; border-radius:999px; padding:4px 12px;">customer</span>
+                <span onClick="{{ u.onSetModerator }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ u.moderatorBtnColor }}; background:{{ u.moderatorBtnBg }}; border:1px solid {{ u.moderatorBtnBorder }}; border-radius:999px; padding:4px 12px;">moderator</span>
+                <span onClick="{{ u.onSetAdmin }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ u.adminBtnColor }}; background:{{ u.adminBtnBg }}; border:1px solid {{ u.adminBtnBorder }}; border-radius:999px; padding:4px 12px;">admin</span>
+              </div>
             </div>
           </sc-for>
         </div>
@@ -493,6 +497,13 @@ class Component extends DCLogic {
     }
   };
 
+  // ---- USER ROLE ----
+  setUserRole = async (userId, role) => {
+    const sb = window.supabaseClient;
+    await sb.from('profiles').update({ role }).eq('id', userId);
+    await this.loadData();
+  };
+
   // ---- ORDER STATUS ----
   setOrderStatus = async (orderId, status) => {
     const sb = window.supabaseClient;
@@ -568,14 +579,43 @@ class Component extends DCLogic {
       };
     });
 
-    const userRows = users.map(u => ({
-      name: u.full_name || '(brak imienia)',
-      phone: u.phone || '—',
-      role: u.role || 'customer',
-      roleColor: u.role === 'admin' ? '#c69a4c' : '#8c7d5e',
-      roleBorder: u.role === 'admin' ? 'rgba(198,154,76,.4)' : 'rgba(140,125,94,.3)',
-      created: fmtDate(u.created_at),
-    }));
+    const roleBtnStyle = (current, target) => {
+      const active = (current || 'customer') === target;
+      if (target === 'admin') return {
+        color: active ? '#0a1a0c' : '#c69a4c',
+        bg: active ? 'linear-gradient(180deg,#c69a4c,#9a7530)' : 'transparent',
+        border: 'rgba(198,154,76,.4)',
+      };
+      if (target === 'moderator') return {
+        color: active ? '#0a1a0c' : '#7aaa72',
+        bg: active ? 'linear-gradient(180deg,#6a9a62,#3d6a38)' : 'transparent',
+        border: 'rgba(122,170,114,.4)',
+      };
+      return {
+        color: active ? '#ddd8c6' : '#8c7d5e',
+        bg: active ? 'rgba(140,125,94,.2)' : 'transparent',
+        border: 'rgba(140,125,94,.3)',
+      };
+    };
+
+    const userRows = users.map(u => {
+      const role = u.role || 'customer';
+      const cs = roleBtnStyle(role, 'customer');
+      const ms = roleBtnStyle(role, 'moderator');
+      const as = roleBtnStyle(role, 'admin');
+      return {
+        name: u.full_name || '(brak imienia)',
+        phone: u.phone || '—',
+        role,
+        created: fmtDate(u.created_at),
+        onSetCustomer: () => this.setUserRole(u.id, 'customer'),
+        onSetModerator: () => this.setUserRole(u.id, 'moderator'),
+        onSetAdmin: () => this.setUserRole(u.id, 'admin'),
+        customerBtnColor: cs.color, customerBtnBg: cs.bg, customerBtnBorder: cs.border,
+        moderatorBtnColor: ms.color, moderatorBtnBg: ms.bg, moderatorBtnBorder: ms.border,
+        adminBtnColor: as.color, adminBtnBg: as.bg, adminBtnBorder: as.border,
+      };
+    });
 
     return {
       showLogin,
