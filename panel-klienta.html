@@ -108,7 +108,18 @@
 
             <div style="margin-top:18px;">
               <div style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">HASŁO</div>
-              <input type="password" value="{{ loginPassword }}" onInput="{{ onLoginPassword }}" placeholder="••••••••" style="width:100%; box-sizing:border-box; padding:14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6; outline:none;" />
+              <div style="position:relative;">
+                <input type="{{ passwordInputType }}" value="{{ loginPassword }}" onInput="{{ onLoginPassword }}" placeholder="••••••••" style="width:100%; box-sizing:border-box; padding:14px 52px 14px 16px; background:rgba(20,28,18,.6); border:1px solid rgba(90,120,70,.3); border-radius:6px; font-family:'Space Mono',monospace; font-size:18px; letter-spacing:.3em; color:#ddd8c6; outline:none;" />
+                <span onClick="{{ toggleShowPassword }}" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.08em; color:#8c7d5e; user-select:none; padding:4px;">{{ showPasswordLabel }}</span>
+              </div>
+              <sc-if value="{{ showStrength }}">
+                <div style="margin-top:7px;">
+                  <div style="height:3px; background:rgba(90,120,70,.18); border-radius:2px; overflow:hidden;">
+                    <div style="height:100%; width:{{ strengthWidth }}; background:{{ strengthColor }}; border-radius:2px;"></div>
+                  </div>
+                  <div style="font-family:'Space Mono',monospace; font-size:9px; color:{{ strengthColor }}; margin-top:4px; letter-spacing:.04em;">{{ strengthLabel }}</div>
+                </div>
+              </sc-if>
             </div>
 
             <span onClick="{{ submitAuth }}" style="cursor:pointer; display:block; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:6px; padding:16px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.35); margin-top:24px;">
@@ -152,6 +163,25 @@
 
 
   <!-- ============================================================ -->
+  <!-- REGISTRATION SUCCESS -->
+  <!-- ============================================================ -->
+  <sc-if value="{{ registrationDone }}">
+    <div style="max-width:1440px; margin:0 auto; padding:80px 40px; display:flex; justify-content:center;">
+      <div style="max-width:580px; width:100%; padding:44px 40px; background:linear-gradient(180deg,#0e1610,#0a0805); border:1px solid rgba(122,170,114,.4); border-radius:14px; text-align:center; box-shadow:0 0 48px -20px rgba(122,170,114,.25);">
+        <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(180deg,#1a2014,#0c160e); border:2px solid #8aba82; margin:0 auto; display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px rgba(122,170,114,.3);">
+          <span style="font-family:'Space Mono',monospace; font-size:26px; color:#8aba82; line-height:1;">✓</span>
+        </div>
+        <h2 style="font-family:'Cinzel',serif; font-weight:700; font-size:30px; color:#ddd8c6; margin:20px 0 10px; letter-spacing:.02em;">Konto zostało utworzone!</h2>
+        <p style="font-family:'EB Garamond',serif; font-size:17px; line-height:1.68; color:#9a9480; margin:0 0 10px;">Wysłaliśmy wiadomość e-mail na adres:</p>
+        <div style="font-family:'Space Mono',monospace; font-size:13px; color:#ddd8c6; padding:10px 16px; background:rgba(122,170,114,.07); border:1px solid rgba(122,170,114,.25); border-radius:6px; display:inline-block; margin-bottom:18px;">{{ registrationEmail }}</div>
+        <p style="font-family:'EB Garamond',serif; font-size:16px; line-height:1.65; color:#9a9480; margin:0 0 28px;">Kliknij w link aktywacyjny w tej wiadomości, aby potwierdzić konto. Bez potwierdzenia logowanie nie będzie możliwe. Sprawdź również folder Spam.</p>
+        <span onClick="{{ resetToLogin }}" style="cursor:pointer; display:inline-block; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:12px 24px;">← Wróć do logowania</span>
+      </div>
+    </div>
+  </sc-if>
+
+
+  <!-- ============================================================ -->
   <!-- DASHBOARD (shown when logged in) -->
   <!-- ============================================================ -->
   <sc-if value="{{ showDashboard }}" hint-placeholder-val="{{ true }}">
@@ -166,7 +196,7 @@
         </div>
         <div style="display:flex; gap:12px; align-items:center;">
           <sc-if value="{{ isAdminUser }}">
-            <a href="sklep.html#dashboard" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:5px; padding:11px 18px; text-decoration:none;">
+            <a href="admin.html" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#c69a4c; border:1px solid rgba(198,154,76,.4); border-radius:5px; padding:11px 18px; text-decoration:none;">
               <span style="width:6px; height:6px; border-radius:50%; background:#c69a4c;"></span>
               Dashboard Admin
             </a>
@@ -532,6 +562,9 @@ class Component extends DCLogic {
     newPassword: '',
     passwordMsg: '',
     passwordMsgColor: '#7aaa72',
+    registrationDone: false,
+    registrationEmail: '',
+    showPassword: false,
   };
 
   async componentDidMount() {
@@ -609,20 +642,52 @@ class Component extends DCLogic {
           email: loginEmail, password: loginPassword,
           options: { data: { full_name: registerName } }
         });
-        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+        if (error) { this.setState({ authError: this.translateError(error.message), authLoading: false }); return; }
         if (data?.user?.identities?.length === 0) {
           this.setState({ authError: 'Konto z tym adresem e-mail już istnieje.', authLoading: false });
           return;
         }
+        this.setState({ authLoading: false, registrationDone: true, registrationEmail: loginEmail });
+        return;
       } else {
         const { error } = await sb.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-        if (error) { this.setState({ authError: error.message, authLoading: false }); return; }
+        if (error) { this.setState({ authError: this.translateError(error.message), authLoading: false }); return; }
       }
       this.setState({ authLoading: false });
     } catch (err) {
       this.setState({ authError: 'Wystąpił błąd połączenia. Spróbuj ponownie.', authLoading: false });
     }
   };
+
+  translateError(msg) {
+    const m = (msg || '').toLowerCase();
+    if (m.includes('invalid login credentials') || m.includes('invalid credentials')) return 'Nieprawidłowy e-mail lub hasło.';
+    if (m.includes('email not confirmed')) return 'Adres e-mail nie został potwierdzony. Sprawdź skrzynkę pocztową.';
+    if (m.includes('user already registered') || m.includes('already registered')) return 'Konto z tym adresem e-mail już istnieje.';
+    if (m.includes('password should be at least') || m.includes('password is too short') || m.includes('weak password')) return 'Hasło musi mieć co najmniej 6 znaków.';
+    if (m.includes('rate limit') || m.includes('over_email_send_rate_limit')) return 'Zbyt wiele prób. Odczekaj chwilę i spróbuj ponownie.';
+    if (m.includes('invalid email') || m.includes('email_address_invalid') || m.includes('unable to validate email')) return 'Nieprawidłowy adres e-mail.';
+    if (m.includes('signup_disabled')) return 'Rejestracja jest tymczasowo wyłączona.';
+    if (m.includes('network') || m.includes('fetch')) return 'Błąd połączenia. Sprawdź internet i spróbuj ponownie.';
+    return msg;
+  }
+
+  computeStrength(pwd) {
+    if (!pwd) return null;
+    let s = 0;
+    if (pwd.length >= 8) s++;
+    if (pwd.length >= 12) s++;
+    if (/[A-Z]/.test(pwd)) s++;
+    if (/[0-9]/.test(pwd)) s++;
+    if (/[^A-Za-z0-9]/.test(pwd)) s++;
+    if (s <= 1) return { width:'20%', color:'#e07070', label:'Słabe — dodaj wielką literę i cyfrę' };
+    if (s <= 2) return { width:'45%', color:'#c69a4c', label:'Przeciętne — dodaj cyfry lub znaki specjalne' };
+    if (s <= 3) return { width:'70%', color:'#7aaa72', label:'Dobre' };
+    return { width:'100%', color:'#8aba82', label:'Silne' };
+  }
+
+  toggleShowPassword = () => this.setState(s => ({ showPassword: !s.showPassword }));
+  resetToLogin = () => this.setState({ registrationDone: false, registrationEmail: '', isRegisterMode: false, loginEmail: '', loginPassword: '', authError: '' });
 
   loginWithGoogle = async () => {
     const sb = window.supabaseClient;
@@ -798,7 +863,7 @@ class Component extends DCLogic {
     }));
 
     return {
-      showLogin: hydrated && !loggedIn,
+      showLogin: hydrated && !loggedIn && !this.state.registrationDone,
       showDashboard: hydrated && loggedIn,
       isAdminUser: loggedIn && this.DASHBOARD_ROLES.includes(profile?.role),
       orders: ordersFmt,
@@ -832,6 +897,17 @@ class Component extends DCLogic {
       toggleAuthMode: this.toggleAuthMode,
       authSubmitLabel: authLoading ? 'Ładowanie...' : (isRegisterMode ? 'Załóż konto →' : 'Zaloguj się →'),
       authToggleLabel: isRegisterMode ? 'Mam już konto — zaloguj' : 'Nie mam konta — załóż',
+      registrationDone: this.state.registrationDone,
+      registrationEmail: this.state.registrationEmail,
+      resetToLogin: this.resetToLogin,
+      showPassword: this.state.showPassword,
+      toggleShowPassword: this.toggleShowPassword,
+      passwordInputType: this.state.showPassword ? 'text' : 'password',
+      showPasswordLabel: this.state.showPassword ? 'UKRYJ' : 'POKAŻ',
+      showStrength: isRegisterMode && !!loginPassword,
+      strengthWidth: this.computeStrength(isRegisterMode ? loginPassword : '')?.width || '0%',
+      strengthColor: this.computeStrength(isRegisterMode ? loginPassword : '')?.color || '#8c7d5e',
+      strengthLabel: this.computeStrength(isRegisterMode ? loginPassword : '')?.label || '',
 
       userFirstName: firstName,
       userEmail: user?.email || '',

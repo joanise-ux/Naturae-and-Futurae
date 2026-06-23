@@ -198,6 +198,35 @@
       <!-- TAB: ORDERS -->
       <!-- ============================================================ -->
       <sc-if value="{{ showOrders }}">
+
+        <!-- Analytics strip -->
+        <div style="display:grid; grid-template-columns:repeat(5,1fr) 1fr 1fr; gap:12px; margin-bottom:22px;">
+          <sc-for list="{{ analyticsStats }}" as="a">
+            <div style="padding:16px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.18); border-radius:10px; text-align:center;">
+              <div style="font-family:'Cinzel',serif; font-size:26px; font-weight:700; color:{{ a.color }};">{{ a.count }}</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; margin-top:4px; letter-spacing:.06em;">{{ a.label }}</div>
+            </div>
+          </sc-for>
+          <div style="padding:16px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.22); border-radius:10px; text-align:center;">
+            <div style="font-family:'Cinzel',serif; font-size:20px; font-weight:700; color:#8aba82;">{{ deliveredRevenue }}<span style="font-size:11px; color:#8c7d5e;"> PLN</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; margin-top:4px; letter-spacing:.06em;">PRZYCHÓD</div>
+          </div>
+          <div style="padding:16px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(198,154,76,.15); border-radius:10px; text-align:center;">
+            <div style="font-family:'Cinzel',serif; font-size:20px; font-weight:700; color:#c69a4c;">{{ totalRevenue }}<span style="font-size:11px; color:#8c7d5e;"> PLN</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8c7d5e; margin-top:4px; letter-spacing:.06em;">ŁĄCZNIE</div>
+          </div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px;">
+          <span onClick="{{ setOrderFilterAll }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(198,154,76,.3); background:{{ filterAllBg }}; color:{{ filterAllColor }};">Wszystkie ({{ ordersTotal }})</span>
+          <span onClick="{{ setOrderFilterNew }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(169,192,160,.3); background:{{ filterNewBg }}; color:{{ filterNewColor }};">Nowe</span>
+          <span onClick="{{ setOrderFilterProcessing }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(198,154,76,.3); background:{{ filterProcessingBg }}; color:{{ filterProcessingColor }};">W pakowaniu</span>
+          <span onClick="{{ setOrderFilterShipped }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(122,170,114,.3); background:{{ filterShippedBg }}; color:{{ filterShippedColor }};">Wysłane</span>
+          <span onClick="{{ setOrderFilterDelivered }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(122,170,114,.4); background:{{ filterDeliveredBg }}; color:{{ filterDeliveredColor }};">Dostarczone</span>
+          <span onClick="{{ setOrderFilterCancelled }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; padding:7px 14px; border-radius:5px; border:1px solid rgba(224,112,112,.3); background:{{ filterCancelledBg }}; color:{{ filterCancelledColor }};">Anulowane</span>
+        </div>
+
         <sc-if value="{{ noOrders }}">
           <div style="text-align:center; padding:60px 20px;">
             <div style="font-family:'Cinzel',serif; font-size:22px; color:#ddd8c6;">Brak zamówień</div>
@@ -232,11 +261,14 @@
                   </sc-for>
                 </div>
               </sc-if>
-              <div style="display:flex; gap:8px; margin-top:12px;">
+              <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
                 <span onClick="{{ o.onToggleItems }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; border:1px solid rgba(90,120,70,.3); border-radius:4px; padding:6px 12px;">{{ o.toggleLabel }}</span>
+                <span style="width:1px; background:rgba(90,120,70,.2); margin:0 4px;"></span>
+                <span onClick="{{ o.onSetNowe }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#a9c0a0; border:1px solid rgba(169,192,160,.3); border-radius:4px; padding:6px 12px;">Nowe</span>
                 <span onClick="{{ o.onSetPakowanie }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#c69a4c; border:1px solid rgba(198,154,76,.3); border-radius:4px; padding:6px 12px;">Pakowanie</span>
                 <span onClick="{{ o.onSetWyslano }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; border:1px solid rgba(122,170,114,.3); border-radius:4px; padding:6px 12px;">Wysłano</span>
                 <span onClick="{{ o.onSetDostarczone }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#8aba82; border:1px solid rgba(122,170,114,.4); border-radius:4px; padding:6px 12px;">Dostarczone</span>
+                <span onClick="{{ o.onSetAnulowane }}" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; color:#e07070; border:1px solid rgba(224,112,112,.35); border-radius:4px; padding:6px 12px;">Anulowane</span>
               </div>
             </div>
           </sc-for>
@@ -259,7 +291,8 @@
             <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:16px; align-items:center; padding:16px 20px; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px;">
               <div>
                 <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6;">{{ u.name }}</div>
-                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:2px;">{{ u.phone }}</div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#7aaa72; margin-top:3px;">{{ u.email }}</div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; margin-top:1px;">{{ u.phone }}</div>
               </div>
               <div>
                 <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e; letter-spacing:.1em;">ZAREJESTROWANO</div>
@@ -324,6 +357,13 @@
         <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:6px;">URL OBRAZKA</div>
         <input type="text" value="{{ editImage }}" onInput="{{ onEditImage }}" style="width:100%; box-sizing:border-box; padding:12px 14px; background:rgba(20,28,18,.6); border:1px solid rgba(198,154,76,.25); border-radius:6px; font-family:'Space Mono',monospace; font-size:13px; color:#ddd8c6; outline:none;">
       </div>
+      <div style="margin-top:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.1em; color:#8c7d5e; margin-bottom:8px;">DOSTĘPNOŚĆ W SKLEPIE</div>
+        <span onClick="{{ onEditAvailable }}" style="cursor:pointer; display:inline-flex; align-items:center; gap:10px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:{{ editAvailableColor }}; background:{{ editAvailableBg }}; border:1px solid {{ editAvailableBorder }}; border-radius:6px; padding:10px 16px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:{{ editAvailableColor }}; box-shadow:0 0 6px {{ editAvailableColor }};"></span>
+          {{ editAvailableLabel }}
+        </span>
+      </div>
 
       <div style="display:flex; gap:12px; margin-top:24px;">
         <span onClick="{{ saveProduct }}" style="cursor:pointer; flex:1; text-align:center; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#c69a4c,#9a7530); border:1px solid #c69a4c; border-radius:6px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(220,200,140,.45);">
@@ -363,6 +403,7 @@ class Component extends DCLogic {
     resetEmail: '',
     resetSuccess: '',
     tab: 'products',
+    orderFilter: 'all',
     products: [],
     orders: [],
     users: [],
@@ -377,6 +418,7 @@ class Component extends DCLogic {
     editUnit: '',
     editDesc: '',
     editImage: '',
+    editAvailable: true,
   };
 
   async componentDidMount() {
@@ -401,8 +443,8 @@ class Component extends DCLogic {
       this.setState({ user, isAdmin: true, adminName: profile.full_name || user.email });
       await this.loadData();
     } else {
-      this.setState({ user, isAdmin: false, authError: 'To konto nie ma uprawnień administratora.' });
-      await sb.auth.signOut();
+      this.setState({ user, isAdmin: false, authError: 'To konto nie ma uprawnień administratora. Za chwilę zostaniesz przekierowany do panelu klienta.' });
+      setTimeout(() => { window.location.href = 'panel-klienta.html'; }, 2500);
     }
   }
 
@@ -459,6 +501,7 @@ class Component extends DCLogic {
   };
 
   setTab = (t) => this.setState({ tab: t, successMsg: '' });
+  setOrderFilter = (f) => this.setState({ orderFilter: f });
 
   // ---- PRODUCT EDITING ----
   openEdit = (p) => {
@@ -467,6 +510,7 @@ class Component extends DCLogic {
       editPrice: String(p.price), editStock: String(p.stock),
       editTag: p.tag || '', editUnit: p.unit || '',
       editDesc: p.description || '', editImage: p.image || '',
+      editAvailable: p.available !== false,
     });
   };
 
@@ -480,14 +524,16 @@ class Component extends DCLogic {
   onEditUnit = (e) => this.setState({ editUnit: e.target.value });
   onEditDesc = (e) => this.setState({ editDesc: e.target.value });
   onEditImage = (e) => this.setState({ editImage: e.target.value });
+  onEditAvailable = () => this.setState(s => ({ editAvailable: !s.editAvailable }));
 
   saveProduct = async () => {
     const { editId, editName, editLatin, editPrice, editStock, editTag, editUnit, editDesc, editImage } = this.state;
     const sb = window.supabaseClient;
+    const { editAvailable } = this.state;
     const { error } = await sb.from('products').update({
       name: editName, latin: editLatin, price: Number(editPrice),
       stock: parseInt(editStock, 10), tag: editTag, unit: editUnit,
-      description: editDesc, image: editImage,
+      description: editDesc, image: editImage, available: editAvailable,
     }).eq('id', editId);
     if (error) {
       this.setState({ authError: 'Błąd zapisu: ' + error.message });
@@ -520,7 +566,7 @@ class Component extends DCLogic {
   };
 
   renderVals() {
-    const { user, isAdmin, adminName, email, password, authError, successMsg, tab, products, orders, users, editId, expandedOrders } = this.state;
+    const { user, isAdmin, adminName, email, password, authError, successMsg, tab, orderFilter, products, orders, users, editId, expandedOrders } = this.state;
 
     const showLogin = !isAdmin;
     const showProducts = isAdmin && tab === 'products';
@@ -548,13 +594,16 @@ class Component extends DCLogic {
     };
 
     const statusColors = {
+      'Nowe': { color: '#a9c0a0', border: 'rgba(169,192,160,.4)' },
       'Pakowanie': { color: '#c69a4c', border: 'rgba(198,154,76,.4)' },
       'Wysłano': { color: '#7aaa72', border: 'rgba(122,170,114,.3)' },
       'Dostarczone': { color: '#8aba82', border: 'rgba(122,170,114,.5)' },
+      'Anulowane': { color: '#e07070', border: 'rgba(224,112,112,.4)' },
     };
 
-    const orderRows = orders.map(o => {
-      const sc = statusColors[o.status] || { color: '#8c7d5e', border: 'rgba(140,125,94,.3)' };
+    const allOrderRows = orders.map(o => {
+      const st = o.status || 'Nowe';
+      const sc = statusColors[st] || { color: '#8c7d5e', border: 'rgba(140,125,94,.3)' };
       const items = (o.order_items || []).map(i => ({
         ...i,
         lineTotal: Number(i.price) * i.qty,
@@ -562,6 +611,7 @@ class Component extends DCLogic {
       const isExpanded = !!expandedOrders[o.id];
       return {
         ...o,
+        status: st,
         total: Number(o.total),
         date: fmtDate(o.created_at),
         customer: o.guest_name || o.guest_email || 'Zarejestrowany klient',
@@ -573,11 +623,28 @@ class Component extends DCLogic {
         showItems: isExpanded,
         toggleLabel: isExpanded ? 'Zwiń pozycje ▲' : 'Pozycje ▼',
         onToggleItems: () => this.toggleOrderItems(o.id),
+        onSetNowe: () => this.setOrderStatus(o.id, 'Nowe'),
         onSetPakowanie: () => this.setOrderStatus(o.id, 'Pakowanie'),
         onSetWyslano: () => this.setOrderStatus(o.id, 'Wysłano'),
         onSetDostarczone: () => this.setOrderStatus(o.id, 'Dostarczone'),
+        onSetAnulowane: () => this.setOrderStatus(o.id, 'Anulowane'),
       };
     });
+
+    const filterMap = { all: null, new: 'Nowe', processing: 'Pakowanie', shipped: 'Wysłano', delivered: 'Dostarczone', cancelled: 'Anulowane' };
+    const activeStatus = filterMap[orderFilter];
+    const orderRows = activeStatus ? allOrderRows.filter(o => o.status === activeStatus) : allOrderRows;
+
+    const countByStatus = (s) => allOrderRows.filter(o => o.status === s).length;
+    const analyticsStats = [
+      { label: 'Nowe', count: countByStatus('Nowe'), color: '#a9c0a0' },
+      { label: 'W pakowaniu', count: countByStatus('Pakowanie'), color: '#c69a4c' },
+      { label: 'Wysłane', count: countByStatus('Wysłano'), color: '#7aaa72' },
+      { label: 'Dostarczone', count: countByStatus('Dostarczone'), color: '#8aba82' },
+      { label: 'Anulowane', count: countByStatus('Anulowane'), color: '#e07070' },
+    ];
+    const totalRevenue = allOrderRows.reduce((s, o) => s + o.total, 0);
+    const deliveredRevenue = allOrderRows.filter(o => o.status === 'Dostarczone').reduce((s, o) => s + o.total, 0);
 
     const roleBtnStyle = (current, target) => {
       const active = (current || 'customer') === target;
@@ -605,6 +672,7 @@ class Component extends DCLogic {
       const as = roleBtnStyle(role, 'admin');
       return {
         name: u.full_name || '(brak imienia)',
+        email: u.email || '—',
         phone: u.phone || '—',
         role,
         created: fmtDate(u.created_at),
@@ -625,8 +693,31 @@ class Component extends DCLogic {
       statProducts, statStock, statOrders,
       statRevenue: statRevenue.toFixed(0),
       showProducts, showOrders, showUsers,
-      noOrders: orders.length === 0,
+      noOrders: orderRows.length === 0,
       noUsers: users.length === 0,
+      orderFilter,
+      setOrderFilterAll: () => this.setOrderFilter('all'),
+      setOrderFilterNew: () => this.setOrderFilter('new'),
+      setOrderFilterProcessing: () => this.setOrderFilter('processing'),
+      setOrderFilterShipped: () => this.setOrderFilter('shipped'),
+      setOrderFilterDelivered: () => this.setOrderFilter('delivered'),
+      setOrderFilterCancelled: () => this.setOrderFilter('cancelled'),
+      filterAllBg: orderFilter === 'all' ? 'rgba(198,154,76,.12)' : 'transparent',
+      filterAllColor: orderFilter === 'all' ? '#c69a4c' : '#8c7d5e',
+      filterNewBg: orderFilter === 'new' ? 'rgba(169,192,160,.12)' : 'transparent',
+      filterNewColor: orderFilter === 'new' ? '#a9c0a0' : '#8c7d5e',
+      filterProcessingBg: orderFilter === 'processing' ? 'rgba(198,154,76,.12)' : 'transparent',
+      filterProcessingColor: orderFilter === 'processing' ? '#c69a4c' : '#8c7d5e',
+      filterShippedBg: orderFilter === 'shipped' ? 'rgba(122,170,114,.12)' : 'transparent',
+      filterShippedColor: orderFilter === 'shipped' ? '#7aaa72' : '#8c7d5e',
+      filterDeliveredBg: orderFilter === 'delivered' ? 'rgba(122,170,114,.15)' : 'transparent',
+      filterDeliveredColor: orderFilter === 'delivered' ? '#8aba82' : '#8c7d5e',
+      filterCancelledBg: orderFilter === 'cancelled' ? 'rgba(224,112,112,.12)' : 'transparent',
+      filterCancelledColor: orderFilter === 'cancelled' ? '#e07070' : '#8c7d5e',
+      analyticsStats,
+      totalRevenue: totalRevenue.toFixed(0),
+      deliveredRevenue: deliveredRevenue.toFixed(0),
+      ordersTotal: allOrderRows.length,
       tabProducts: () => this.setTab('products'),
       tabOrders: () => this.setTab('orders'),
       tabUsers: () => this.setTab('users'),
@@ -656,6 +747,12 @@ class Component extends DCLogic {
       onEditUnit: this.onEditUnit,
       onEditDesc: this.onEditDesc,
       onEditImage: this.onEditImage,
+      editAvailable: this.state.editAvailable,
+      onEditAvailable: this.onEditAvailable,
+      editAvailableLabel: this.state.editAvailable ? 'Dostępny w sklepie' : 'Niedostępny (ukryty)',
+      editAvailableBg: this.state.editAvailable ? 'linear-gradient(180deg,#6a9a62,#3d6a38)' : 'rgba(224,112,112,.15)',
+      editAvailableColor: this.state.editAvailable ? '#0a1a0c' : '#e07070',
+      editAvailableBorder: this.state.editAvailable ? '#8aba82' : 'rgba(224,112,112,.4)',
       saveProduct: this.saveProduct,
       closeEditModal: this.closeEditModal,
       doLogin: this.doLogin,
