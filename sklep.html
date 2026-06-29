@@ -6,6 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js"></script>
 <script src="./support.js"></script>
+<script src="./transitions.js"></script>
 </head>
 <body>
 <x-dc>
@@ -22,10 +23,6 @@
   html { scrollbar-gutter: stable; }
   body { margin: 0; background: #111812; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
-  @view-transition { navigation: auto; }
-  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
-  ::view-transition-old(root) { animation-name: nf-vt-out; }
-  ::view-transition-new(root) { animation-name: nf-vt-in; }
   @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
   @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
   @keyframes sp-needle { 0%,100%{transform:rotate(-26deg)} 50%{transform:rotate(20deg)} }
