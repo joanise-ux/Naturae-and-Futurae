@@ -330,14 +330,18 @@
           <svg width="18" height="18" viewBox="0 0 18 18" fill="{{ dNavUsersClr }}"><circle cx="9" cy="5.5" r="3"/><path d="M3 16.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
           <span style="font-size:15px; color:{{ dNavUsersClr }};">Użytkownicy</span>
         </div>
+        <sc-if value="{{ dShowAnalytics }}">
         <div onClick="{{ dashGoAnalytics }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavAnalyticsBg }}; border:1px solid {{ dNavAnalyticsBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavAnalyticsClr }}" stroke-width="1.5"><path d="M2 14l4-5 3 3 7-9"/><path d="M13 3h3v3"/></svg>
           <span style="font-size:15px; color:{{ dNavAnalyticsClr }};">Analiza Sklepu</span>
         </div>
+        </sc-if>
+        <sc-if value="{{ dShowBackups }}">
         <div onClick="{{ dashGoBackups }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavBackupsBg }}; border:1px solid {{ dNavBackupsBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavBackupsClr }}" stroke-width="1.5"><path d="M3 9a6 6 0 1 1 1.1 3.4"/><path d="M3 13V9h4"/><path d="M9 5v4l2.5 1.5"/></svg>
           <span style="font-size:15px; color:{{ dNavBackupsClr }};">Kopie zapasowe</span>
         </div>
+        </sc-if>
       </div>
 
       <!-- User info -->
@@ -1376,14 +1380,17 @@ class Component extends DCLogic {
       dashGoBackups: () => this.dashSetSection('backups'),
 
       // Section flags
-      dIsOverview: dashSection === 'overview',
+      dIsOverview: dashSection === 'overview' || (isModerator && (dashSection === 'analytics' || dashSection === 'backups')),
       dIsProducts: dashSection === 'products',
       dIsOrders: dashSection === 'orders',
       dIsUsers: dashSection === 'users',
-      dIsAnalytics: dashSection === 'analytics',
-      dIsBackups: dashSection === 'backups',
+      // Analiza Sklepu i Kopie zapasowe — tylko dla administratora
+      dShowAnalytics: !isModerator,
+      dShowBackups: !isModerator,
+      dIsAnalytics: !isModerator && dashSection === 'analytics',
+      dIsBackups: !isModerator && dashSection === 'backups',
 
-      dSectionTitle: titles[dashSection] || 'Przegląd',
+      dSectionTitle: (isModerator && (dashSection === 'analytics' || dashSection === 'backups')) ? 'Przegląd' : (titles[dashSection] || 'Przegląd'),
       dDateStr: dateStr,
       dUserInitials: initials,
       dUserName: fullName,
