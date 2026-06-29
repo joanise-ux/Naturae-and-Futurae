@@ -305,8 +305,8 @@
 
       <!-- Role badge -->
       <div style="margin:12px 6px 16px; padding:8px 12px; background:rgba(198,154,76,.08); border:1px solid rgba(198,154,76,.15); border-radius:8px; display:flex; align-items:center; gap:8px;">
-        <div style="width:8px; height:8px; border-radius:50%; background:#C69A4C;"></div>
-        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#B8B0A0; letter-spacing:0.5px;">Administrator</span>
+        <div style="width:8px; height:8px; border-radius:50%; background:{{ dRoleColor }};"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#B8B0A0; letter-spacing:0.5px;">{{ dRoleLabel }}</span>
       </div>
 
       <!-- Nav -->
@@ -358,7 +358,7 @@
       <!-- Header -->
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px;">
         <div>
-          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Panel Administrator</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">{{ dPanelLabel }}</div>
           <div style="font-family:Cinzel,serif; font-size:24px; font-weight:600; color:#DDD8C6;">{{ dSectionTitle }}</div>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
@@ -399,7 +399,10 @@
               <div style="display:flex; align-items:center; padding:14px 22px; border-bottom:1px solid rgba(138,186,130,.12); gap:16px;">
                 <div style="width:8px; height:8px; border-radius:50%; background:{{ ro.statusColor }}; flex:none;"></div>
                 <span style="font-family:'Space Mono',monospace; font-size:11px; color:#B8B0A0; width:80px; flex:none;">{{ ro.id }}</span>
-                <span style="font-size:14px; color:#DDD8C6; flex:1;">{{ ro.client }}</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:14px; color:#DDD8C6;">{{ ro.client }}</div>
+                  <div style="font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ro.clientContact }}</div>
+                </div>
                 <span style="font-size:13px; color:#9A9480; flex:1;">{{ ro.products }}</span>
                 <span style="font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6; width:90px; flex:none; text-align:right;">{{ ro.amountStr }}</span>
                 <span style="font-family:'Space Mono',monospace; font-size:10px; color:{{ ro.statusColor }}; width:90px; flex:none; text-align:right;">{{ ro.status }}</span>
@@ -466,7 +469,11 @@
             <sc-for list="{{ dOrdersList }}" as="do" hint-placeholder-count="4">
               <div style="display:flex; padding:14px 22px; border-bottom:1px solid rgba(138,186,130,.12); gap:12px; align-items:center;">
                 <span style="width:80px; font-family:'Space Mono',monospace; font-size:12px; color:#B8B0A0;">{{ do.id }}</span>
-                <span style="width:140px; font-size:14px; color:#DDD8C6;">{{ do.client }}</span>
+                <div style="width:140px;">
+                  <div style="font-size:14px; color:#DDD8C6;">{{ do.client }}</div>
+                  <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#8C7D5E; line-height:1.45; word-break:break-word;">{{ do.clientContact }}</div>
+                  <div style="font-family:'Space Mono',monospace; font-size:9.5px; color:#6E7A60; line-height:1.45;">{{ do.clientAddress }}</div>
+                </div>
                 <span style="flex:1; font-size:13px; color:#9A9480;">{{ do.products }}</span>
                 <span style="width:90px; font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ do.amountStr }}</span>
                 <span style="width:60px; font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E;">{{ do.date }}</span>
@@ -1228,8 +1235,30 @@ class Component extends DCLogic {
   }
 
   _dashRenderVals() {
-    const { dashboardMode, dashSection, dashOrders, dashUsers, dashOrderFilter, dashBackupRestoring, dashBackupRestored, dashBackups, products, user } = this.state;
+    const { dashboardMode, dashSection, dashOrders, dashUsers, dashOrderFilter, dashBackupRestoring, dashBackupRestored, dashBackups, products, user, userRole } = this.state;
     if (!dashboardMode) return {};
+
+    // Panel reflects the logged-in user's role (admin vs moderator)
+    const isModerator = userRole === 'moderator';
+    const dRoleLabel = isModerator ? 'Moderator' : 'Administrator';
+    const dPanelLabel = isModerator ? 'Panel Moderator' : 'Panel Administrator';
+    const dRoleColor = isModerator ? '#8ABA82' : '#C69A4C';
+
+    // Resolve real customer details for orders (registered users + guests)
+    const profileById = {};
+    (dashUsers || []).forEach(u => { profileById[u.id] = u; });
+    const resolveCustomer = (o) => {
+      const snap = o.address_snapshot || {};
+      const prof = o.user_id ? profileById[o.user_id] : null;
+      const isGuest = !o.user_id;
+      const name = o.guest_name || snap.name || (prof && prof.full_name) || (isGuest ? 'Gość' : 'Klient');
+      const email = o.guest_email || snap.email || (prof && prof.email) || '';
+      const phone = snap.phone || (prof && prof.phone) || '';
+      const addrParts = [snap.street, [snap.postal, snap.city].filter(Boolean).join(' ')].filter(Boolean);
+      const address = addrParts.join(', ');
+      const contact = [email, phone].filter(Boolean).join(' · ') || '—';
+      return { name, email, phone, address, contact, type: isGuest ? 'Gość' : 'Konto' };
+    };
 
     const navStyle = (section) => {
       const active = dashSection === section;
@@ -1369,15 +1398,22 @@ class Component extends DCLogic {
       dUnpaidCount: unpaidCount,
       dAvgOrder: dashOrders.length > 0 ? Math.round(totalRevenue / dashOrders.length).toLocaleString('pl-PL') + ' zł' : '0 zł',
 
+      // Role / panel labels
+      dRoleLabel, dPanelLabel, dRoleColor,
+
       // Recent orders (overview)
-      dRecentOrders: dashOrders.slice(0, 5).map(o => ({
-        id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
-        client: o.client_name || o.full_name || '—',
-        products: o.productsStr || '—',
-        amountStr: (o.total || 0).toFixed(2) + ' zł',
-        status: o.status || 'Nowe',
-        statusColor: statusColor(o.status),
-      })),
+      dRecentOrders: dashOrders.slice(0, 5).map(o => {
+        const c = resolveCustomer(o);
+        return {
+          id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
+          client: c.name,
+          clientContact: c.contact,
+          products: o.productsStr || '—',
+          amountStr: (o.total || 0).toFixed(2) + ' zł',
+          status: o.status || 'Nowe',
+          statusColor: statusColor(o.status),
+        };
+      }),
 
       // Products list
       dProductsList: products.map(p => ({
@@ -1399,18 +1435,23 @@ class Component extends DCLogic {
       })),
 
       // Orders list
-      dOrdersList: filteredOrders.map(o => ({
-        id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
-        client: o.client_name || o.full_name || '—',
-        products: o.productsStr || '—',
-        amountStr: (o.total || 0).toFixed(2) + ' zł',
-        date: fmtDate(o.created_at),
-        status: o.status || 'Nowe',
-        payment: o.payment || 'Nieopłacone',
-        payColor: payColor(o.payment),
-        onStatusChange: (e) => this.dashUpdateOrderStatus(o.id, 'status', e.target.value),
-        onPaymentChange: (e) => this.dashUpdateOrderStatus(o.id, 'payment', e.target.value),
-      })),
+      dOrdersList: filteredOrders.map(o => {
+        const c = resolveCustomer(o);
+        return {
+          id: o.id?.toString().slice(-6) ? 'NF-' + String(o.id).slice(-4) : o.id,
+          client: c.name,
+          clientContact: c.contact,
+          clientAddress: c.address || '—',
+          products: o.productsStr || '—',
+          amountStr: (o.total || 0).toFixed(2) + ' zł',
+          date: fmtDate(o.created_at),
+          status: o.status || 'Nowe',
+          payment: o.payment || 'Nieopłacone',
+          payColor: payColor(o.payment),
+          onStatusChange: (e) => this.dashUpdateOrderStatus(o.id, 'status', e.target.value),
+          onPaymentChange: (e) => this.dashUpdateOrderStatus(o.id, 'payment', e.target.value),
+        };
+      }),
 
       // Filters
       dFilterAllBg: fa.bg, dFilterAllClr: fa.clr, dFilterAllBrd: fa.brd,
