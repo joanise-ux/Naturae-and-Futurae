@@ -1276,6 +1276,22 @@ class Component extends DCLogic {
     }));
     await sb.from('order_items').insert(orderItems);
 
+    // Collect guest data (checkout without registration) into a separate table.
+    // Unique email dedupes records; a repeat order simply yields an ignored error.
+    if (guestMode && guestData.email) {
+      try {
+        await sb.from('guests').insert({
+          email: guestData.email.trim().toLowerCase(),
+          full_name: guestData.name || null,
+          phone: guestData.phone || null,
+          street: guestData.street || null,
+          postal: guestData.postal || null,
+          city: guestData.city || null,
+          last_order_id: orderId,
+        });
+      } catch (e) { /* never block order completion */ }
+    }
+
     if (user) {
       await sb.from('cart_items').delete().eq('user_id', user.id);
     }

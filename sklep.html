@@ -729,6 +729,19 @@
     </div>
   </sc-if>
 
+  <!-- ===== ROLE CHANGE CONFIRMATION ===== -->
+  <sc-if value="{{ dRoleConfirmOpen }}">
+    <div onClick="{{ dashCancelRoleChange }}" style="position:fixed; inset:0; background:rgba(6,9,6,.85); backdrop-filter:blur(8px); z-index:300;"></div>
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:301; width:min(440px,92vw); background:#0E1810; border-radius:16px; border:1px solid rgba(198,154,76,.25); padding:30px; box-shadow:0 24px 48px rgba(0,0,0,.45); font-family:'EB Garamond',serif;">
+      <div style="font-family:Cinzel,serif; font-size:20px; font-weight:600; color:#DDD8C6; margin-bottom:14px;">Zmiana roli</div>
+      <div style="font-size:15px; color:#B8B0A0; line-height:1.6; margin-bottom:26px;">Czy na pewno chcesz to zrobić? Zaakceptowanie wiąże się z utratą dostępu do Panela Administracyjnego.</div>
+      <div style="display:flex; gap:12px;">
+        <div onClick="{{ dashCancelRoleChange }}" style="flex:1; padding:12px; text-align:center; font-family:'Space Mono',monospace; font-size:11px; color:#9A9480; border:1px solid rgba(154,148,128,.2); border-radius:8px; cursor:pointer; letter-spacing:0.5px;">ANULUJ</div>
+        <div onClick="{{ dashConfirmRoleChange }}" style="flex:1; padding:12px; text-align:center; font-family:'Space Mono',monospace; font-size:11px; color:#060906; background:#C69A4C; border-radius:8px; cursor:pointer; letter-spacing:0.5px; font-weight:700;">ZAAKCEPTUJ</div>
+      </div>
+    </div>
+  </sc-if>
+
   </sc-if>
   <!-- END ADMIN DASHBOARD -->
 
@@ -859,6 +872,7 @@ class Component extends DCLogic {
     dashOrders: [],
     dashUsers: [],
     dashOrderFilter: 'all',
+    dashRoleConfirm: null,
     dashEditId: null,
     dashEditForm: {},
     dashEditOrigStock: 0,
@@ -1056,6 +1070,19 @@ class Component extends DCLogic {
     this.setState(s => ({
       dashOrders: s.dashOrders.map(o => o.id === orderId ? { ...o, [field]: value } : o)
     }));
+  };
+
+  // Zmiana roli wymaga potwierdzenia (może odebrać dostęp do panelu).
+  dashRequestRoleChange = (userId, role) => {
+    const current = this.state.dashUsers.find(u => u.id === userId);
+    if (current && (current.role || 'customer') === role) return; // brak zmiany
+    this.setState({ dashRoleConfirm: { userId, role } });
+  };
+  dashCancelRoleChange = () => this.setState({ dashRoleConfirm: null });
+  dashConfirmRoleChange = async () => {
+    const c = this.state.dashRoleConfirm;
+    this.setState({ dashRoleConfirm: null });
+    if (c) await this.dashUpdateUserRole(c.userId, c.role);
   };
 
   dashUpdateUserRole = async (userId, role) => {
@@ -1470,6 +1497,9 @@ class Component extends DCLogic {
 
       // Users list
       dCanEditUsers: this.state.userRole === 'admin',
+      dRoleConfirmOpen: !!this.state.dashRoleConfirm,
+      dashCancelRoleChange: this.dashCancelRoleChange,
+      dashConfirmRoleChange: this.dashConfirmRoleChange,
       dUsersList: dashUsers.map(u => {
         const role = u.role || 'customer';
         const name = u.full_name || u.email?.split('@')[0] || '—';
@@ -1485,7 +1515,7 @@ class Component extends DCLogic {
           roleColor,
           roleBg: role === 'admin' ? 'rgba(198,154,76,.12)' : role === 'moderator' ? 'rgba(138,186,130,.12)' : 'rgba(154,148,128,.12)',
           roleBorderColor: role === 'admin' ? 'rgba(198,154,76,.2)' : role === 'moderator' ? 'rgba(138,186,130,.2)' : 'rgba(154,148,128,.2)',
-          onRoleChange: (e) => this.dashUpdateUserRole(u.id, e.target.value),
+          onRoleChange: (e) => this.dashRequestRoleChange(u.id, e.target.value),
         };
       }),
 

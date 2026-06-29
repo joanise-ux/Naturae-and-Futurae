@@ -1306,6 +1306,22 @@ class Component extends DCLogic {
     }));
     await sb.from('order_items').insert(orderItems);
 
+    // Zbieramy dane gości (zamówienie bez rejestracji) do osobnej tabeli.
+    // Unikalny e-mail dedupe'uje rekordy; ponowne zamówienie = pominięty błąd.
+    if (guestMode && guestData.email) {
+      try {
+        await sb.from('guests').insert({
+          email: guestData.email.trim().toLowerCase(),
+          full_name: guestData.name || null,
+          phone: guestData.phone || null,
+          street: guestData.street || null,
+          postal: guestData.postal || null,
+          city: guestData.city || null,
+          last_order_id: orderId,
+        });
+      } catch (e) { /* nie blokuj finalizacji zamówienia */ }
+    }
+
     if (user) {
       await sb.from('cart_items').delete().eq('user_id', user.id);
     }
