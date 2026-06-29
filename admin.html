@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; background: #1A3636; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: #111812; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
   @view-transition { navigation: auto; }
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.4,0,.2,1); }
@@ -30,7 +30,7 @@
 </style>
 </helmet>
 
-<div style="min-height:100vh; font-family:'EB Garamond',serif; background:#1A3636; color:#b8b0a0;">
+<div style="min-height:100vh; font-family:'EB Garamond',serif; background:#0D1F1F; color:#b8b0a0;">
 
   <!-- NAV -->
   <div style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; border-bottom:1px solid rgba(90,120,70,.2); max-width:1440px; margin:0 auto;">
@@ -246,10 +246,18 @@
                   <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.06em; color:{{ o.statusColor }}; border:1px solid {{ o.statusBorder }}; border-radius:999px; padding:4px 12px;">{{ o.status }}</span>
                 </div>
               </div>
-              <div style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#9a9480;">
-                <span>{{ o.customer }}</span>
-                <span style="color:#8c7d5e;">{{ o.delivery }}</span>
-                <span style="color:#8c7d5e;">{{ o.payment }}</span>
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:'Space Mono',monospace; font-size:12px; color:#ddd8c6; margin-bottom:4px;">
+                <span style="font-weight:600;">{{ o.customerName }}</span>
+                <span style="font-size:9px; letter-spacing:.06em; color:#c69a4c; border:1px solid rgba(198,154,76,.35); border-radius:999px; padding:2px 8px;">{{ o.customerType }}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap; font-family:'Space Mono',monospace; font-size:11px; color:#9a9480;">
+                <span style="color:#7aaa72;">{{ o.customerEmail }}</span>
+                <span>{{ o.customerPhone }}</span>
+                <span style="color:#8c7d5e;">{{ o.customerAddress }}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; margin-top:4px;">
+                <span>{{ o.delivery }}</span>
+                <span>{{ o.payment }}</span>
               </div>
               <sc-if value="{{ o.showItems }}">
                 <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(90,120,70,.15);">
@@ -601,6 +609,9 @@ class Component extends DCLogic {
       'Anulowane': { color: '#e07070', border: 'rgba(224,112,112,.4)' },
     };
 
+    const profileById = {};
+    (users || []).forEach(u => { profileById[u.id] = u; });
+
     const allOrderRows = orders.map(o => {
       const st = o.status || 'Nowe';
       const sc = statusColors[st] || { color: '#8c7d5e', border: 'rgba(140,125,94,.3)' };
@@ -609,12 +620,27 @@ class Component extends DCLogic {
         lineTotal: Number(i.price) * i.qty,
       }));
       const isExpanded = !!expandedOrders[o.id];
+
+      const snap = o.address_snapshot || {};
+      const profile = o.user_id ? profileById[o.user_id] : null;
+      const isGuest = !o.user_id;
+      const customerName = o.guest_name || snap.name || (profile && profile.full_name) || (isGuest ? 'Gość' : 'Zarejestrowany klient');
+      const customerEmail = o.guest_email || snap.email || (profile && profile.email) || '—';
+      const customerPhone = snap.phone || (profile && profile.phone) || '—';
+      const addrParts = [snap.street, [snap.postal, snap.city].filter(Boolean).join(' ')].filter(Boolean);
+      const customerAddress = addrParts.join(', ') || '—';
+
       return {
         ...o,
         status: st,
         total: Number(o.total),
         date: fmtDate(o.created_at),
-        customer: o.guest_name || o.guest_email || 'Zarejestrowany klient',
+        customer: customerName,
+        customerName,
+        customerEmail,
+        customerPhone,
+        customerAddress,
+        customerType: isGuest ? 'Gość' : 'Konto',
         delivery: o.delivery_method || '—',
         payment: o.payment_method || '—',
         statusColor: sc.color,
