@@ -505,6 +505,14 @@
       <!-- ===== USERS ===== -->
       <sc-if value="{{ dIsUsers }}">
         <div style="animation:nf-fadeIn .4s ease;">
+          <div style="margin-bottom:16px; padding:16px 20px; background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.18);">
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:12px;">SKALA RANG · 11 = NAJWYŻSZA · 1–7 WOLNE (REZERWA)</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <sc-for list="{{ dRankLegend }}" as="rl">
+                <span style="display:inline-flex; align-items:center; gap:7px; padding:5px 11px; border-radius:7px; background:{{ rl.bg }}; border:1px solid {{ rl.border }}; font-family:'Space Mono',monospace; font-size:11px; color:{{ rl.color }};"><b style="font-size:12px;">{{ rl.rank }}</b> {{ rl.label }}</span>
+              </sc-for>
+            </div>
+          </div>
           <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); overflow:hidden;">
             <div style="display:flex; padding:12px 22px; border-bottom:1px solid rgba(138,186,130,.18); gap:12px;">
               <span style="width:44px;"></span>
@@ -1307,10 +1315,17 @@ class Component extends DCLogic {
     };
     const rankMeta = (r) => RANK_META[r] || { label: 'Ranga ' + r, color: '#9A9480', bg: 'rgba(154,148,128,.12)', border: 'rgba(154,148,128,.2)' };
     const editorRank = userRank || 0;
+    const selfId = user?.id;
     // Analiza Sklepu i Kopie zapasowe tylko dla administratora (11); niżsi mają ograniczony widok.
     const isModerator = editorRank < 11;
     // Opcje wyboru: nazwane rangi nie wyższe niż własna (nie można nadać rangi wyższej niż własna).
     const dRankOptions = [11, 10, 9, 8].filter(r => r <= editorRank).map(r => ({ value: String(r), label: rankMeta(r).label }));
+    // Legenda całej skali 1–11 (11 najwyższa); 1–7 wolne (rezerwa).
+    const dRankLegend = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(r => {
+      const m = rankMeta(r);
+      const reserved = r <= 7;
+      return { rank: r, label: reserved ? 'Wolna' : m.label, color: m.color, bg: m.bg, border: m.border };
+    });
 
     // Panel odzwierciedla rangę zalogowanego (Administrator / Moderator / ...)
     const erm = rankMeta(editorRank);
@@ -1540,6 +1555,7 @@ class Component extends DCLogic {
 
       // Users list
       dRankOptions,
+      dRankLegend,
       dRoleConfirmOpen: !!this.state.dashRoleConfirm,
       dashCancelRoleChange: this.dashCancelRoleChange,
       dashConfirmRoleChange: this.dashConfirmRoleChange,
@@ -1548,7 +1564,8 @@ class Component extends DCLogic {
         const meta = rankMeta(urank);
         const name = u.full_name || u.email?.split('@')[0] || '—';
         // Edytować można tylko personel (>=10) i tylko użytkowników ściśle niższej rangi; goście są tylko do odczytu.
-        const canEdit = editorRank >= 10 && editorRank > urank && !u.isGuest;
+        // Edytować może personel (>=10): ściśle niższych, a administrator (11) także równych sobie — nigdy siebie. Goście read-only.
+        const canEdit = !u.isGuest && editorRank >= 10 && u.id !== selfId && (editorRank > urank || editorRank >= 11);
         return {
           id: u.id,
           name,
