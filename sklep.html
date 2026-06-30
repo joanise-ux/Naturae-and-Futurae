@@ -1307,6 +1307,8 @@ class Component extends DCLogic {
     };
     const rankMeta = (r) => RANK_META[r] || { label: 'Ranga ' + r, color: '#9A9480', bg: 'rgba(154,148,128,.12)', border: 'rgba(154,148,128,.2)' };
     const editorRank = userRank || 0;
+    // Analiza Sklepu i Kopie zapasowe tylko dla administratora (11); niżsi mają ograniczony widok.
+    const isModerator = editorRank < 11;
     // Opcje wyboru: nazwane rangi nie wyższe niż własna (nie można nadać rangi wyższej niż własna).
     const dRankOptions = [11, 10, 9, 8].filter(r => r <= editorRank).map(r => ({ value: String(r), label: rankMeta(r).label }));
 
