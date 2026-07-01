@@ -24,6 +24,7 @@
 </script>
 <script src="./support.js"></script>
 <script src="./transitions.js"></script>
+<script src="./content-editor.js"></script>
 </head>
 <body>
 <x-dc>
@@ -83,8 +84,8 @@
   <div data-screen-label="Hero" style="position:relative; display:grid; grid-template-columns:1.02fr .98fr; gap:46px; padding:66px 40px 58px; align-items:center; max-width:1440px; margin:0 auto;">
     <div>
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;"><span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>in vitro · culta sub vitro</div>
-      <h2 style="font-family:'Cinzel',serif; font-weight:700; font-size:60px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">From nature<br>to <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">the future.</span></h2>
-      <p style="font-size:18px; line-height:1.66; color:#9a9480; max-width:440px; margin:24px 0 0;">Plants propagated in vitro in a sterile, brass cabinet. Old varieties from the orchard in Walim and the Owl Mountains — preserved under glass, free of disease, ready for a new century.</p>
+      <h2 data-edit-key="hero-title" style="font-family:'Cinzel',serif; font-weight:700; font-size:60px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">From nature<br>to <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">the future.</span></h2>
+      <p data-edit-key="hero-lead" style="font-size:18px; line-height:1.66; color:#9a9480; max-width:440px; margin:24px 0 0;">Plants propagated in vitro in a sterile, brass cabinet. Old varieties from the orchard in Walim and the Owl Mountains — preserved under glass, free of disease, ready for a new century.</p>
       <div style="display:flex; gap:14px; margin-top:32px;">
         <a href="sklep-en.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.3);">Explore the plants →</a>
         <a href="historia-en.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:14px 24px;">Our story</a>
@@ -120,7 +121,7 @@
         <span style="position:absolute; left:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
         <span style="position:absolute; right:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
         <div style="position:relative; border-radius:7px; overflow:hidden; aspect-ratio:3/3.6;">
-          <img src="assets/sp-library-terrarium.jpg" alt="Library terrarium" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <img data-edit-key="hero-image" src="assets/sp-library-terrarium.jpg" alt="Library terrarium" style="width:100%; height:100%; object-fit:cover; display:block;">
           <div style="position:absolute; left:16px; top:16px; transform:rotate(-3deg); background:linear-gradient(180deg,#d8dcc8,#c4ccb0); border:1px solid #8a9a70; border-radius:3px; padding:9px 12px 10px; box-shadow:0 8px 18px -8px rgba(0,0,0,.7); max-width:182px;">
             <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#2a3a1a; line-height:1.3;">Echeveria elegans</div>
             <div style="font-family:'EB Garamond',serif; font-size:11.5px; color:#4a5a36; line-height:1.4; margin-top:3px;">in vitro · 12 May<br>gen. identical to mother</div>
@@ -153,15 +154,15 @@
 
     <div style="display:grid; grid-template-columns:.85fr 1.15fr; gap:40px; align-items:center;">
       <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(90,120,70,.3); box-shadow:0 24px 60px -30px rgba(0,0,0,.8);">
-        <img src="assets/sp-desk-bottles.jpg" alt="Workshop" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <img data-edit-key="about-image" src="assets/sp-desk-bottles.jpg" alt="Workshop" style="width:100%; height:100%; object-fit:cover; display:block;">
         <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.4) 100%);"></div>
         <span style="position:absolute; left:16px; bottom:16px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; color:#a9c0a0; background:rgba(8,12,8,.6); border:1px solid rgba(90,120,70,.3); border-radius:4px; padding:5px 10px;">LABORATORY · WAŁBRZYCH</span>
       </div>
       <div>
         <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// who we are</div>
-        <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:32px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">A laboratory in the heart of the Owl Mountains</h3>
-        <p style="font-size:18px; line-height:1.66; color:#9a9480; margin:20px 0 0; max-width:480px;">Nature &amp; Future is a plant micropropagation laboratory based in Wałbrzych. We combine the precision of in vitro technology with a passion for saving historic varieties — sour cherries, sweet cherries and apple trees from orchards that have grown here for over a hundred years.</p>
-        <p style="font-size:18px; line-height:1.66; color:#9a9480; margin:14px 0 0; max-width:480px;">We also produce aquarium plants in in vitro culture — <span style="color:#7aaa72;">100% free of algae, snails and pathogens</span>.</p>
+        <h3 data-edit-key="about-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:32px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">A laboratory in the heart of the Owl Mountains</h3>
+        <p data-edit-key="about-p1" style="font-size:18px; line-height:1.66; color:#9a9480; margin:20px 0 0; max-width:480px;">Nature &amp; Future is a plant micropropagation laboratory based in Wałbrzych. We combine the precision of in vitro technology with a passion for saving historic varieties — sour cherries, sweet cherries and apple trees from orchards that have grown here for over a hundred years.</p>
+        <p data-edit-key="about-p2" style="font-size:18px; line-height:1.66; color:#9a9480; margin:14px 0 0; max-width:480px;">We also produce aquarium plants in in vitro culture — <span style="color:#7aaa72;">100% free of algae, snails and pathogens</span>.</p>
         <a href="historia-en.html" style="display:inline-block; margin-top:26px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#a9c0a0;">Discover our story →</a>
       </div>
     </div>
@@ -174,7 +175,7 @@
     <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px;">
       <div>
         <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// process</div>
-        <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; color:#ddd8c6; margin:10px 0 0; letter-spacing:.02em;">Six stages of micropropagation</h3>
+        <h3 data-edit-key="process-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; color:#ddd8c6; margin:10px 0 0; letter-spacing:.02em;">Six stages of micropropagation</h3>
       </div>
       <span style="font-family:'Space Mono',monospace; font-size:11px; color:#5a5a4e;">explant → acclimatisation</span>
     </div>
@@ -238,7 +239,7 @@
   <!-- ================================================================ -->
   <div data-screen-label="Why in vitro" style="position:relative; display:grid; grid-template-columns:.82fr 1.18fr; margin-top:80px; border-top:1px solid rgba(90,120,70,.16); border-bottom:1px solid rgba(90,120,70,.16);">
     <div style="position:relative; min-height:440px; overflow:hidden;">
-      <img src="assets/sp-flasks.jpg" alt="In vitro flasks" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+      <img data-edit-key="why-image" src="assets/sp-flasks.jpg" alt="In vitro flasks" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
       <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(6,10,6,.15), rgba(6,10,6,.6));"></div>
       <span style="position:absolute; left:20px; top:20px; font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#7aaa72; background:rgba(6,10,6,.55); border:1px solid rgba(90,120,70,.35); border-radius:5px; padding:6px 11px;">RACK_A · in vitro cultures</span>
       <!-- steam wisps -->
@@ -246,7 +247,7 @@
     </div>
     <div style="padding:56px 48px; display:flex; flex-direction:column; justify-content:center; background:linear-gradient(180deg,#0a140d,#060906);">
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// why in vitro</div>
-      <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; line-height:1.18; color:#ddd8c6; margin:14px 0 26px; letter-spacing:.02em;">Guaranteed purity — from flask to your garden.</h3>
+      <h3 data-edit-key="why-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; line-height:1.18; color:#ddd8c6; margin:14px 0 26px; letter-spacing:.02em;">Guaranteed purity — from flask to your garden.</h3>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
         <div style="border-left:2px solid #c69a4c; padding:2px 0 2px 16px;">
           <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#8aba82;">Pathogen-free</div>
@@ -328,7 +329,7 @@
   <!-- HISTORIA — storytelling teaser -->
   <!-- ================================================================ -->
   <div id="historia" data-screen-label="History" style="position:relative; margin-top:80px; min-height:520px; overflow:hidden;">
-    <img src="assets/sp-street.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.6;">
+    <img data-edit-key="history-image" src="assets/sp-street.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.6;">
     <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,12,8,.95) 0%, rgba(8,12,8,.8) 45%, rgba(8,12,8,.4) 100%);"></div>
     <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,12,8,.5) 0%, transparent 25%, rgba(8,12,8,.6) 100%);"></div>
     <!-- steam wisps -->
@@ -338,9 +339,9 @@
     <div style="position:relative; z-index:2; max-width:1440px; margin:0 auto; padding:70px 40px; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
       <div>
         <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// our story</div>
-        <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:16px 0 0; letter-spacing:.02em;">The orchard in Walim — over a hundred years under the Owl Mountains sky</h3>
-        <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:22px; line-height:1.5; color:#a9c0a0; margin:24px 0 0; max-width:480px;">„Old trees survived two wars and half a century of neglect. We carry their genes into the future — test tube by test tube."</p>
-        <p style="font-size:16px; line-height:1.6; color:#9a9480; margin:20px 0 0; max-width:480px;">The Owl Mountains region, the estates of the von Zedlitz and von Seher-Thoss families, the palace in Jedlinka. From 18th-century orchards, through the wars and the communist era, to our in vitro laboratory.</p>
+        <h3 data-edit-key="history-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:16px 0 0; letter-spacing:.02em;">The orchard in Walim — over a hundred years under the Owl Mountains sky</h3>
+        <p data-edit-key="history-quote" style="font-family:'EB Garamond',serif; font-style:italic; font-size:22px; line-height:1.5; color:#a9c0a0; margin:24px 0 0; max-width:480px;">„Old trees survived two wars and half a century of neglect. We carry their genes into the future — test tube by test tube."</p>
+        <p data-edit-key="history-text" style="font-size:16px; line-height:1.6; color:#9a9480; margin:20px 0 0; max-width:480px;">The Owl Mountains region, the estates of the von Zedlitz and von Seher-Thoss families, the palace in Jedlinka. From 18th-century orchards, through the wars and the communist era, to our in vitro laboratory.</p>
         <a href="historia-en.html" style="display:inline-block; margin-top:28px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.3);">Read the full story →</a>
       </div>
       <!-- atmospheric brass-framed timeline preview -->
@@ -388,8 +389,8 @@
       <div style="width:60px; height:1px; background:linear-gradient(90deg, rgba(90,120,70,.4), transparent);"></div>
     </div>
     <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// partnership</div>
-    <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:36px; line-height:1.16; color:#ddd8c6; margin:16px auto 0; max-width:640px; letter-spacing:.02em;">Interested in our plants?</h3>
-    <p style="font-size:18px; line-height:1.62; color:#9a9480; max-width:520px; margin:18px auto 0;">Write to us — we answer questions about availability, pricing and wholesale partnership. We are in Wałbrzych, but we ship plants across Poland.</p>
+    <h3 data-edit-key="contact-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:36px; line-height:1.16; color:#ddd8c6; margin:16px auto 0; max-width:640px; letter-spacing:.02em;">Interested in our plants?</h3>
+    <p data-edit-key="contact-lead" style="font-size:18px; line-height:1.62; color:#9a9480; max-width:520px; margin:18px auto 0;">Write to us — we answer questions about availability, pricing and wholesale partnership. We are in Wałbrzych, but we ship plants across Poland.</p>
     <div style="display:flex; gap:16px; justify-content:center; margin-top:32px;">
       <a href="mailto:kontakt@nfplantbiotech.com" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:16px 30px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 28px rgba(90,120,70,.35);">Write to us →</a>
       <a href="sklep-en.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:16px 30px;">B2B partnership</a>

@@ -7,6 +7,7 @@
 <script src="./supabase-config.js"></script>
 <script src="./support.js"></script>
 <script src="./transitions.js"></script>
+<script src="./content-editor.js"></script>
 </head>
 <body>
 <x-dc>
@@ -77,9 +78,9 @@
 
     <div style="position:relative; z-index:2; max-width:1440px; margin:0 auto; padding:96px 40px 88px;">
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;"><span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>our story · culta sub vitro</div>
-      <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:52px; line-height:1.08; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; max-width:760px; text-shadow:0 2px 30px rgba(0,0,0,.6);">The orchard in Walim — over a century beneath the Owl Mountains</h1>
-      <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:23px; line-height:1.5; color:#a9c0a0; margin:26px 0 0; max-width:600px;">"The old trees survived two wars and half a century of neglect. We carry their genes into the future — vial by vial."</p>
-      <p style="font-size:17px; line-height:1.66; color:#9a9480; max-width:560px; margin:22px 0 0;">The Owl Mountains region, the estates of the von Zedlitz and von Seher-Thoss families, the palace in Jedlinka. From 18th-century orchards, through wars and the communist era, all the way to our in vitro laboratory in Wałbrzych.</p>
+      <h1 data-edit-key="hero-title" style="font-family:'Cinzel',serif; font-weight:700; font-size:52px; line-height:1.08; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; max-width:760px; text-shadow:0 2px 30px rgba(0,0,0,.6);">The orchard in Walim — over a century beneath the Owl Mountains</h1>
+      <p data-edit-key="hero-quote" style="font-family:'EB Garamond',serif; font-style:italic; font-size:23px; line-height:1.5; color:#a9c0a0; margin:26px 0 0; max-width:600px;">"The old trees survived two wars and half a century of neglect. We carry their genes into the future — vial by vial."</p>
+      <p data-edit-key="hero-lead" style="font-size:17px; line-height:1.66; color:#9a9480; max-width:560px; margin:22px 0 0;">The Owl Mountains region, the estates of the von Zedlitz and von Seher-Thoss families, the palace in Jedlinka. From 18th-century orchards, through wars and the communist era, all the way to our in vitro laboratory in Wałbrzych.</p>
     </div>
   </div>
 
@@ -89,13 +90,13 @@
   <div style="max-width:1440px; margin:0 auto; padding:90px 40px 0; display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;">
     <div>
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// roots</div>
-      <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">The land of the von Zedlitz and von Seher-Thoss families</h2>
-      <p style="font-size:16.5px; line-height:1.7; color:#9a9480; margin:22px 0 0;">At the foot of the Owl Mountains, among the estates of the aristocratic von Zedlitz and von Seher-Thoss families, orchards and gardens were planted from the 18th century onward. The palace in Jedlinka was the heart of this land — and around it grew apple, pear and plum varieties chosen by generations of gardeners.</p>
-      <p style="font-size:16.5px; line-height:1.7; color:#9a9480; margin:16px 0 0;">Walim, lying along the same route, inherited that horticultural instinct. The orchard that arose here at the turn of the century combined Silesian and Saxon varieties — hardy trees suited to the mountain climate and the short summer.</p>
+      <h2 data-edit-key="roots-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">The land of the von Zedlitz and von Seher-Thoss families</h2>
+      <p data-edit-key="roots-p1" style="font-size:16.5px; line-height:1.7; color:#9a9480; margin:22px 0 0;">At the foot of the Owl Mountains, among the estates of the aristocratic von Zedlitz and von Seher-Thoss families, orchards and gardens were planted from the 18th century onward. The palace in Jedlinka was the heart of this land — and around it grew apple, pear and plum varieties chosen by generations of gardeners.</p>
+      <p data-edit-key="roots-p2" style="font-size:16.5px; line-height:1.7; color:#9a9480; margin:16px 0 0;">Walim, lying along the same route, inherited that horticultural instinct. The orchard that arose here at the turn of the century combined Silesian and Saxon varieties — hardy trees suited to the mountain climate and the short summer.</p>
     </div>
     <div style="position:relative; border-radius:14px; padding:9px; background:linear-gradient(145deg,#241a10,#120c08); border:1px solid #c69a4c; box-shadow:0 30px 70px -38px rgba(0,0,0,.9), inset 0 0 0 1px rgba(122,170,114,.2);">
       <div style="border-radius:8px; overflow:hidden; aspect-ratio:4/3;">
-        <img src="assets/cathedral.jpg" alt="A palace in the heart of the Owl Mountains" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <img data-edit-key="roots-image" src="assets/cathedral.jpg" alt="A palace in the heart of the Owl Mountains" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div style="position:absolute; left:50%; bottom:-12px; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:3px; padding:5px 12px; white-space:nowrap;">Jedlinka · Owl Mountains</div>
     </div>
@@ -107,7 +108,7 @@
   <div style="max-width:1100px; margin:0 auto; padding:100px 40px;">
     <div style="text-align:center;">
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// timeline</div>
-      <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">From orchard to vial</h2>
+      <h2 data-edit-key="timeline-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">From orchard to vial</h2>
     </div>
 
     <div style="margin-top:56px; display:flex; flex-direction:column; gap:0;">
@@ -159,7 +160,7 @@
     <div class="nf-anim" style="position:absolute; right:24%; top:58%; width:3px; height:3px; border-radius:50%; background:#7aaa72; box-shadow:0 0 8px 2px rgba(122,170,114,.6); animation:nf-firefly 14s ease-in-out infinite 3s;"></div>
     <div style="position:relative; max-width:1440px; margin:0 auto; padding:90px 40px;">
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d8a5d;">// historic varieties</div>
-      <h2 style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em; max-width:620px;">Varieties that would otherwise vanish from the map</h2>
+      <h2 data-edit-key="varieties-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em; max-width:620px;">Varieties that would otherwise vanish from the map</h2>
       <p style="font-size:16.5px; line-height:1.7; color:#9a9480; margin:18px 0 0; max-width:600px;">Old apple trees from the orchard in Walim — preserved under glass, free of disease, genetically identical to their mother trees.</p>
 
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px;">

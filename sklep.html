@@ -1236,7 +1236,7 @@ class Component extends DCLogic {
 
   // ===== KOPIE ZAPASOWE =====
   // Tabele objęte kopią. Kolejność bezpieczna dla kluczy obcych przy imporcie (rodzice najpierw).
-  DB_TABLES = ['profiles', 'products', 'orders', 'order_items', 'guests', 'cart_items', 'watched_products'];
+  DB_TABLES = ['profiles', 'products', 'orders', 'order_items', 'guests', 'cart_items', 'watched_products', 'site_content'];
 
   dashSetBackupMsg = (msg, ms = 5000) => {
     this.setState({ dashBackupMsg: msg });
