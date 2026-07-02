@@ -30,9 +30,12 @@
 
   // Elementy „inline" — blok z samymi takimi dziećmi traktujemy jako jeden
   // edytowalny kawałek tekstu (zachowujemy wewnętrzne formatowanie).
+  // A (link) jest tu traktowany jako inline — dzięki temu blok zawierający linki
+  // (np. kolumna nawigacji w stopce, rząd przycisków) jest edytowalny jako całość,
+  // można w nim zmieniać teksty i hiperłącza.
   var INLINE = { SPAN:1, B:1, I:1, EM:1, STRONG:1, BR:1, SMALL:1, SUP:1, SUB:1,
-                 U:1, MARK:1, ABBR:1, TIME:1, WBR:1, S:1, FONT:1 };
-  // Elementów tych nigdy nie edytujemy (linki, przyciski, formularze, nawigacja).
+                 U:1, MARK:1, ABBR:1, TIME:1, WBR:1, S:1, FONT:1, A:1 };
+  // Elementów tych nigdy nie kluczujemy jako samodzielny blok.
   var SKIP_TAG = { A:1, BUTTON:1, INPUT:1, SELECT:1, OPTION:1, TEXTAREA:1,
                    SCRIPT:1, STYLE:1, NAV:1, SVG:1, PATH:1, VIDEO:1, IFRAME:1 };
 
@@ -82,7 +85,7 @@
     // Elementy inline (span, b, i…) nie są samodzielnym blokiem — obejmuje je
     // nadrzędny blok tekstu, więc nie kluczujemy ich osobno (unika zagnieżdżeń).
     if (INLINE[el.tagName]) return false;
-    if (el.closest('.nf-nav, header, a, button, select, [data-nf-skip]')) return false;
+    if (el.closest('.nf-nav, .nf-lang, header, a, button, select, [data-nf-skip]')) return false;
     if (!normText(el)) return false;
     // wszystkie dzieci muszą być inline (brak zagnieżdżonych bloków)
     var kids = el.children;
@@ -292,10 +295,16 @@
     toolbar.style.top = top + 'px';
     toolbar.style.left = (window.scrollX + r.left) + 'px';
 
+    var linkBtn = mkBtn('🔗 Link', false);
+    var unlinkBtn = mkBtn('Odłącz', false);
     var saveBtn = mkBtn('Zapisz', true);
     var cancelBtn = mkBtn('Anuluj', false);
+    linkBtn.addEventListener('click', function (e) { e.preventDefault(); addLink(); });
+    unlinkBtn.addEventListener('click', function (e) { e.preventDefault(); removeLink(); });
     saveBtn.addEventListener('click', function (e) { e.preventDefault(); onSave(); });
     cancelBtn.addEventListener('click', function (e) { e.preventDefault(); onCancel(); });
+    toolbar.appendChild(linkBtn);
+    toolbar.appendChild(unlinkBtn);
     toolbar.appendChild(saveBtn);
     toolbar.appendChild(cancelBtn);
     document.body.appendChild(toolbar);
@@ -313,7 +322,48 @@
       background: primary ? 'linear-gradient(180deg,#6a9a62,#3d6a38)' : 'transparent',
       border: '1px solid ' + (primary ? GREEN : 'rgba(90,120,70,.5)')
     });
+    // Nie zabieraj focusu edytowanemu blokowi — zaznaczenie tekstu ma przetrwać klik
+    b.addEventListener('mousedown', function (e) { e.preventDefault(); });
     return b;
+  }
+
+  // --- Wstawianie / usuwanie hiperłącza w edytowanym tekście ---------------
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function normalizeAnchors() {
+    if (!editingEl) return;
+    var as = editingEl.querySelectorAll('a[href]');
+    for (var i = 0; i < as.length; i++) {
+      var href = as[i].getAttribute('href') || '';
+      if (/^https?:\/\//i.test(href)) {
+        as[i].setAttribute('target', '_blank');
+        as[i].setAttribute('rel', 'noopener');
+      }
+    }
+  }
+  function addLink() {
+    if (!editingEl) return;
+    var url = window.prompt('Adres linku (URL), np. https://... albo sklep.html', 'https://');
+    if (!url) return;
+    var sel = window.getSelection();
+    var hasSel = sel && String(sel).length > 0;
+    if (hasSel) {
+      document.execCommand('createLink', false, url);
+    } else {
+      var text = window.prompt('Tekst do wyświetlenia', url);
+      if (text === null) return;
+      document.execCommand('insertHTML', false,
+        '<a href="' + escapeHtml(url) + '">' + escapeHtml(text || url) + '</a>');
+    }
+    normalizeAnchors();
+    editingEl.focus();
+  }
+  function removeLink() {
+    if (!editingEl) return;
+    document.execCommand('unlink');
+    editingEl.focus();
   }
 
   function hideToolbar() {
