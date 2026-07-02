@@ -465,6 +465,7 @@
               <span style="flex:1; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">PRODUKTY</span>
               <span style="width:90px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">KWOTA</span>
               <span style="width:60px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">DATA</span>
+              <span style="width:120px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">KANAŁ / PUNKT</span>
               <span style="width:130px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">STATUS</span>
               <span style="width:130px; font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1px;">PŁATNOŚĆ</span>
             </div>
@@ -479,6 +480,19 @@
                 <span style="flex:1; font-size:13px; color:#9A9480;">{{ do.products }}</span>
                 <span style="width:90px; font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ do.amountStr }}</span>
                 <span style="width:60px; font-family:'Space Mono',monospace; font-size:10px; color:#8C7D5E;">{{ do.date }}</span>
+                <span style="width:120px; display:flex; flex-direction:column; gap:4px;">
+                  <select value="{{ do.channel }}" onChange="{{ do.onChannelChange }}" style="width:100%; padding:4px 6px; background:#1A2014; color:#8ABA82; border:1px solid rgba(138,186,130,.15); border-radius:4px; font-size:11px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
+                    <option value="online">Sklep Online</option>
+                    <option value="hurtownia">Hurtownia</option>
+                    <option value="marketplace">Marketplace</option>
+                  </select>
+                  <select value="{{ do.location }}" onChange="{{ do.onLocationChange }}" style="width:100%; padding:4px 6px; background:#1A2014; color:#C69A4C; border:1px solid rgba(198,154,76,.15); border-radius:4px; font-size:11px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
+                    <option value="">Punkt: —</option>
+                    <option value="online">Online</option>
+                    <option value="walim">Punkt Walim</option>
+                    <option value="wroclaw">Punkt Wrocław</option>
+                  </select>
+                </span>
                 <span style="width:130px;">
                   <select value="{{ do.status }}" onChange="{{ do.onStatusChange }}" style="width:100%; padding:5px 8px; background:#1A2014; color:#DDD8C6; border:1px solid rgba(138,186,130,.15); border-radius:4px; font-size:12px; font-family:'EB Garamond',serif; outline:none; cursor:pointer;">
                     <option value="Nowe">Nowe</option>
@@ -548,69 +562,292 @@
       <!-- ===== ANALYTICS ===== -->
       <sc-if value="{{ dIsAnalytics }}">
         <div style="animation:nf-fadeIn .4s ease;">
+
+          <!-- Przełącznik okresu -->
+          <div style="display:flex; gap:8px; margin-bottom:20px;">
+            <div onClick="{{ dSetPerMonth }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerMonthBg }}; color:{{ dPerMonthClr }}; border:1px solid {{ dPerMonthBrd }};">Miesiąc</div>
+            <div onClick="{{ dSetPerQuarter }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerQuarterBg }}; color:{{ dPerQuarterClr }}; border:1px solid {{ dPerQuarterBrd }};">Kwartał</div>
+            <div onClick="{{ dSetPerYear }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerYearBg }}; color:{{ dPerYearClr }}; border:1px solid {{ dPerYearBrd }};">Rok</div>
+          </div>
+
           <!-- KPI Cards -->
-          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px;">
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px;">
             <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
               <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">PRODUKTY AKTYWNE</div>
               <div style="font-family:Cinzel,serif; font-size:32px; font-weight:700; color:#DDD8C6;">{{ dActiveProducts }}</div>
             </div>
             <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
-              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">PRZYCHÓD ŁĄCZNY</div>
-              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dTotalRevenue }}</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">PRZYCHÓD (OKRES)</div>
+              <div style="font-family:Cinzel,serif; font-size:26px; font-weight:700; color:#DDD8C6;">{{ dAnRevenue }}</div>
             </div>
             <div style="background:#122014; border-radius:12px; border:1px solid rgba(138,186,130,.22); padding:20px 16px; text-align:center;">
-              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">ZAMÓWIENIA</div>
-              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dTotalOrders }}</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">ZAMÓWIENIA (OKRES)</div>
+              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#DDD8C6;">{{ dAnOrders }}</div>
             </div>
             <div style="background:#122014; border-radius:12px; border:1px solid rgba(198,154,76,.25); padding:20px 16px; text-align:center;">
-              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">ŚREDNIA ZAMÓWIENIA</div>
-              <div style="font-family:Cinzel,serif; font-size:28px; font-weight:700; color:#C69A4C;">{{ dAvgOrder }}</div>
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:10px;">MARŻA BRUTTO</div>
+              <div style="font-family:Cinzel,serif; font-size:26px; font-weight:700; color:#C69A4C;">{{ dAnMargin }}</div>
             </div>
           </div>
 
-          <!-- Revenue by status -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <!-- Trend przychodu + Marża -->
+          <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:16px; margin-bottom:16px;">
+            <!-- Trend -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Zamówienia wg statusu</div>
-              <sc-for list="{{ dOrdersByStatus }}" as="obs" hint-placeholder-count="4">
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(138,186,130,.08);">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:8px; height:8px; border-radius:50%; background:{{ obs.color }};"></div>
-                    <span style="font-size:14px; color:#DDD8C6;">{{ obs.label }}</span>
-                  </div>
-                  <span style="font-family:'Space Mono',monospace; font-size:13px; color:#B8B0A0;">{{ obs.count }}</span>
-                </div>
-              </sc-for>
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:6px;">Trend przychodu</div>
+              <sc-if value="{{ dHasTrend }}">
+                <svg viewBox="0 0 620 220" style="width:100%; height:auto; display:block; margin-top:8px;">
+                  <defs>
+                    <linearGradient id="nfTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#8ABA82" stop-opacity="0.32"></stop>
+                      <stop offset="100%" stop-color="#8ABA82" stop-opacity="0"></stop>
+                    </linearGradient>
+                  </defs>
+                  <sc-for list="{{ dTrendYLabels }}" as="yl">
+                    <text x="6" y="{{ yl.y }}" fill="#5d7a50" font-size="10" font-family="'Space Mono',monospace" dominant-baseline="middle">{{ yl.label }}</text>
+                  </sc-for>
+                  <path d="{{ dTrendArea }}" fill="url(#nfTrendGrad)" stroke="none"></path>
+                  <polyline points="{{ dTrendLine }}" fill="none" stroke="#8ABA82" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+                  <sc-for list="{{ dTrendDots }}" as="dot">
+                    <circle cx="{{ dot.x }}" cy="{{ dot.y }}" r="3.5" fill="#0E1810" stroke="#8ABA82" stroke-width="2"></circle>
+                  </sc-for>
+                  <sc-for list="{{ dTrendXLabels }}" as="xl">
+                    <text x="{{ xl.x }}" y="214" fill="#8C7D5E" font-size="10" font-family="'Space Mono',monospace" text-anchor="middle">{{ xl.label }}</text>
+                  </sc-for>
+                </svg>
+              </sc-if>
+              <sc-if value="{{ !dHasTrend }}">
+                <div style="padding:60px 12px; text-align:center; font-size:14px; color:#6E7A60;">Brak sprzedaży w wybranym okresie — wykres wypełni się automatycznie wraz z zamówieniami.</div>
+              </sc-if>
             </div>
+            <!-- Marża (Zysk / Koszty) -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Produkty wg kategorii</div>
-              <sc-for list="{{ dProductsByCategory }}" as="pbc" hint-placeholder-count="2">
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(138,186,130,.08);">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:8px; height:8px; border-radius:50%; background:#8ABA82;"></div>
-                    <span style="font-size:14px; color:#DDD8C6;">{{ pbc.label }}</span>
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:6px;">Rentowność</div>
+              <sc-if value="{{ dHasMargin }}">
+                <div style="display:flex; align-items:center; justify-content:space-around; margin-top:10px;">
+                  <div style="position:relative; width:110px; height:110px; text-align:center;">
+                    <svg viewBox="0 0 120 120" style="width:110px; height:110px;">
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(138,186,130,.12)" stroke-width="12"></circle>
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="{{ dProfitRingColor }}" stroke-width="12" stroke-dasharray="{{ dProfitRingDash }}" stroke-linecap="round" transform="rotate(-90 60 60)"></circle>
+                    </svg>
+                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                      <div style="font-family:Cinzel,serif; font-size:22px; font-weight:700; color:#DDD8C6;">{{ dProfitPct }}</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">Zysk</div>
+                    </div>
                   </div>
-                  <div style="display:flex; align-items:center; gap:12px;">
-                    <span style="font-family:'Space Mono',monospace; font-size:13px; color:#B8B0A0;">{{ pbc.count }} szt.</span>
-                    <span style="font-family:'Space Mono',monospace; font-size:11px; color:#C69A4C;">{{ pbc.revenue }}</span>
+                  <div style="position:relative; width:110px; height:110px; text-align:center;">
+                    <svg viewBox="0 0 120 120" style="width:110px; height:110px;">
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(198,154,76,.12)" stroke-width="12"></circle>
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="{{ dCostRingColor }}" stroke-width="12" stroke-dasharray="{{ dCostRingDash }}" stroke-linecap="round" transform="rotate(-90 60 60)"></circle>
+                    </svg>
+                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                      <div style="font-family:Cinzel,serif; font-size:22px; font-weight:700; color:#DDD8C6;">{{ dCostPct }}</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">Koszty</div>
+                    </div>
                   </div>
                 </div>
-              </sc-for>
+                <div style="display:flex; justify-content:space-between; margin-top:16px; padding-top:14px; border-top:1px solid rgba(138,186,130,.1);">
+                  <div><div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">MARŻA</div><div style="font-family:'Space Mono',monospace; font-size:14px; color:#8ABA82;">{{ dGrossMargin }}</div></div>
+                  <div style="text-align:right;"><div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">KOSZT</div><div style="font-family:'Space Mono',monospace; font-size:14px; color:#C69A4C;">{{ dPeriodCost }}</div></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasMargin }}">
+                <div style="padding:44px 12px; text-align:center;">
+                  <div style="font-size:14px; color:#6E7A60; line-height:1.6;">Uzupełnij <b style="color:#8ABA82;">koszt</b> produktów (w edycji produktu), aby marża i rentowność liczyły się automatycznie.</div>
+                </div>
+              </sc-if>
             </div>
           </div>
 
-          <!-- Top products -->
+          <!-- Donuty: statusy + płatności -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <!-- Zamówienia wg statusu -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Zamówienia wg statusu</div>
+              <sc-if value="{{ dHasStatus }}">
+                <div style="display:flex; align-items:center; gap:22px;">
+                  <div style="position:relative; width:140px; height:140px; flex:none;">
+                    <svg viewBox="0 0 120 120" style="width:140px; height:140px;">
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(138,186,130,.1)" stroke-width="14"></circle>
+                      <sc-for list="{{ dStatusArcs }}" as="arc">
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="{{ arc.color }}" stroke-width="14" stroke-dasharray="{{ arc.dash }}" stroke-dashoffset="{{ arc.offset }}" transform="rotate(-90 60 60)"></circle>
+                      </sc-for>
+                    </svg>
+                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                      <div style="font-family:Cinzel,serif; font-size:26px; font-weight:700; color:#DDD8C6;">{{ dStatusTotal }}</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">zamówień</div>
+                    </div>
+                  </div>
+                  <div style="flex:1;">
+                    <sc-for list="{{ dStatusLegend }}" as="sl">
+                      <div style="display:flex; align-items:center; justify-content:space-between; padding:7px 0;">
+                        <div style="display:flex; align-items:center; gap:9px;">
+                          <div style="width:9px; height:9px; border-radius:2px; background:{{ sl.color }};"></div>
+                          <span style="font-size:13px; color:#B8B0A0;">{{ sl.label }}</span>
+                        </div>
+                        <span style="font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ sl.count }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasStatus }}">
+                <div style="padding:50px 12px; text-align:center; font-size:14px; color:#6E7A60;">Brak zamówień w tym okresie.</div>
+              </sc-if>
+            </div>
+            <!-- Opłacone vs nieopłacone -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Płatności</div>
+              <sc-if value="{{ dHasPay }}">
+                <div style="display:flex; align-items:center; gap:22px;">
+                  <div style="position:relative; width:140px; height:140px; flex:none;">
+                    <svg viewBox="0 0 120 120" style="width:140px; height:140px;">
+                      <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(138,186,130,.1)" stroke-width="14"></circle>
+                      <sc-for list="{{ dPayArcs }}" as="arc">
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="{{ arc.color }}" stroke-width="14" stroke-dasharray="{{ arc.dash }}" stroke-dashoffset="{{ arc.offset }}" transform="rotate(-90 60 60)"></circle>
+                      </sc-for>
+                    </svg>
+                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                      <div style="font-family:Cinzel,serif; font-size:26px; font-weight:700; color:#8ABA82;">{{ dPaidPct }}</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">opłacone</div>
+                    </div>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:7px 0;">
+                      <div style="display:flex; align-items:center; gap:9px;"><div style="width:9px; height:9px; border-radius:2px; background:#8ABA82;"></div><span style="font-size:13px; color:#B8B0A0;">Opłacone</span></div>
+                      <span style="font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ dPaidCount }}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:7px 0;">
+                      <div style="display:flex; align-items:center; gap:9px;"><div style="width:9px; height:9px; border-radius:2px; background:#C69A4C;"></div><span style="font-size:13px; color:#B8B0A0;">Nieopłacone</span></div>
+                      <span style="font-family:'Space Mono',monospace; font-size:13px; color:#DDD8C6;">{{ dUnpaidCountP }}</span>
+                    </div>
+                    <div style="margin-top:10px; padding-top:12px; border-top:1px solid rgba(138,186,130,.1);">
+                      <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">DO ZAPŁATY</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:16px; color:#C69A4C;">{{ dUnpaidValue }}</div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasPay }}">
+                <div style="padding:50px 12px; text-align:center; font-size:14px; color:#6E7A60;">Brak zamówień w tym okresie.</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <!-- Słupki: kategorie + kanały -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <!-- Sprzedaż wg kategorii -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż wg kategorii</div>
+              <sc-if value="{{ dHasCategory }}">
+                <div style="display:flex; align-items:flex-end; justify-content:space-around; height:180px; gap:24px; padding:0 10px;">
+                  <sc-for list="{{ dCategoryBars }}" as="bar" hint-placeholder-count="2">
+                    <div style="display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end;">
+                      <div style="font-family:'Space Mono',monospace; font-size:11px; color:#C69A4C; margin-bottom:6px;">{{ bar.valueStr }}</div>
+                      <div style="width:100%; max-width:64px; height:{{ bar.h }}px; border-radius:8px 8px 0 0; background:linear-gradient(180deg,#8ABA82,#C69A4C);"></div>
+                      <div style="font-size:12px; color:#B8B0A0; margin-top:10px; text-align:center;">{{ bar.label }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasCategory }}">
+                <div style="padding:50px 12px; text-align:center; font-size:14px; color:#6E7A60;">Brak sprzedaży w tym okresie.</div>
+              </sc-if>
+            </div>
+            <!-- Zamówienia wg kanałów -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż wg kanałów</div>
+              <sc-if value="{{ dHasChannel }}">
+                <div style="display:flex; align-items:flex-end; justify-content:space-around; height:180px; gap:24px; padding:0 10px;">
+                  <sc-for list="{{ dChannelBars }}" as="bar" hint-placeholder-count="3">
+                    <div style="display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end;">
+                      <div style="font-family:'Space Mono',monospace; font-size:11px; color:#C69A4C; margin-bottom:6px;">{{ bar.valueStr }}</div>
+                      <div style="width:100%; max-width:64px; height:{{ bar.h }}px; border-radius:8px 8px 0 0; background:linear-gradient(180deg,#7AAA72,#3f6b3a);"></div>
+                      <div style="font-size:12px; color:#B8B0A0; margin-top:10px; text-align:center;">{{ bar.label }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasChannel }}">
+                <div style="padding:50px 12px; text-align:center; font-size:14px; color:#6E7A60;">Oznacz kanał zamówienia w zakładce Zamówienia — słupki wypełnią się automatycznie.</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <!-- GAP + Sprzedaż detaliczna -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <!-- Analiza GAP -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Analiza GAP (plan vs wykonanie)</div>
+              <sc-if value="{{ dHasTarget }}">
+                <div style="display:flex; align-items:center; gap:22px;">
+                  <div style="position:relative; width:110px; height:110px; flex:none;">
+                    <svg viewBox="0 0 120 120" style="width:110px; height:110px;">
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(198,154,76,.12)" stroke-width="12"></circle>
+                      <circle cx="60" cy="60" r="44" fill="none" stroke="{{ dGapRingColor }}" stroke-width="12" stroke-dasharray="{{ dGapRingDash }}" stroke-linecap="round" transform="rotate(-90 60 60)"></circle>
+                    </svg>
+                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                      <div style="font-family:Cinzel,serif; font-size:20px; font-weight:700; color:#DDD8C6;">{{ dGapPct }}</div>
+                      <div style="font-family:'Space Mono',monospace; font-size:8px; color:#8C7D5E;">planu</div>
+                    </div>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">PLAN</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:15px; color:#B8B0A0; margin-bottom:8px;">{{ dTargetAmount }}</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E;">ODCHYLENIE</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:17px; color:{{ dGapColor }};">{{ dGapValue }}</div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dHasTarget }}">
+                <div style="font-size:13px; color:#6E7A60; line-height:1.6; margin-bottom:14px;">Ustaw cel sprzedażowy dla wybranego okresu — odchylenie od planu policzy się samo.</div>
+              </sc-if>
+              <div style="display:flex; gap:8px; margin-top:16px;">
+                <input type="number" value="{{ dTargetInput }}" onChange="{{ dashOnTargetInput }}" placeholder="Cel sprzedaży (zł)" style="flex:1; padding:9px 12px; background:#1A2014; border:1px solid rgba(198,154,76,.2); border-radius:8px; color:#C69A4C; font-family:'Space Mono',monospace; font-size:13px; outline:none; box-sizing:border-box;" />
+                <div onClick="{{ dashSaveTarget }}" style="padding:9px 16px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:#060906; background:#C69A4C; border-radius:8px; cursor:pointer; display:flex; align-items:center; font-weight:700;">{{ dTargetSaveLabel }}</div>
+              </div>
+            </div>
+            <!-- Sprzedaż detaliczna wg punktów -->
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż detaliczna wg punktów</div>
+              <sc-if value="{{ dHasRetail }}">
+                <sc-for list="{{ dRetailPoints }}" as="rp">
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#C69A4C" stroke-width="1.5"><path d="M9 1C5.5 1 3 3.5 3 7c0 4 6 10 6 10s6-6 6-10c0-3.5-2.5-6-6-6z"/><circle cx="9" cy="7" r="2"/></svg>
+                      <span style="font-size:14px; color:#DDD8C6;">{{ rp.label }}</span>
+                    </div>
+                    <span style="font-family:'Space Mono',monospace; font-size:14px; color:#C69A4C;">{{ rp.valueStr }}</span>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ !dHasRetail }}">
+                <div style="padding:50px 12px; text-align:center; font-size:14px; color:#6E7A60;">Przypisz punkt (Walim / Wrocław / Online) do zamówienia — sprzedaż detaliczna zsumuje się automatycznie.</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <!-- Top produkty -->
           <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
             <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Top produkty wg sprzedaży</div>
-            <sc-for list="{{ dTopProducts }}" as="tp" hint-placeholder-count="5">
-              <div style="display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
-                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E; width:24px;">{{ tp.rank }}.</span>
-                <span style="font-size:15px; color:#DDD8C6; flex:1;">{{ tp.name }}</span>
-                <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8ABA82;">{{ tp.soldCount }} szt.</span>
-                <span style="font-family:'Space Mono',monospace; font-size:13px; color:#C69A4C; width:100px; text-align:right;">{{ tp.totalRevenue }}</span>
-              </div>
-            </sc-for>
+            <sc-if value="{{ dHasTop }}">
+              <sc-for list="{{ dTopProducts }}" as="tp" hint-placeholder-count="5">
+                <div style="display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
+                  <span style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E; width:24px;">{{ tp.rank }}.</span>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:15px; color:#DDD8C6; margin-bottom:5px;">{{ tp.name }}</div>
+                    <div style="height:5px; border-radius:3px; background:rgba(138,186,130,.1); overflow:hidden;"><div style="height:100%; width:{{ tp.barW }}; background:linear-gradient(90deg,#8ABA82,#C69A4C); border-radius:3px;"></div></div>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:12px; color:#8ABA82; width:60px; text-align:right;">{{ tp.soldCount }} szt.</span>
+                  <span style="font-family:'Space Mono',monospace; font-size:13px; color:#C69A4C; width:100px; text-align:right;">{{ tp.totalRevenue }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{ !dHasTop }}">
+              <div style="padding:40px 12px; text-align:center; font-size:14px; color:#6E7A60;">Brak sprzedaży produktów w tym okresie.</div>
+            </sc-if>
           </div>
+
         </div>
       </sc-if>
 
@@ -721,19 +958,25 @@
           <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">OPIS</div>
           <textarea value="{{ dashEditForm.desc }}" onChange="{{ dashEditOnDesc }}" rows="3" style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#DDD8C6; font-size:14px; outline:none; resize:vertical; box-sizing:border-box; line-height:1.5;"></textarea>
         </div>
-        <!-- Price + Category -->
+        <!-- Price + Cost -->
         <div style="display:flex; gap:16px;">
           <div style="flex:1;">
             <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">CENA (ZŁ)</div>
             <input type="number" value="{{ dashEditForm.price }}" onChange="{{ dashEditOnPrice }}" style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#C69A4C; font-family:'Space Mono',monospace; font-size:15px; outline:none; box-sizing:border-box;" />
           </div>
           <div style="flex:1;">
-            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">KATEGORIA</div>
-            <select value="{{ dashEditForm.cat }}" onChange="{{ dashEditOnCategory }}" style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#8ABA82; font-size:14px; outline:none; box-sizing:border-box; cursor:pointer;">
-              <option value="sadownicze">Drzewa owocowe</option>
-              <option value="akwariowe">Akwariowe</option>
-            </select>
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">KOSZT (ZŁ)</div>
+            <input type="number" value="{{ dashEditForm.cost }}" onChange="{{ dashEditOnCost }}" placeholder="0" style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#B8B0A0; font-family:'Space Mono',monospace; font-size:15px; outline:none; box-sizing:border-box;" />
           </div>
+        </div>
+        <div style="font-family:'EB Garamond',serif; font-size:11px; color:#6E7A60; margin-top:-8px;">Koszt zakupu/wytworzenia — zasila wyliczaną marżę w Analizie Sklepu.</div>
+        <!-- Category -->
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">KATEGORIA</div>
+          <select value="{{ dashEditForm.cat }}" onChange="{{ dashEditOnCategory }}" style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#8ABA82; font-size:14px; outline:none; box-sizing:border-box; cursor:pointer;">
+            <option value="sadownicze">Drzewa owocowe</option>
+            <option value="akwariowe">Akwariowe</option>
+          </select>
         </div>
         <!-- Availability -->
         <div onClick="{{ dashEditToggleAvail }}" style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#1A2014; border:1px solid {{ dashEditAvailBorder }}; border-radius:8px; cursor:pointer;">
@@ -897,6 +1140,10 @@ class Component extends DCLogic {
     dashSection: 'overview',
     dashOrders: [],
     dashUsers: [],
+    dashTargets: [],
+    dashAnalyticsPeriod: 'year',   // 'month' | 'quarter' | 'year'
+    dashTargetInput: '',
+    dashTargetSaving: false,
     dashOrderFilter: 'all',
     dashRoleConfirm: null,
     dashEditId: null,
@@ -923,7 +1170,8 @@ class Component extends DCLogic {
     const mapped = (products || []).map(p => ({
       id: p.id, cat: p.category, name: p.name, latin: p.latin,
       price: Number(p.price), image: p.image, tag: p.tag,
-      stock: p.stock, unit: p.unit, desc: p.description
+      stock: p.stock, unit: p.unit, desc: p.description,
+      cost: Number(p.cost) || 0
     }));
 
     const { data: { session } } = await sb.auth.getSession();
@@ -1072,11 +1320,12 @@ class Component extends DCLogic {
   // === DASHBOARD METHODS ===
   async loadDashboardData() {
     const sb = window.supabaseClient;
-    const [ordersRes, usersRes, itemsRes, guestsRes] = await Promise.all([
+    const [ordersRes, usersRes, itemsRes, guestsRes, targetsRes] = await Promise.all([
       sb.from('orders').select('*').order('created_at', { ascending: false }),
       sb.from('profiles').select('*'),
       sb.from('order_items').select('*'),
       sb.from('guests').select('*'),
+      sb.from('sales_targets').select('*'),
     ]);
     const orders = (ordersRes.data || []).map(o => {
       const oItems = (itemsRes.data || []).filter(i => i.order_id === o.id);
@@ -1096,6 +1345,7 @@ class Component extends DCLogic {
       return {
         dashOrders: orders,
         dashUsers: [ ...(usersRes.data || []), ...guestUsers ],
+        dashTargets: targetsRes.data || [],
         dashBackups: toAdd.length ? [ ...toAdd, ...s.dashBackups ] : s.dashBackups,
       };
     });
@@ -1110,6 +1360,34 @@ class Component extends DCLogic {
   };
 
   dashSetSection = (section) => this.setState({ dashSection: section });
+
+  dashSetPeriod = (period) => this.setState({ dashAnalyticsPeriod: period });
+  dashOnTargetInput = (e) => { const v = e.target.value; this.setState({ dashTargetInput: v }); };
+
+  // Zapis celu sprzedażowego (analiza GAP) dla bieżącego okresu — upsert po kluczu `period`.
+  dashSaveTarget = async () => {
+    const amount = parseFloat(this.state.dashTargetInput);
+    if (isNaN(amount) || amount < 0) return;
+    const period = this.analyticsPeriodKey(this.state.dashAnalyticsPeriod);
+    this.setState({ dashTargetSaving: true });
+    const sb = window.supabaseClient;
+    const uid = this.state.user?.id || null;
+    const { error } = await sb.from('sales_targets')
+      .upsert({ period, amount, updated_by: uid }, { onConflict: 'period' });
+    this.setState({ dashTargetSaving: false, dashTargetInput: '' });
+    if (error) { console.warn('Zapis celu odrzucony:', error.message); return; }
+    this.dashAudit('sales_target', period, { amount });
+    await this.loadDashboardData();
+  };
+
+  // Klucz okresu spójny z filtrem: 'YYYY-MM' | 'YYYY-Qn' | 'YYYY' dla teraz.
+  analyticsPeriodKey = (period) => {
+    const d = new Date();
+    const y = d.getFullYear();
+    if (period === 'year') return String(y);
+    if (period === 'quarter') return y + '-Q' + (Math.floor(d.getMonth() / 3) + 1);
+    return y + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  };
 
   // Dziennik zmian personelu (staff_audit). Cicho ignoruje błędy — akcja główna już się wykonała.
   dashAudit = async (action, targetId, detail) => {
@@ -1175,6 +1453,7 @@ class Component extends DCLogic {
       dashEditForm: {
         name: p.name || '', desc: p.desc || '',
         price: p.price != null ? String(p.price) : '',
+        cost: p.cost != null ? String(p.cost) : '',
         cat: p.cat || 'sadownicze', image: p.image || '',
         available: (p.stock || 0) > 0,
       },
@@ -1188,6 +1467,7 @@ class Component extends DCLogic {
   dashEditOnName = (e) => { const v = e.target.value; this.setState(s => ({ dashEditForm: { ...s.dashEditForm, name: v } })); };
   dashEditOnDesc = (e) => { const v = e.target.value; this.setState(s => ({ dashEditForm: { ...s.dashEditForm, desc: v } })); };
   dashEditOnPrice = (e) => { const v = e.target.value; this.setState(s => ({ dashEditForm: { ...s.dashEditForm, price: v } })); };
+  dashEditOnCost = (e) => { const v = e.target.value; this.setState(s => ({ dashEditForm: { ...s.dashEditForm, cost: v } })); };
   dashEditOnCategory = (e) => { const v = e.target.value; this.setState(s => ({ dashEditForm: { ...s.dashEditForm, cat: v } })); };
   dashEditToggleAvail = () => this.setState(s => ({ dashEditForm: { ...s.dashEditForm, available: !s.dashEditForm.available } }));
   dashEditRemoveImage = () => this.setState(s => ({ dashEditForm: { ...s.dashEditForm, image: '' } }));
@@ -1216,10 +1496,12 @@ class Component extends DCLogic {
     if (isNaN(price) || price < 0) { this.setState({ dashEditMsg: 'Podaj poprawną cenę.' }); return; }
     const orig = this.state.dashEditOrigStock || 0;
     const newStock = f.available ? (orig > 0 ? orig : 10) : 0;
+    const cost = f.cost === '' || f.cost == null ? 0 : parseFloat(f.cost);
+    if (isNaN(cost) || cost < 0) { this.setState({ dashEditMsg: 'Podaj poprawny koszt.' }); return; }
     this.setState({ dashEditSaving: true, dashEditMsg: '' });
     const sb = window.supabaseClient;
     const { error } = await sb.from('products').update({
-      name: f.name.trim(), description: f.desc || '', price: price,
+      name: f.name.trim(), description: f.desc || '', price: price, cost: cost,
       category: f.cat, image: f.image || null, stock: newStock,
     }).eq('id', id);
     if (error) {
@@ -1228,13 +1510,13 @@ class Component extends DCLogic {
     }
     this.setState(s => ({
       dashEditSaving: false, dashEditId: null, dashEditForm: {}, dashEditMsg: '',
-      products: s.products.map(p => p.id === id ? { ...p, name: f.name.trim(), desc: f.desc || '', price: price, cat: f.cat, image: f.image || '', stock: newStock } : p),
+      products: s.products.map(p => p.id === id ? { ...p, name: f.name.trim(), desc: f.desc || '', price: price, cost: cost, cat: f.cat, image: f.image || '', stock: newStock } : p),
     }));
   };
 
   // ===== KOPIE ZAPASOWE =====
   // Tabele objęte kopią. Kolejność bezpieczna dla kluczy obcych przy imporcie (rodzice najpierw).
-  DB_TABLES = ['profiles', 'products', 'orders', 'order_items', 'guests', 'cart_items', 'watched_products', 'site_content'];
+  DB_TABLES = ['profiles', 'products', 'orders', 'order_items', 'guests', 'cart_items', 'watched_products', 'site_content', 'sales_targets'];
 
   dashSetBackupMsg = (msg, ms = 5000) => {
     this.setState({ dashBackupMsg: msg });
@@ -1496,7 +1778,7 @@ class Component extends DCLogic {
   }
 
   _dashRenderVals() {
-    const { dashboardMode, dashSection, dashOrders, dashUsers, dashOrderFilter, dashBackupRestoring, dashBackupRestored, dashBackups, products, user, userRole, userRank } = this.state;
+    const { dashboardMode, dashSection, dashOrders, dashUsers, dashOrderFilter, dashBackupRestoring, dashBackupRestored, dashBackups, products, user, userRole, userRank, dashTargets, dashAnalyticsPeriod, dashTargetInput, dashTargetSaving } = this.state;
     if (!dashboardMode) return {};
 
     // === RANGI (skala 1..11) ===
@@ -1594,51 +1876,157 @@ class Component extends DCLogic {
 
     const titles = { overview:'Przegląd', products:'Produkty', orders:'Zamówienia', users:'Użytkownicy', analytics:'Analiza Sklepu', backups:'Kopie zapasowe' };
 
-    // Analytics: orders by status
+    // ===== ANALIZA SKLEPU =====
+    const money = (nn) => Math.round(nn || 0).toLocaleString('pl-PL') + ' zł';
+    const MONTHS = ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'];
     const statusLabels = ['Nowe','W realizacji','Wysłane','Dostarczone','Anulowane'];
     const statusColors = ['#8ABA82','#C69A4C','#7AAA72','#6A9A62','#9A9480'];
-    const ordersByStatus = statusLabels.map((label, i) => ({
-      label,
-      color: statusColors[i],
-      count: dashOrders.filter(o => o.status === label).length,
-    }));
 
-    // Analytics: products by category
-    const catMap = {};
-    products.forEach(p => {
-      const cat = p.cat || p.category || 'Inne';
-      if (!catMap[cat]) catMap[cat] = { count: 0, revenue: 0 };
-      catMap[cat].count++;
-    });
-    dashOrders.forEach(o => {
-      (o.items || []).forEach(item => {
-        const prod = products.find(p => p.id === item.product_id);
-        const cat = prod ? (prod.cat || prod.category) : 'Inne';
-        if (catMap[cat]) catMap[cat].revenue += Number(item.price || 0) * (item.qty || 0);
+    // --- Zakres okresu + kubełki trendu (Miesiąc / Kwartał / Rok) ---
+    const period = dashAnalyticsPeriod || 'month';
+    const nowA = new Date();
+    let periodFrom, periodBuckets;
+    if (period === 'year') {
+      periodFrom = new Date(nowA.getFullYear(), nowA.getMonth() - 11, 1);
+      periodBuckets = Array.from({ length: 12 }, (_, k) => {
+        const d = new Date(nowA.getFullYear(), nowA.getMonth() - (11 - k), 1);
+        return { start: d, end: new Date(d.getFullYear(), d.getMonth() + 1, 1), label: MONTHS[d.getMonth()] };
       });
-    });
-    const productsByCategory = Object.entries(catMap).map(([label, data]) => ({
-      label: label === 'akwariowe' ? 'Akwariowe' : label === 'sadownicze' ? 'Drzewa owocowe' : label,
-      count: data.count,
-      revenue: data.revenue.toLocaleString('pl-PL') + ' zł',
-    }));
+    } else if (period === 'quarter') {
+      periodFrom = new Date(nowA.getFullYear(), nowA.getMonth() - 2, 1);
+      periodBuckets = Array.from({ length: 3 }, (_, k) => {
+        const d = new Date(nowA.getFullYear(), nowA.getMonth() - (2 - k), 1);
+        return { start: d, end: new Date(d.getFullYear(), d.getMonth() + 1, 1), label: MONTHS[d.getMonth()] };
+      });
+    } else {
+      periodFrom = new Date(nowA.getFullYear(), nowA.getMonth(), 1);
+      periodBuckets = Array.from({ length: 4 }, (_, w) => ({
+        start: new Date(nowA.getFullYear(), nowA.getMonth(), 1 + w * 7),
+        end: w === 3 ? new Date(nowA.getFullYear(), nowA.getMonth() + 1, 1) : new Date(nowA.getFullYear(), nowA.getMonth(), 1 + (w + 1) * 7),
+        label: 'T' + (w + 1),
+      }));
+    }
+    const inPeriod = dashOrders.filter(o => { const t = o.created_at ? new Date(o.created_at) : null; return t && t >= periodFrom && t <= nowA; });
+    const periodRevenue = inPeriod.reduce((s, o) => s + (o.total || 0), 0);
+    const periodOrders = inPeriod.length;
 
-    // Analytics: top products
+    // --- Trend przychodu (SVG area + line) ---
+    const trendVals = periodBuckets.map(b => {
+      const bo = inPeriod.filter(o => { const t = new Date(o.created_at); return t >= b.start && t < b.end; });
+      return { label: b.label, revenue: bo.reduce((s, o) => s + (o.total || 0), 0), count: bo.length };
+    });
+    const trendMax = Math.max(1, ...trendVals.map(v => v.revenue));
+    const CW = 620, CH = 220, padL = 52, padR = 12, padT = 16, padB = 26;
+    const plotW = CW - padL - padR, plotH = CH - padT - padB, nT = trendVals.length;
+    const xAt = (i) => padL + (nT <= 1 ? plotW / 2 : plotW * i / (nT - 1));
+    const yAt = (v) => padT + plotH - plotH * (v / trendMax);
+    const trendPts = trendVals.map((v, i) => xAt(i).toFixed(1) + ',' + yAt(v.revenue).toFixed(1));
+    const trendLine = trendPts.join(' ');
+    const trendArea = 'M' + xAt(0).toFixed(1) + ',' + (padT + plotH).toFixed(1) + ' L' + trendPts.join(' L') + ' L' + xAt(nT - 1).toFixed(1) + ',' + (padT + plotH).toFixed(1) + ' Z';
+    const trendDots = trendVals.map((v, i) => ({ x: xAt(i).toFixed(1), y: yAt(v.revenue).toFixed(1) }));
+    const trendXLabels = trendVals.map((v, i) => ({ x: xAt(i).toFixed(1), label: v.label }));
+    const trendYLabels = [1, 0.5, 0].map(f => ({ y: (padT + plotH - plotH * f).toFixed(1), label: money(trendMax * f) }));
+    const hasTrend = periodRevenue > 0;
+
+    // --- Donut helper (segmenty jako stroke-dasharray) ---
+    const donut = (segments, r) => {
+      const C = 2 * Math.PI * r; const total = segments.reduce((s, x) => s + x.value, 0); let acc = 0;
+      const arcs = segments.filter(s => s.value > 0).map(s => {
+        const len = (total ? s.value / total : 0) * C;
+        const a = { color: s.color, dash: len.toFixed(2) + ' ' + (C - len).toFixed(2), offset: (-acc).toFixed(2) };
+        acc += len; return a;
+      });
+      return { arcs, C: C.toFixed(2), r, total };
+    };
+
+    // --- Donut: zamówienia wg statusu (okres) ---
+    const statusSeg = statusLabels.map((label, i) => ({ label, color: statusColors[i], value: inPeriod.filter(o => o.status === label).length }));
+    const statusDonut = donut(statusSeg, 52);
+    const statusLegend = statusSeg.map(s => ({ label: s.label, color: s.color, count: s.value }));
+    const hasStatus = statusDonut.total > 0;
+
+    // --- Donut: opłacone vs nieopłacone (okres) ---
+    const paidCount = inPeriod.filter(o => !(o.payment || '').includes('Nieopł')).length;
+    const unpaidCountP = inPeriod.filter(o => (o.payment || '').includes('Nieopł')).length;
+    const unpaidValue = inPeriod.filter(o => (o.payment || '').includes('Nieopł')).reduce((s, o) => s + (o.total || 0), 0);
+    const payDonut = donut([{ color: '#8ABA82', value: paidCount }, { color: '#C69A4C', value: unpaidCountP }], 52);
+    const paidPct = periodOrders ? Math.round(paidCount / periodOrders * 100) : 0;
+    const hasPay = periodOrders > 0;
+
+    // --- Słupki: sprzedaż wg kategorii (okres, przychód) ---
+    const catRev = {};
+    inPeriod.forEach(o => (o.items || []).forEach(item => {
+      const prod = products.find(p => p.id === item.product_id);
+      const c = prod ? (prod.cat || prod.category) : 'inne';
+      catRev[c] = (catRev[c] || 0) + Number(item.price || 0) * (item.qty || 0);
+    }));
+    const catLabel = (c) => c === 'akwariowe' ? 'Akwariowe' : c === 'sadownicze' ? 'Drzewa owocowe' : (c || 'Inne');
+    let catEntries = Object.entries(catRev);
+    if (!catEntries.length) catEntries = [['sadownicze', 0], ['akwariowe', 0]];
+    const catMaxRev = Math.max(1, ...catEntries.map(([, v]) => v));
+    const categoryBars = catEntries.map(([c, v]) => ({ label: catLabel(c), valueStr: money(v), h: Math.max(2, Math.round(v / catMaxRev * 140)) }));
+    const hasCategory = periodRevenue > 0;
+
+    // --- Marża / zysk / koszty (JOIN products.cost) ---
+    let periodCost = 0;
+    inPeriod.forEach(o => (o.items || []).forEach(item => {
+      const prod = products.find(p => p.id === item.product_id);
+      periodCost += (prod ? (prod.cost || 0) : 0) * (item.qty || 0);
+    }));
+    const anyCost = products.some(p => (p.cost || 0) > 0);
+    const grossMargin = periodRevenue - periodCost;
+    const costPct = periodRevenue ? Math.round(periodCost / periodRevenue * 100) : 0;
+    const profitPct = periodRevenue ? Math.round(grossMargin / periodRevenue * 100) : 0;
+    const ring = (pct, color) => { const r = 44, C = 2 * Math.PI * r, len = Math.max(0, Math.min(100, pct)) / 100 * C; return { r, C: C.toFixed(2), dash: len.toFixed(2) + ' ' + (C - len).toFixed(2), color }; };
+    const profitRing = ring(profitPct, '#8ABA82');
+    const costRing = ring(costPct, '#C69A4C');
+    const hasMargin = anyCost && periodRevenue > 0;
+
+    // --- GAP: plan vs wykonanie ---
+    const periodKey = this.analyticsPeriodKey(period);
+    const targetRow = (dashTargets || []).find(t => t.period === periodKey);
+    const targetAmount = targetRow ? Number(targetRow.amount) : 0;
+    const hasTarget = !!targetRow && targetAmount > 0;
+    const gap = periodRevenue - targetAmount;
+    const gapPct = targetAmount ? Math.round(periodRevenue / targetAmount * 100) : 0;
+    const gapRing = ring(Math.min(100, gapPct), gap >= 0 ? '#8ABA82' : '#C69A4C');
+
+    // --- Kanały sprzedaży (okres) ---
+    const chanNames = { online: 'Sklep Online', hurtownia: 'Hurtownia', marketplace: 'Marketplace' };
+    const chanRev = {};
+    inPeriod.forEach(o => { const c = o.channel || 'online'; chanRev[c] = (chanRev[c] || 0) + (o.total || 0); });
+    let chanEntries = Object.entries(chanRev);
+    if (!chanEntries.length) chanEntries = [['online', 0]];
+    const chanMax = Math.max(1, ...chanEntries.map(([, v]) => v));
+    const channelBars = chanEntries.map(([c, v]) => ({ label: chanNames[c] || c, valueStr: money(v), h: Math.max(2, Math.round(v / chanMax * 140)) }));
+    const hasChannel = periodRevenue > 0;
+
+    // --- Sprzedaż detaliczna wg punktów (okres) ---
+    const locNames = { online: 'Online', walim: 'Punkt Walim', wroclaw: 'Punkt Wrocław' };
+    const locRev = {};
+    inPeriod.forEach(o => { if (o.location) locRev[o.location] = (locRev[o.location] || 0) + (o.total || 0); });
+    const retailPoints = Object.entries(locRev).map(([l, v]) => ({ label: locNames[l] || l, valueStr: money(v) }));
+    const hasRetail = retailPoints.length > 0;
+
+    // --- Top produkty (okres) z paskiem udziału ---
     const soldMap = {};
-    dashOrders.forEach(o => {
-      (o.items || []).forEach(item => {
-        const key = item.product_id || item.name;
-        if (!soldMap[key]) soldMap[key] = { name: item.name || '—', qty: 0, revenue: 0 };
-        soldMap[key].qty += (item.qty || 0);
-        soldMap[key].revenue += Number(item.price || 0) * (item.qty || 0);
-      });
-    });
-    const topProducts = Object.values(soldMap).sort((a, b) => b.revenue - a.revenue).slice(0, 5).map((tp, i) => ({
-      rank: i + 1,
-      name: tp.name,
-      soldCount: tp.qty,
-      totalRevenue: tp.revenue.toLocaleString('pl-PL') + ' zł',
+    inPeriod.forEach(o => (o.items || []).forEach(item => {
+      const key = item.product_id || item.name;
+      if (!soldMap[key]) soldMap[key] = { name: item.name || '—', qty: 0, revenue: 0 };
+      soldMap[key].qty += (item.qty || 0);
+      soldMap[key].revenue += Number(item.price || 0) * (item.qty || 0);
     }));
+    const topArr = Object.values(soldMap).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+    const topMax = Math.max(1, ...topArr.map(t => t.revenue));
+    const topProducts = topArr.map((tp, i) => ({
+      rank: i + 1, name: tp.name, soldCount: tp.qty,
+      totalRevenue: money(tp.revenue), barW: Math.max(3, Math.round(tp.revenue / topMax * 100)) + '%',
+    }));
+    const hasTop = topArr.length > 0;
+
+    // Przełącznik okresu
+    const perStyle = (p) => ({ bg: period === p ? '#8ABA82' : 'transparent', clr: period === p ? '#060906' : '#9A9480', brd: period === p ? '#8ABA82' : 'rgba(138,186,130,.2)' });
+    const pM = perStyle('month'), pQ = perStyle('quarter'), pY = perStyle('year');
 
     return {
       // Nav
@@ -1733,8 +2121,12 @@ class Component extends DCLogic {
           status: o.status || 'Nowe',
           payment: o.payment || 'Nieopłacone',
           payColor: payColor(o.payment),
+          channel: o.channel || 'online',
+          location: o.location || '',
           onStatusChange: (e) => this.dashUpdateOrderStatus(o.id, 'status', e.target.value),
           onPaymentChange: (e) => this.dashUpdateOrderStatus(o.id, 'payment', e.target.value),
+          onChannelChange: (e) => this.dashUpdateOrderStatus(o.id, 'channel', e.target.value),
+          onLocationChange: (e) => this.dashUpdateOrderStatus(o.id, 'location', e.target.value),
         };
       }),
 
@@ -1776,9 +2168,81 @@ class Component extends DCLogic {
         };
       }),
 
-      // Analytics
-      dOrdersByStatus: ordersByStatus,
-      dProductsByCategory: productsByCategory,
+      // Analytics — przełącznik okresu
+      dPerMonthBg: pM.bg, dPerMonthClr: pM.clr, dPerMonthBrd: pM.brd,
+      dPerQuarterBg: pQ.bg, dPerQuarterClr: pQ.clr, dPerQuarterBrd: pQ.brd,
+      dPerYearBg: pY.bg, dPerYearClr: pY.clr, dPerYearBrd: pY.brd,
+      dSetPerMonth: () => this.dashSetPeriod('month'),
+      dSetPerQuarter: () => this.dashSetPeriod('quarter'),
+      dSetPerYear: () => this.dashSetPeriod('year'),
+
+      // Analytics — KPI (okres)
+      dAnRevenue: money(periodRevenue),
+      dAnOrders: periodOrders,
+      dAnMargin: hasMargin ? money(grossMargin) : '—',
+
+      // Trend
+      dHasTrend: hasTrend,
+      dTrendLine: trendLine,
+      dTrendArea: trendArea,
+      dTrendDots: trendDots,
+      dTrendXLabels: trendXLabels,
+      dTrendYLabels: trendYLabels,
+
+      // Donut statusu
+      dHasStatus: hasStatus,
+      dStatusArcs: statusDonut.arcs,
+      dStatusC: statusDonut.C,
+      dStatusLegend: statusLegend,
+      dStatusTotal: statusDonut.total,
+
+      // Donut płatności
+      dHasPay: hasPay,
+      dPayArcs: payDonut.arcs,
+      dPayC: payDonut.C,
+      dPaidPct: paidPct + '%',
+      dPaidCount: paidCount,
+      dUnpaidCountP: unpaidCountP,
+      dUnpaidValue: money(unpaidValue),
+
+      // Słupki kategorii
+      dHasCategory: hasCategory,
+      dCategoryBars: categoryBars,
+
+      // Marża / koszty
+      dHasMargin: hasMargin,
+      dProfitPct: profitPct + '%',
+      dCostPct: costPct + '%',
+      dProfitRingDash: profitRing.dash,
+      dProfitRingColor: profitRing.color,
+      dCostRingDash: costRing.dash,
+      dCostRingColor: costRing.color,
+      dGrossMargin: money(grossMargin),
+      dPeriodCost: money(periodCost),
+
+      // GAP
+      dHasTarget: hasTarget,
+      dTargetAmount: money(targetAmount),
+      dGapValue: (gap >= 0 ? '+' : '') + money(gap),
+      dGapColor: gap >= 0 ? '#8ABA82' : '#C69A4C',
+      dGapPct: gapPct + '%',
+      dGapRingDash: gapRing.dash,
+      dGapRingColor: gapRing.color,
+      dTargetInput: dashTargetInput,
+      dTargetSaveLabel: dashTargetSaving ? 'ZAPISYWANIE…' : 'USTAW CEL',
+      dashOnTargetInput: this.dashOnTargetInput,
+      dashSaveTarget: this.dashSaveTarget,
+
+      // Kanały
+      dHasChannel: hasChannel,
+      dChannelBars: channelBars,
+
+      // Punkty detaliczne
+      dHasRetail: hasRetail,
+      dRetailPoints: retailPoints,
+
+      // Top produkty
+      dHasTop: hasTop,
       dTopProducts: topProducts,
 
       // Backups
@@ -1813,6 +2277,7 @@ class Component extends DCLogic {
       dashEditOnName: this.dashEditOnName,
       dashEditOnDesc: this.dashEditOnDesc,
       dashEditOnPrice: this.dashEditOnPrice,
+      dashEditOnCost: this.dashEditOnCost,
       dashEditOnCategory: this.dashEditOnCategory,
       dashEditToggleAvail: this.dashEditToggleAvail,
       dashEditRemoveImage: this.dashEditRemoveImage,
