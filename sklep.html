@@ -309,33 +309,33 @@
 
       <!-- Nav -->
       <div style="display:flex; flex-direction:column; gap:2px; flex:1; padding:0 2px;">
-        <div onClick="{{ dashGoOverview }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOverviewBg }}; border:1px solid {{ dNavOverviewBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoOverview }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOverviewBg }}; border:1px solid {{ dNavOverviewBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="{{ dNavOverviewClr }}"><rect x="1" y="1" width="7" height="7" rx="1.5"/><rect x="10" y="1" width="7" height="7" rx="1.5"/><rect x="1" y="10" width="7" height="7" rx="1.5"/><rect x="10" y="10" width="7" height="7" rx="1.5"/></svg>
           <span style="font-size:15px; color:{{ dNavOverviewClr }};">Przegląd</span>
         </div>
-        <div onClick="{{ dashGoProducts }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavProductsBg }}; border:1px solid {{ dNavProductsBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoProducts }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavProductsBg }}; border:1px solid {{ dNavProductsBrd }};">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="{{ dNavProductsClr }}"><path d="M16 4c-5 0-10 3-10 8 0 1 .3 2 .8 2.8.5-3 2-5.5 4.2-7.3 1.5 2.5 2.2 5.2 2 8 1.5-1 2.8-2.5 3.5-4.2C17.5 9 17.8 6.5 16 4z"/></svg>
           <span style="font-size:15px; color:{{ dNavProductsClr }};">Produkty</span>
         </div>
-        <div onClick="{{ dashGoOrders }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOrdersBg }}; border:1px solid {{ dNavOrdersBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoOrders }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavOrdersBg }}; border:1px solid {{ dNavOrdersBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavOrdersClr }}" stroke-width="1.5"><path d="M9 2L3 5v7l6 4 6-4V5L9 2z"/><path d="M3 5l6 4 6-4M9 9v8"/></svg>
           <span style="font-size:15px; color:{{ dNavOrdersClr }};">Zamówienia</span>
           <sc-if value="{{ dUnpaidCount }}">
             <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:9px; color:#C69A4C; background:rgba(198,154,76,.15); padding:2px 7px; border-radius:10px;">{{ dUnpaidCount }}</span>
           </sc-if>
         </div>
-        <div onClick="{{ dashGoUsers }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavUsersBg }}; border:1px solid {{ dNavUsersBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoUsers }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavUsersBg }}; border:1px solid {{ dNavUsersBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="{{ dNavUsersClr }}"><circle cx="9" cy="5.5" r="3"/><path d="M3 16.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
           <span style="font-size:15px; color:{{ dNavUsersClr }};">Użytkownicy</span>
         </div>
         <sc-if value="{{ dShowAnalytics }}">
-        <div onClick="{{ dashGoAnalytics }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavAnalyticsBg }}; border:1px solid {{ dNavAnalyticsBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoAnalytics }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavAnalyticsBg }}; border:1px solid {{ dNavAnalyticsBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavAnalyticsClr }}" stroke-width="1.5"><path d="M2 14l4-5 3 3 7-9"/><path d="M13 3h3v3"/></svg>
           <span style="font-size:15px; color:{{ dNavAnalyticsClr }};">Analiza Sklepu</span>
         </div>
         </sc-if>
         <sc-if value="{{ dShowBackups }}">
-        <div onClick="{{ dashGoBackups }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavBackupsBg }}; border:1px solid {{ dNavBackupsBrd }};">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoBackups }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavBackupsBg }}; border:1px solid {{ dNavBackupsBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavBackupsClr }}" stroke-width="1.5"><path d="M3 9a6 6 0 1 1 1.1 3.4"/><path d="M3 13V9h4"/><path d="M9 5v4l2.5 1.5"/></svg>
           <span style="font-size:15px; color:{{ dNavBackupsClr }};">Kopie zapasowe</span>
         </div>
@@ -353,6 +353,10 @@
         </div>
       </div>
     </div>
+
+    <!-- Pływający przycisk zwijania/rozwijania panelu (tylko mobile) + przyciemnione tło -->
+    <button type="button" class="nf-dash-toggle" aria-label="Pokaż lub ukryj menu panelu">☰ Menu panelu</button>
+    <div class="nf-dash-backdrop" aria-hidden="true"></div>
 
     <!-- MAIN CONTENT -->
     <div style="flex:1; padding:28px 36px; min-height:calc(100vh - 80px); box-sizing:border-box; overflow-y:auto;">
@@ -1146,6 +1150,16 @@
     if (b){ var n = b.closest('.nf-nav'); if(n) n.classList.toggle('nf-open'); return; }
     var l = t.closest ? t.closest('.nf-nav.nf-open a') : null;
     if (l){ var o = l.closest('.nf-nav'); if(o) o.classList.remove('nf-open'); }
+
+    /* Panel admina — zwijanie/rozwijanie bocznej szuflady na mobile */
+    function dashSidebar(){ return document.querySelector('.nf-dash-sidebar'); }
+    var dt = t.closest ? t.closest('.nf-dash-toggle') : null;
+    if (dt){ e.preventDefault(); var sd = dashSidebar(); if(sd) sd.classList.toggle('nf-dash-open'); return; }
+    var bd = t.closest ? t.closest('.nf-dash-backdrop') : null;
+    if (bd){ var sc = dashSidebar(); if(sc) sc.classList.remove('nf-dash-open'); return; }
+    /* Klik w pozycję menu panelu → zamknij szufladę (bez return: nawigacja działa dalej) */
+    var di = t.closest ? t.closest('.nf-dash-nav-item') : null;
+    if (di){ var sn = dashSidebar(); if(sn) sn.classList.remove('nf-dash-open'); }
   }, true);
 })();
 </script>
