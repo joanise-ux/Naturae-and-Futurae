@@ -563,11 +563,16 @@
       <sc-if value="{{ dIsAnalytics }}">
         <div style="animation:nf-fadeIn .4s ease;">
 
-          <!-- Przełącznik okresu -->
-          <div style="display:flex; gap:8px; margin-bottom:20px;">
-            <div onClick="{{ dSetPerMonth }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerMonthBg }}; color:{{ dPerMonthClr }}; border:1px solid {{ dPerMonthBrd }};">Miesiąc</div>
-            <div onClick="{{ dSetPerQuarter }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerQuarterBg }}; color:{{ dPerQuarterClr }}; border:1px solid {{ dPerQuarterBrd }};">Kwartał</div>
-            <div onClick="{{ dSetPerYear }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerYearBg }}; color:{{ dPerYearClr }}; border:1px solid {{ dPerYearBrd }};">Rok</div>
+          <!-- Przełącznik okresu + eksport całości -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+            <div style="display:flex; gap:8px;">
+              <div onClick="{{ dSetPerMonth }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerMonthBg }}; color:{{ dPerMonthClr }}; border:1px solid {{ dPerMonthBrd }};">Miesiąc</div>
+              <div onClick="{{ dSetPerQuarter }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerQuarterBg }}; color:{{ dPerQuarterClr }}; border:1px solid {{ dPerQuarterBrd }};">Kwartał</div>
+              <div onClick="{{ dSetPerYear }}" style="padding:9px 22px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer; border-radius:8px; background:{{ dPerYearBg }}; color:{{ dPerYearClr }}; border:1px solid {{ dPerYearBrd }};">Rok</div>
+            </div>
+            <div onClick="{{ dExportAll }}" title="Pobierz wszystkie moduły w jednym pliku CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.5px; color:#060906; background:#C69A4C; border-radius:8px; padding:9px 16px; font-weight:700;">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#060906" stroke-width="1.7"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>POBIERZ WSZYSTKO (CSV)
+            </div>
           </div>
 
           <!-- KPI Cards -->
@@ -594,7 +599,10 @@
           <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:16px; margin-bottom:16px;">
             <!-- Trend -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:6px;">Trend przychodu</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Trend przychodu</div>
+                <div onClick="{{ dExportTrend }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasTrend }}">
                 <svg viewBox="0 0 620 220" style="width:100%; height:auto; display:block; margin-top:8px;">
                   <defs>
@@ -622,7 +630,10 @@
             </div>
             <!-- Marża (Zysk / Koszty) -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:6px;">Rentowność</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Rentowność</div>
+                <div onClick="{{ dExportMargin }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasMargin }}">
                 <div style="display:flex; align-items:center; justify-content:space-around; margin-top:10px;">
                   <div style="position:relative; width:110px; height:110px; text-align:center;">
@@ -663,7 +674,10 @@
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
             <!-- Zamówienia wg statusu -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Zamówienia wg statusu</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Zamówienia wg statusu</div>
+                <div onClick="{{ dExportStatus }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasStatus }}">
                 <div style="display:flex; align-items:center; gap:22px;">
                   <div style="position:relative; width:140px; height:140px; flex:none;">
@@ -697,7 +711,10 @@
             </div>
             <!-- Opłacone vs nieopłacone -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Płatności</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Płatności</div>
+                <div onClick="{{ dExportPay }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasPay }}">
                 <div style="display:flex; align-items:center; gap:22px;">
                   <div style="position:relative; width:140px; height:140px; flex:none;">
@@ -738,7 +755,10 @@
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
             <!-- Sprzedaż wg kategorii -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż wg kategorii</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Sprzedaż wg kategorii</div>
+                <div onClick="{{ dExportCategory }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasCategory }}">
                 <div style="display:flex; align-items:flex-end; justify-content:space-around; height:180px; gap:24px; padding:0 10px;">
                   <sc-for list="{{ dCategoryBars }}" as="bar" hint-placeholder-count="2">
@@ -756,7 +776,10 @@
             </div>
             <!-- Zamówienia wg kanałów -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż wg kanałów</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Sprzedaż wg kanałów</div>
+                <div onClick="{{ dExportChannel }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasChannel }}">
                 <div style="display:flex; align-items:flex-end; justify-content:space-around; height:180px; gap:24px; padding:0 10px;">
                   <sc-for list="{{ dChannelBars }}" as="bar" hint-placeholder-count="3">
@@ -778,7 +801,10 @@
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
             <!-- Analiza GAP -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(198,154,76,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:12px;">Analiza GAP (plan vs wykonanie)</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Analiza GAP (plan vs wykonanie)</div>
+                <div onClick="{{ dExportGap }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasTarget }}">
                 <div style="display:flex; align-items:center; gap:22px;">
                   <div style="position:relative; width:110px; height:110px; flex:none;">
@@ -809,7 +835,10 @@
             </div>
             <!-- Sprzedaż detaliczna wg punktów -->
             <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Sprzedaż detaliczna wg punktów</div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Sprzedaż detaliczna wg punktów</div>
+                <div onClick="{{ dExportRetail }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+              </div>
               <sc-if value="{{ dHasRetail }}">
                 <sc-for list="{{ dRetailPoints }}" as="rp">
                   <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
@@ -829,7 +858,10 @@
 
           <!-- Top produkty -->
           <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:22px;">
-            <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6; margin-bottom:16px;">Top produkty wg sprzedaży</div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+              <div style="font-family:Cinzel,serif; font-size:16px; font-weight:600; color:#DDD8C6;">Top produkty wg sprzedaży</div>
+              <div onClick="{{ dExportTop }}" title="Pobierz CSV" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.5px; color:#8ABA82; border:1px solid rgba(138,186,130,.25); border-radius:6px; padding:4px 8px; flex:none;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M8 2v9M4.5 7.5L8 11l3.5-3.5M2.5 13.5h11"/></svg>CSV</div>
+            </div>
             <sc-if value="{{ dHasTop }}">
               <sc-for list="{{ dTopProducts }}" as="tp" hint-placeholder-count="5">
                 <div style="display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid rgba(138,186,130,.08);">
@@ -1559,6 +1591,32 @@ class Component extends DCLogic {
     return blob.size;
   };
 
+  // ===== EKSPORT MODUŁÓW ANALIZY DO CSV =====
+  // Separator ';' + BOM UTF-8 — poprawne otwieranie w polskim Excelu (ł, ż, ó itd.).
+  csvLine = (arr) => arr.map(v => {
+    let s = (v == null) ? '' : String(v);
+    if (/[";\n\r]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }).join(';');
+  buildCSV = (headers, rows) => [headers, ...rows].map(r => this.csvLine(r)).join('\r\n');
+  downloadCSV = (filename, body) => {
+    const blob = new Blob(['﻿' + body], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  // section = { name, headers, rows }
+  dashExportCSV = (section) => this.downloadCSV(section.name + '.csv', this.buildCSV(section.headers, section.rows));
+  dashExportAll = (sections, name) => {
+    const blocks = sections.map(s => {
+      const title = s.name.replace(/_.*/, '').replace(/-/g, ' ').toUpperCase();
+      return this.csvLine([title]) + '\r\n' + this.buildCSV(s.headers, s.rows);
+    });
+    this.downloadCSV(name + '.csv', blocks.join('\r\n\r\n'));
+  };
+
   // Przywraca (nadpisuje) tabele na serwerze danymi ze zrzutu. Zwraca raport tekstowy.
   dashApplySnapshot = async (snap) => {
     const sb = window.supabaseClient;
@@ -2028,6 +2086,25 @@ class Component extends DCLogic {
     const perStyle = (p) => ({ bg: period === p ? '#8ABA82' : 'transparent', clr: period === p ? '#060906' : '#9A9480', brd: period === p ? '#8ABA82' : 'rgba(138,186,130,.2)' });
     const pM = perStyle('month'), pQ = perStyle('quarter'), pY = perStyle('year');
 
+    // --- Eksport modułów do CSV (liczby z przecinkiem dziesiętnym dla PL Excela) ---
+    const nf = (v) => (Math.round((v || 0) * 100) / 100).toString().replace('.', ',');
+    const pT = periodKey; // sufiks nazwy pliku: 2026 / 2026-Q3 / 2026-07
+    const exKpi = { name: 'kpi_' + pT, headers: ['Wskaźnik', 'Wartość'], rows: [
+      ['Produkty aktywne', activeProducts], ['Przychód okresu (zł)', nf(periodRevenue)],
+      ['Zamówienia okresu', periodOrders], ['Marża brutto (zł)', anyCost ? nf(grossMargin) : 'brak danych o kosztach'] ] };
+    const exTrend = { name: 'trend-przychodu_' + pT, headers: ['Okres', 'Przychód (zł)', 'Zamówienia'], rows: trendVals.map(v => [v.label, nf(v.revenue), v.count]) };
+    const exStatus = { name: 'zamowienia-wg-statusu_' + pT, headers: ['Status', 'Liczba'], rows: statusLegend.map(s => [s.label, s.count]) };
+    const exPay = { name: 'platnosci_' + pT, headers: ['Typ', 'Liczba', 'Wartość (zł)'], rows: [['Opłacone', paidCount, ''], ['Nieopłacone', unpaidCountP, nf(unpaidValue)]] };
+    const exCategory = { name: 'sprzedaz-wg-kategorii_' + pT, headers: ['Kategoria', 'Przychód (zł)'], rows: catEntries.map(([c, v]) => [catLabel(c), nf(v)]) };
+    const exChannel = { name: 'sprzedaz-wg-kanalow_' + pT, headers: ['Kanał', 'Przychód (zł)'], rows: chanEntries.map(([c, v]) => [chanNames[c] || c, nf(v)]) };
+    const exRetail = { name: 'sprzedaz-detaliczna_' + pT, headers: ['Punkt', 'Przychód (zł)'], rows: Object.entries(locRev).map(([l, v]) => [locNames[l] || l, nf(v)]) };
+    const exMargin = { name: 'rentownosc_' + pT, headers: ['Wskaźnik', 'Wartość'], rows: [
+      ['Przychód (zł)', nf(periodRevenue)], ['Koszt (zł)', nf(periodCost)], ['Marża brutto (zł)', nf(grossMargin)], ['Zysk (%)', profitPct], ['Koszty (%)', costPct] ] };
+    const exGap = { name: 'analiza-gap_' + pT, headers: ['Pozycja', 'Wartość'], rows: [
+      ['Plan (zł)', nf(targetAmount)], ['Wykonanie (zł)', nf(periodRevenue)], ['Odchylenie (zł)', nf(gap)], ['Realizacja planu (%)', gapPct] ] };
+    const exTop = { name: 'top-produkty_' + pT, headers: ['Pozycja', 'Produkt', 'Sztuki', 'Przychód (zł)'], rows: topArr.map((t, i) => [i + 1, t.name, t.qty, nf(t.revenue)]) };
+    const exAllSections = [exKpi, exTrend, exStatus, exPay, exCategory, exChannel, exRetail, exMargin, exGap, exTop];
+
     return {
       // Nav
       dNavOverviewBg: ov.bg, dNavOverviewBrd: ov.brd, dNavOverviewClr: ov.clr,
@@ -2175,6 +2252,19 @@ class Component extends DCLogic {
       dSetPerMonth: () => this.dashSetPeriod('month'),
       dSetPerQuarter: () => this.dashSetPeriod('quarter'),
       dSetPerYear: () => this.dashSetPeriod('year'),
+
+      // Analytics — eksport modułów do CSV
+      dExportAll: () => this.dashExportAll(exAllSections, 'analiza-sklepu_' + pT),
+      dExportKpi: () => this.dashExportCSV(exKpi),
+      dExportTrend: () => this.dashExportCSV(exTrend),
+      dExportStatus: () => this.dashExportCSV(exStatus),
+      dExportPay: () => this.dashExportCSV(exPay),
+      dExportCategory: () => this.dashExportCSV(exCategory),
+      dExportChannel: () => this.dashExportCSV(exChannel),
+      dExportRetail: () => this.dashExportCSV(exRetail),
+      dExportMargin: () => this.dashExportCSV(exMargin),
+      dExportGap: () => this.dashExportCSV(exGap),
+      dExportTop: () => this.dashExportCSV(exTop),
 
       // Analytics — KPI (okres)
       dAnRevenue: money(periodRevenue),
