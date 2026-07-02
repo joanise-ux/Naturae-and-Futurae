@@ -263,6 +263,7 @@
     el.style.outline = '2px solid ' + GREEN;
     el.style.outlineOffset = '2px';
     el.focus();
+    attachLinkOpener(el);
     showToolbar(el, function save() {
       var value = el.innerHTML;
       finishText(el);
@@ -274,6 +275,7 @@
   }
 
   function finishText(el) {
+    detachLinkOpener(el);
     el.removeAttribute('contenteditable');
     el.style.outline = ''; el.style.outlineOffset = '';
     hideToolbar();
@@ -305,6 +307,10 @@
     cancelBtn.addEventListener('click', function (e) { e.preventDefault(); onCancel(); });
     toolbar.appendChild(linkBtn);
     toolbar.appendChild(unlinkBtn);
+    var hint = document.createElement('span');
+    hint.textContent = 'najedź na link → „Otwórz ↗" (⌘/Ctrl+klik)';
+    css(hint, { fontFamily: "'Space Mono',monospace", fontSize: '10px', color: 'rgba(207,215,196,.6)', alignSelf: 'center', margin: '0 4px' });
+    toolbar.appendChild(hint);
     toolbar.appendChild(saveBtn);
     toolbar.appendChild(cancelBtn);
     document.body.appendChild(toolbar);
@@ -332,11 +338,26 @@
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
+  // Uzupełnia brakujący schemat: „example.com" → „https://example.com".
+  // Zostawia bez zmian: pełne URL-e, mailto:/tel:, kotwice (#…), ścieżki (/… , sklep.html).
+  function normalizeUrl(url) {
+    url = String(url || '').trim();
+    if (!url) return url;
+    if (/^(https?:|mailto:|tel:|#|\/)/i.test(url)) return url;
+    if (/\.html($|[?#])/i.test(url)) return url;           // wewnętrzna podstrona
+    if (/^[\w-]+(\.[\w-]+)+([\/?#].*)?$/.test(url)) return 'https://' + url; // goła domena
+    return url;
+  }
+  // Rozwiązuje href względem bieżącej strony (do otwierania linku z edytora).
+  function resolveHref(href) {
+    try { return new URL(href, location.href).href; } catch (e) { return href; }
+  }
   function normalizeAnchors() {
     if (!editingEl) return;
     var as = editingEl.querySelectorAll('a[href]');
     for (var i = 0; i < as.length; i++) {
-      var href = as[i].getAttribute('href') || '';
+      var href = normalizeUrl(as[i].getAttribute('href') || '');
+      as[i].setAttribute('href', href);
       if (/^https?:\/\//i.test(href)) {
         as[i].setAttribute('target', '_blank');
         as[i].setAttribute('rel', 'noopener');
@@ -347,6 +368,7 @@
     if (!editingEl) return;
     var url = window.prompt('Adres linku (URL), np. https://... albo sklep.html', 'https://');
     if (!url) return;
+    url = normalizeUrl(url);
     var sel = window.getSelection();
     var hasSel = sel && String(sel).length > 0;
     if (hasSel) {
@@ -359,6 +381,79 @@
     }
     normalizeAnchors();
     editingEl.focus();
+  }
+
+  // --- Podgląd/otwieranie linku podczas edycji ----------------------------
+  // W trybie contenteditable przeglądarka NIE nawiguje po kliknięciu w link
+  // (klik tylko ustawia kursor). Dlatego przy najechaniu na link pokazujemy
+  // dymek „Otwórz ↗", a ⌘/Ctrl+klik otwiera link w nowej karcie.
+  var linkPop = null, linkPopHover = false, linkHideT = null, curMove = null, curClick = null;
+  function ensureLinkPop() {
+    if (linkPop) return linkPop;
+    linkPop = document.createElement('div');
+    linkPop.setAttribute('data-nf-skip', '');
+    css(linkPop, {
+      position: 'absolute', zIndex: 100001, display: 'none', alignItems: 'center',
+      padding: '5px 8px', background: 'rgba(8,12,8,.97)', border: '1px solid rgba(90,120,70,.5)',
+      borderRadius: '7px', fontFamily: "'Space Mono',monospace", fontSize: '11px',
+      color: '#cfd7c4', boxShadow: '0 4px 14px rgba(0,0,0,.5)', whiteSpace: 'nowrap'
+    });
+    linkPop.addEventListener('mouseenter', function () { linkPopHover = true; clearTimeout(linkHideT); });
+    linkPop.addEventListener('mouseleave', function () { linkPopHover = false; scheduleHideLinkPop(); });
+    document.body.appendChild(linkPop);
+    return linkPop;
+  }
+  function scheduleHideLinkPop() {
+    clearTimeout(linkHideT);
+    linkHideT = setTimeout(function () { if (linkPop && !linkPopHover) linkPop.style.display = 'none'; }, 260);
+  }
+  function showLinkPop(a) {
+    ensureLinkPop();
+    clearTimeout(linkHideT);
+    var href = a.getAttribute('href') || '';
+    linkPop.innerHTML = '';
+    var span = document.createElement('span');
+    span.textContent = '🔗 ' + (href.length > 44 ? href.slice(0, 44) + '…' : href);
+    css(span, { opacity: '.85', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px', display: 'inline-block', verticalAlign: 'middle' });
+    var open = document.createElement('button');
+    open.type = 'button'; open.textContent = 'Otwórz ↗';
+    css(open, {
+      cursor: 'pointer', fontFamily: "'Space Mono',monospace", fontSize: '11px', color: '#0a1a0c',
+      background: 'linear-gradient(180deg,' + GREEN + ',#3d6a38)', border: '1px solid ' + GREEN,
+      borderRadius: '5px', padding: '3px 9px', marginLeft: '10px'
+    });
+    open.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    open.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      window.open(resolveHref(a.getAttribute('href') || ''), '_blank', 'noopener');
+    });
+    linkPop.appendChild(span); linkPop.appendChild(open);
+    linkPop.style.display = 'flex';
+    var r = a.getBoundingClientRect();
+    var top = window.scrollY + r.top - linkPop.offsetHeight - 6;
+    if (top < window.scrollY + 4) top = window.scrollY + r.bottom + 6;
+    css(linkPop, { top: top + 'px', left: (window.scrollX + r.left) + 'px' });
+  }
+  function attachLinkOpener(el) {
+    curMove = function (e) {
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (a && el.contains(a)) showLinkPop(a); else scheduleHideLinkPop();
+    };
+    curClick = function (e) {
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (a && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        window.open(resolveHref(a.getAttribute('href') || ''), '_blank', 'noopener');
+      }
+    };
+    el.addEventListener('mousemove', curMove);
+    el.addEventListener('click', curClick);
+  }
+  function detachLinkOpener(el) {
+    if (curMove) el.removeEventListener('mousemove', curMove);
+    if (curClick) el.removeEventListener('click', curClick);
+    curMove = curClick = null;
+    if (linkPop) linkPop.style.display = 'none';
   }
   function removeLink() {
     if (!editingEl) return;
