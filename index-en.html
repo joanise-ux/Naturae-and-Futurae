@@ -40,7 +40,7 @@
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #071310; -webkit-font-smoothing: antialiased; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scrollbar-gutter: stable; }
   a { color: inherit; text-decoration: none; }
   @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
   @keyframes nf-vt-in  { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
@@ -81,7 +81,7 @@
   <!-- ================================================================ -->
   <!-- HERO -->
   <!-- ================================================================ -->
-  <div data-screen-label="Hero" style="position:relative; display:grid; grid-template-columns:1.02fr .98fr; gap:46px; padding:66px 40px 58px; align-items:center; max-width:1440px; margin:0 auto;">
+  <div data-screen-label="Hero" style="position:relative; display:grid; grid-template-columns:1.02fr .98fr; gap:46px; padding:66px 40px 58px; align-items:center; max-width:1440px; margin:0 auto; background:linear-gradient(180deg,rgba(14,22,16,.6),rgba(10,18,11,.4)); border:1px solid rgba(90,120,70,.12); border-radius:14px; margin-top:20px;">
     <div>
       <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;"><span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>in vitro · culta sub vitro</div>
       <h2 data-edit-key="hero-title" style="font-family:'Cinzel',serif; font-weight:700; font-size:60px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">From nature<br>to <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">the future.</span></h2>
@@ -152,7 +152,7 @@
       <div style="width:80px; height:1px; background:linear-gradient(90deg, rgba(90,120,70,.5), transparent);"></div>
     </div>
 
-    <div style="display:grid; grid-template-columns:.85fr 1.15fr; gap:40px; align-items:center;">
+    <div style="display:grid; grid-template-columns:.85fr 1.15fr; gap:40px; align-items:center; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:14px; padding:36px;">
       <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(90,120,70,.3); box-shadow:0 24px 60px -30px rgba(0,0,0,.8);">
         <img data-edit-key="about-image" src="assets/sp-desk-bottles.jpg" alt="Workshop" style="width:100%; height:100%; object-fit:cover; display:block;">
         <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.4) 100%);"></div>
@@ -377,6 +377,7 @@
   <!-- CTA KONTAKTOWY -->
   <!-- ================================================================ -->
   <div id="kontakt" data-screen-label="Contact CTA" style="max-width:1440px; margin:0 auto; padding:90px 40px; text-align:center;">
+    <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:14px; padding:48px 40px;">
     <!-- ornamental divider -->
     <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:40px;">
       <div style="width:60px; height:1px; background:linear-gradient(90deg, transparent, rgba(90,120,70,.4));"></div>
@@ -394,6 +395,7 @@
     <div style="display:flex; gap:16px; justify-content:center; margin-top:32px;">
       <a href="mailto:kontakt@nfplantbiotech.com" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:16px 30px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 28px rgba(90,120,70,.35);">Write to us →</a>
       <a href="sklep-en.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:16px 30px;">B2B partnership</a>
+    </div>
     </div>
   </div>
 
