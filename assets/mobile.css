@@ -31,6 +31,25 @@ html { scrollbar-gutter: stable; }
 .nf-dash-toggle{ display:none; }
 .nf-dash-backdrop{ display:none; }
 
+/* ---------- DESKTOP: nagłówek zawsze w tym samym miejscu ----------
+   Nav ma inline `display:flex; justify-content:space-between`, więc pozycja
+   środkowych linków zależy od szerokości prawej grupy akcji. Ta różni się
+   między stronami (np. sklep ma „Koszyk" z licznikiem zamiast „Kontakt",
+   admin dodatkowo przycisk panelu) → linki „przeskakują" przy zmianie strony.
+   Siatka 1fr/auto/1fr trzyma środkowe linki dokładnie na środku ekranu na
+   każdej podstronie; logo zawsze przy lewej, akcje zawsze przy prawej.
+   Dzieci: 1=logo, 2=PL/EN(mobile, ukryte), 3=hamburger(ukryty), 4=linki, 5=akcje. */
+@media (min-width: 861px){
+  .nf-nav{
+    display:grid !important;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+  }
+  .nf-nav > a:first-child{ justify-self:start; }   /* logo */
+  .nf-nav > :nth-child(4){ justify-self:center; }  /* linki */
+  .nf-nav > :nth-child(5){ justify-self:end; }     /* akcje */
+}
+
 @media (max-width: 860px){
 
   html, body{ overflow-x:hidden; max-width:100%; }
