@@ -151,16 +151,16 @@
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px;">
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
         <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.24); border-radius:14px; padding:18px; display:flex; flex-direction:column;">
-          <div style="position:relative; border-radius:10px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08;">
+          <a href="{{ p.detailUrl }}" style="display:block; position:relative; border-radius:10px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08; text-decoration:none;">
             <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.6) 100%);"></div>
             <span style="position:absolute; left:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:999px; padding:5px 10px;">{{ p.tag }}</span>
-            <span onClick="{{ p.onToggleWatch }}" style="cursor:pointer; position:absolute; right:12px; top:12px; font-size:18px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; background:rgba(8,12,8,.75); border:1px solid {{ p.watchBorder }}; border-radius:50%; color:{{ p.watchColor }}; transition:all .25s; z-index:2;">{{ p.watchIcon }}</span>
+            <span onClick="event.preventDefault();event.stopPropagation();{{ p.onToggleWatch }}" style="cursor:pointer; position:absolute; right:12px; top:12px; font-size:18px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; background:rgba(8,12,8,.75); border:1px solid {{ p.watchBorder }}; border-radius:50%; color:{{ p.watchColor }}; transition:all .25s; z-index:2;">{{ p.watchIcon }}</span>
             <div style="position:absolute; left:12px; bottom:12px; display:flex; align-items:center; gap:7px; background:rgba(8,12,8,.7); border:1px solid rgba(90,120,70,.3); border-radius:5px; padding:5px 9px;">
               <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 5px rgba(122,170,114,.7);"></span>
               <span style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#a9c0a0;">{{ p.stock }}&nbsp;dostępne</span>
             </div>
-          </div>
+          </a>
           <a href="{{ p.detailUrl }}" style="font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic; text-decoration:none;">{{ p.latin }}</a>
           <a href="{{ p.detailUrl }}" style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em; text-decoration:none;">{{ p.name }}</a>
           <p style="font-size:14.5px; line-height:1.55; color:#9a9480; margin:10px 0 16px; min-height:46px;">{{ p.desc }}</p>
@@ -338,6 +338,15 @@
         <div class="nf-dash-nav-item" onClick="{{ dashGoBackups }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavBackupsBg }}; border:1px solid {{ dNavBackupsBrd }};">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavBackupsClr }}" stroke-width="1.5"><path d="M3 9a6 6 0 1 1 1.1 3.4"/><path d="M3 13V9h4"/><path d="M9 5v4l2.5 1.5"/></svg>
           <span style="font-size:15px; color:{{ dNavBackupsClr }};">Kopie zapasowe</span>
+        </div>
+        </sc-if>
+        <sc-if value="{{ dShowMail }}">
+        <div class="nf-dash-nav-item" onClick="{{ dashGoMail }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; cursor:pointer; background:{{ dNavMailBg }}; border:1px solid {{ dNavMailBrd }};">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="{{ dNavMailClr }}" stroke-width="1.5"><rect x="2" y="4" width="14" height="10" rx="2"/><path d="M2 6l7 4.5L16 6"/></svg>
+          <span style="font-size:15px; color:{{ dNavMailClr }};">Poczta</span>
+          <sc-if value="{{ dUnreadMailCount }}">
+            <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:9px; color:#8ABA82; background:rgba(138,186,130,.15); padding:2px 7px; border-radius:10px;">{{ dUnreadMailCount }}</span>
+          </sc-if>
         </div>
         </sc-if>
       </div>
@@ -955,6 +964,163 @@
         </div>
       </sc-if>
 
+      <!-- ===== POCZTA (MAIL) ===== -->
+      <sc-if value="{{ dIsMail }}">
+        <div style="animation:nf-fadeIn .4s ease;">
+
+          <!-- INBOX VIEW -->
+          <sc-if value="{{ dIsMailInbox }}">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+              <div onClick="{{ dashMailStartCompose }}" style="display:flex; align-items:center; gap:9px; padding:11px 18px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.5px; color:#0E1810; background:#8ABA82; border:1px solid #8ABA82; border-radius:8px; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#0E1810" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg>
+                NOWY E-MAIL
+              </div>
+              <div onClick="{{ dashMailRefresh }}" style="display:flex; align-items:center; gap:9px; padding:11px 18px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.5px; color:#DDD8C6; background:rgba(138,186,130,.1); border:1px solid rgba(138,186,130,.25); border-radius:8px; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.6"><path d="M2 8a6 6 0 1 1 1.1 3.4"/><path d="M2 12V8h4"/></svg>
+                {{ dRefreshLabel }}
+              </div>
+              <!-- Tab: Odebrane / Wysłane -->
+              <div style="display:flex; gap:0; margin-left:auto;">
+                <div onClick="{{ dashMailTabInbox }}" style="padding:10px 16px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:{{ dMailTabInboxClr }}; background:{{ dMailTabInboxBg }}; border:1px solid {{ dMailTabInboxBrd }}; border-radius:8px 0 0 8px; cursor:pointer;">ODEBRANE</div>
+                <div onClick="{{ dashMailTabSent }}" style="padding:10px 16px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:{{ dMailTabSentClr }}; background:{{ dMailTabSentBg }}; border:1px solid {{ dMailTabSentBrd }}; border-radius:0 8px 8px 0; cursor:pointer;">WYSŁANE</div>
+              </div>
+            </div>
+
+            <sc-if value="{{ dMailLoading }}">
+              <div style="text-align:center; padding:40px; color:#8C7D5E; font-size:14px;">
+                <div style="width:20px; height:20px; border:2px solid #8ABA82; border-top-color:transparent; border-radius:50%; animation:nf-spin 1s linear infinite; margin:0 auto 12px;"></div>
+                Ładowanie poczty...
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ dMailEmpty }}">
+              <div style="text-align:center; padding:60px 20px; color:#8C7D5E;">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#8C7D5E" stroke-width="1.2" style="margin-bottom:16px;"><rect x="6" y="12" width="36" height="24" rx="4"/><path d="M6 16l18 11 18-11"/></svg>
+                <div style="font-size:15px; margin-bottom:6px;">Skrzynka jest pusta</div>
+                <div style="font-size:13px;">{{ dMailEmptyHint }}</div>
+              </div>
+            </sc-if>
+
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <sc-for list="{{ dMailList }}" as="ml">
+                <div onClick="{{ ml.onClick }}" style="background:{{ ml.rowBg }}; border-radius:10px; border:1px solid rgba(138,186,130,.12); padding:14px 18px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:background .15s;">
+                  <div style="width:8px; height:8px; border-radius:50%; background:{{ ml.dotColor }}; flex:none;"></div>
+                  <div style="width:160px; flex:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    <span style="font-size:14px; color:#DDD8C6; font-weight:{{ ml.fontWeight }};">{{ ml.from }}</span>
+                  </div>
+                  <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    <span style="font-size:14px; color:{{ ml.subjectColor }}; font-weight:{{ ml.fontWeight }};">{{ ml.subject }}</span>
+                  </div>
+                  <div style="font-family:'Space Mono',monospace; font-size:11px; color:#8C7D5E; flex:none;">{{ ml.date }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- COMPOSE VIEW -->
+          <sc-if value="{{ dIsMailCompose }}">
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:24px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div onClick="{{ dashMailBackToInbox }}" style="width:32px; height:32px; border-radius:8px; background:rgba(154,148,128,.1); display:flex; align-items:center; justify-content:center; cursor:pointer; color:#9A9480; font-size:16px;">←</div>
+                  <div style="font-family:Cinzel,serif; font-size:18px; font-weight:600; color:#DDD8C6;">Nowy e-mail</div>
+                </div>
+              </div>
+
+              <!-- Recipients -->
+              <div style="margin-bottom:16px;">
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:8px;">DO</div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+                  <sc-for list="{{ dMailRecipientChips }}" as="rc">
+                    <div style="display:flex; align-items:center; gap:6px; padding:5px 10px; background:rgba(138,186,130,.1); border:1px solid rgba(138,186,130,.2); border-radius:16px; font-size:12px; color:#DDD8C6;">
+                      {{ rc.label }}
+                      <span onClick="{{ rc.onRemove }}" style="cursor:pointer; color:#9A9480; font-size:14px; line-height:1;">×</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:200px; position:relative;">
+                    <input value="{{ dashMailRecipientSearch }}" onInput="{{ dashMailOnSearch }}" placeholder="Szukaj użytkownika lub wpisz e-mail..." style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#DDD8C6; font-size:14px; outline:none; box-sizing:border-box;" />
+                    <sc-if value="{{ dShowRecipientDropdown }}">
+                      <div style="position:absolute; top:100%; left:0; right:0; z-index:10; background:#1A2014; border:1px solid rgba(138,186,130,.2); border-radius:0 0 8px 8px; max-height:200px; overflow-y:auto;">
+                        <sc-for list="{{ dMailUserOptions }}" as="uo">
+                          <div onClick="{{ uo.onClick }}" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid rgba(138,186,130,.08); font-size:13px; color:#DDD8C6;">
+                            {{ uo.name }} <span style="color:#8C7D5E;">{{ uo.email }}</span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                  <div onClick="{{ dashMailAddCustomEmail }}" style="padding:10px 14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:#DDD8C6; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); border-radius:8px; cursor:pointer; white-space:nowrap;">+ DODAJ</div>
+                  <div onClick="{{ dashMailAddAllUsers }}" style="padding:10px 14px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:#C69A4C; background:rgba(198,154,76,.08); border:1px solid rgba(198,154,76,.2); border-radius:8px; cursor:pointer; white-space:nowrap;">WSZYSCY KLIENCI</div>
+                </div>
+              </div>
+
+              <!-- Subject -->
+              <div style="margin-bottom:16px;">
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">TEMAT</div>
+                <input value="{{ dashMailComposeSubject }}" onInput="{{ dashMailOnSubject }}" placeholder="Temat wiadomości..." style="width:100%; padding:10px 14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#DDD8C6; font-size:15px; outline:none; box-sizing:border-box;" />
+              </div>
+
+              <!-- Body — rich text toolbar + contenteditable -->
+              <div style="margin-bottom:16px;">
+                <div style="font-family:'Space Mono',monospace; font-size:9px; color:#8C7D5E; letter-spacing:1.5px; margin-bottom:6px;">TREŚĆ</div>
+                <div style="display:flex; gap:4px; margin-bottom:6px;">
+                  <div onClick="{{ dashMailFmtBold }}" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); border-radius:6px; cursor:pointer; font-weight:bold; color:#DDD8C6; font-size:13px;">B</div>
+                  <div onClick="{{ dashMailFmtItalic }}" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); border-radius:6px; cursor:pointer; font-style:italic; color:#DDD8C6; font-size:13px;">I</div>
+                  <div onClick="{{ dashMailFmtUl }}" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); border-radius:6px; cursor:pointer; color:#DDD8C6; font-size:11px;">☰</div>
+                  <div onClick="{{ dashMailFmtLink }}" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:rgba(138,186,130,.08); border:1px solid rgba(138,186,130,.15); border-radius:6px; cursor:pointer; color:#DDD8C6; font-size:11px;">🔗</div>
+                </div>
+                <div id="nf-mail-editor" contenteditable="true" style="min-height:200px; padding:14px; background:#1A2014; border:1px solid rgba(138,186,130,.15); border-radius:8px; color:#DDD8C6; font-size:14px; line-height:1.7; outline:none; overflow-y:auto; max-height:400px;"></div>
+              </div>
+
+              <!-- Message & Send -->
+              <sc-if value="{{ dHasMailMsg }}">
+                <div style="margin-bottom:14px; padding:11px 16px; font-size:13px; color:#C69A4C; background:rgba(198,154,76,.08); border:1px solid rgba(198,154,76,.2); border-radius:8px;">{{ dashMailMsg }}</div>
+              </sc-if>
+              <div style="display:flex; gap:12px;">
+                <div onClick="{{ dashMailSend }}" style="display:flex; align-items:center; gap:9px; padding:12px 24px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.5px; color:#0E1810; background:#8ABA82; border:1px solid #8ABA82; border-radius:8px; cursor:pointer;">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#0E1810" stroke-width="1.6"><path d="M2 8l12-5-5 12-2-5-5-2z"/></svg>
+                  {{ dashMailSendLabel }}
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- DETAIL VIEW -->
+          <sc-if value="{{ dIsMailDetail }}">
+            <div style="background:#122014; border-radius:14px; border:1px solid rgba(138,186,130,.22); padding:24px;">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+                <div onClick="{{ dashMailBackToInbox }}" style="width:32px; height:32px; border-radius:8px; background:rgba(154,148,128,.1); display:flex; align-items:center; justify-content:center; cursor:pointer; color:#9A9480; font-size:16px;">←</div>
+                <div style="flex:1; font-family:Cinzel,serif; font-size:18px; font-weight:600; color:#DDD8C6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ dMailDetail.subject }}</div>
+                <div onClick="{{ dashMailReply }}" style="display:flex; align-items:center; gap:8px; padding:10px 16px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:#DDD8C6; background:rgba(138,186,130,.1); border:1px solid rgba(138,186,130,.2); border-radius:8px; cursor:pointer;">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8ABA82" stroke-width="1.5"><path d="M6 3L2 7l4 4"/><path d="M2 7h8a4 4 0 0 1 4 4v2"/></svg>
+                  ODPOWIEDZ
+                </div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px; padding:16px; background:rgba(138,186,130,.04); border-radius:10px; border:1px solid rgba(138,186,130,.1);">
+                <div style="display:flex; gap:12px; font-size:13px;">
+                  <span style="color:#8C7D5E; width:36px;">Od:</span>
+                  <span style="color:#DDD8C6;">{{ dMailDetail.from }}</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:13px;">
+                  <span style="color:#8C7D5E; width:36px;">Do:</span>
+                  <span style="color:#DDD8C6;">{{ dMailDetail.to }}</span>
+                </div>
+                <div style="display:flex; gap:12px; font-size:13px;">
+                  <span style="color:#8C7D5E; width:36px;">Data:</span>
+                  <span style="color:#DDD8C6;">{{ dMailDetail.date }}</span>
+                </div>
+              </div>
+
+              <div id="nf-mail-body" style="padding:20px; background:#1A2014; border-radius:10px; border:1px solid rgba(138,186,130,.1); color:#DDD8C6; font-size:14px; line-height:1.8; min-height:120px; white-space:pre-wrap; word-break:break-word;">{{ dMailDetail.body }}</div>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
     </div>
   </div>
   <!-- ===== EDIT PRODUCT MODAL ===== -->
@@ -1202,6 +1368,18 @@ class Component extends DCLogic {
     dashBackupRestored: null,
     dashBackupBusy: null,   // 'create' | 'export' | 'import' | null
     dashBackupMsg: '',
+    // Mail
+    dashMailView: 'inbox',
+    dashEmails: [],
+    dashMailLoading: false,
+    dashMailSelectedId: null,
+    dashMailComposeTo: [],
+    dashMailComposeSubject: '',
+    dashMailComposeBody: '',
+    dashMailSending: false,
+    dashMailMsg: '',
+    dashMailRecipientSearch: '',
+    dashMailTab: 'inbox',
     dashBackups: [
       { id: 1, date: new Date().toLocaleDateString('pl-PL') + ', 03:00', size: '24.8 MB', label: 'Automatyczna kopia (dziś)' },
       { id: 2, date: new Date(Date.now()-86400000).toLocaleDateString('pl-PL') + ', 03:00', size: '24.5 MB', label: 'Automatyczna kopia (wczoraj)' },
@@ -1759,6 +1937,147 @@ class Component extends DCLogic {
     }
   };
 
+  // ===== POCZTA (MAIL) =====
+  SUPABASE_FN_URL = 'https://qhhrtqxtoguymtmiypdk.supabase.co/functions/v1';
+
+  dashLoadEmails = async () => {
+    this.setState({ dashMailLoading: true });
+    const sb = window.supabaseClient;
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        await fetch(this.SUPABASE_FN_URL + '/fetch-emails', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+          body: '{}',
+        });
+      }
+    } catch (e) { console.warn('IMAP sync:', e); }
+    const { data } = await sb.from('emails').select('*').order('received_at', { ascending: false }).limit(200);
+    this.setState({ dashEmails: data || [], dashMailLoading: false });
+  };
+
+  dashMailOpenDetail = (emailId) => {
+    this.setState({ dashMailView: 'detail', dashMailSelectedId: emailId });
+    const sb = window.supabaseClient;
+    sb.from('emails').update({ read: true }).eq('id', emailId).then(() => {});
+    this.setState(s => ({
+      dashEmails: s.dashEmails.map(e => e.id === emailId ? { ...e, read: true } : e)
+    }));
+  };
+
+  dashMailStartCompose = () => {
+    this.setState({
+      dashMailView: 'compose',
+      dashMailComposeTo: [],
+      dashMailComposeSubject: '',
+      dashMailComposeBody: '',
+      dashMailMsg: '',
+      dashMailRecipientSearch: '',
+    });
+    setTimeout(() => {
+      const ed = document.getElementById('nf-mail-editor');
+      if (ed) { ed.innerHTML = ''; ed.focus(); }
+    }, 100);
+  };
+
+  dashMailBackToInbox = () => this.setState({ dashMailView: 'inbox' });
+
+  dashMailOnSearch = (e) => { const v = e.target.value; this.setState({ dashMailRecipientSearch: v }); };
+  dashMailOnSubject = (e) => { const v = e.target.value; this.setState({ dashMailComposeSubject: v }); };
+
+  dashMailAddRecipient = (email, name) => {
+    this.setState(s => {
+      if (s.dashMailComposeTo.find(r => r.email === email)) return {};
+      return { dashMailComposeTo: [...s.dashMailComposeTo, { email, name: name || email }], dashMailRecipientSearch: '' };
+    });
+  };
+
+  dashMailRemoveRecipient = (email) => {
+    this.setState(s => ({
+      dashMailComposeTo: s.dashMailComposeTo.filter(r => r.email !== email)
+    }));
+  };
+
+  dashMailAddCustomEmail = () => {
+    const q = (this.state.dashMailRecipientSearch || '').trim();
+    if (q && q.includes('@') && q.includes('.')) {
+      this.dashMailAddRecipient(q, q);
+    }
+  };
+
+  dashMailAddAllUsers = () => {
+    const all = (this.state.dashUsers || [])
+      .filter(u => u.email && !u.isGuest)
+      .map(u => ({ email: u.email, name: u.full_name || u.email }));
+    this.setState(s => {
+      const existing = new Set(s.dashMailComposeTo.map(r => r.email));
+      const toAdd = all.filter(u => !existing.has(u.email));
+      return { dashMailComposeTo: [...s.dashMailComposeTo, ...toAdd] };
+    });
+  };
+
+  dashMailFmtBold = () => document.execCommand('bold');
+  dashMailFmtItalic = () => document.execCommand('italic');
+  dashMailFmtUl = () => document.execCommand('insertUnorderedList');
+  dashMailFmtLink = () => {
+    const url = prompt('Podaj URL linku:');
+    if (url) document.execCommand('createLink', false, url);
+  };
+
+  dashMailSend = async () => {
+    const { dashMailComposeTo, dashMailComposeSubject } = this.state;
+    if (!dashMailComposeTo.length) { this.setState({ dashMailMsg: 'Dodaj przynajmniej jednego odbiorcę.' }); return; }
+    if (!dashMailComposeSubject.trim()) { this.setState({ dashMailMsg: 'Podaj temat wiadomości.' }); return; }
+    const ed = document.getElementById('nf-mail-editor');
+    const html = ed ? ed.innerHTML : '';
+    if (!html || html === '<br>') { this.setState({ dashMailMsg: 'Wpisz treść wiadomości.' }); return; }
+    this.setState({ dashMailSending: true, dashMailMsg: '' });
+    const sb = window.supabaseClient;
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const res = await fetch(this.SUPABASE_FN_URL + '/send-email', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: dashMailComposeTo.map(r => r.email),
+          subject: dashMailComposeSubject.trim(),
+          html: html,
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Błąd wysyłania');
+      this.setState({ dashMailSending: false, dashMailView: 'inbox', dashMailMsg: '', dashMailTab: 'sent' });
+      this.dashLoadEmails();
+    } catch (e) {
+      this.setState({ dashMailSending: false, dashMailMsg: 'Błąd: ' + e.message });
+    }
+  };
+
+  dashMailReply = () => {
+    const email = (this.state.dashEmails || []).find(e => e.id === this.state.dashMailSelectedId);
+    if (!email) return;
+    const replyTo = email.from_address || '';
+    const replyName = email.from_name || replyTo;
+    const subject = (email.subject || '').startsWith('Re:') ? email.subject : 'Re: ' + (email.subject || '');
+    this.setState({
+      dashMailView: 'compose',
+      dashMailComposeTo: [{ email: replyTo, name: replyName }],
+      dashMailComposeSubject: subject,
+      dashMailComposeBody: '',
+      dashMailMsg: '',
+      dashMailRecipientSearch: '',
+    });
+    setTimeout(() => {
+      const ed = document.getElementById('nf-mail-editor');
+      if (ed) {
+        const orig = email.body_text || email.body_html || '';
+        ed.innerHTML = '<br><br><div style="border-left:3px solid #8C7D5E; padding-left:12px; color:#8C7D5E;">' + orig.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') + '</div>';
+        ed.focus();
+      }
+    }, 100);
+  };
+
   setCategory = (cat) => this.setState({ category: cat });
   setSortMode = (mode) => this.setState({ sortMode: mode });
   openDrawer  = () => this.setState({ drawerOpen: true, orderJustPlaced: false });
@@ -1905,7 +2224,7 @@ class Component extends DCLogic {
       };
     };
     const ov = navStyle('overview'), pr = navStyle('products'), or_ = navStyle('orders');
-    const us = navStyle('users'), an = navStyle('analytics'), bk = navStyle('backups');
+    const us = navStyle('users'), an = navStyle('analytics'), bk = navStyle('backups'), ma = navStyle('mail');
 
     const statusColor = (st) => {
       const s = (st || '').toLowerCase();
@@ -1946,7 +2265,7 @@ class Component extends DCLogic {
     const now = new Date();
     const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    const titles = { overview:'Przegląd', products:'Produkty', orders:'Zamówienia', users:'Użytkownicy', analytics:'Analiza Sklepu', backups:'Kopie zapasowe' };
+    const titles = { overview:'Przegląd', products:'Produkty', orders:'Zamówienia', users:'Użytkownicy', analytics:'Analiza Sklepu', backups:'Kopie zapasowe', mail:'Poczta' };
 
     // ===== ANALIZA SKLEPU =====
     const money = (nn) => Math.round(nn || 0).toLocaleString('pl-PL') + ' zł';
@@ -2127,6 +2446,7 @@ class Component extends DCLogic {
       dNavUsersBg: us.bg, dNavUsersBrd: us.brd, dNavUsersClr: us.clr,
       dNavAnalyticsBg: an.bg, dNavAnalyticsBrd: an.brd, dNavAnalyticsClr: an.clr,
       dNavBackupsBg: bk.bg, dNavBackupsBrd: bk.brd, dNavBackupsClr: bk.clr,
+      dNavMailBg: ma.bg, dNavMailBrd: ma.brd, dNavMailClr: ma.clr,
 
       // Section handlers
       dashGoOverview: () => this.dashSetSection('overview'),
@@ -2135,19 +2455,22 @@ class Component extends DCLogic {
       dashGoUsers: () => this.dashSetSection('users'),
       dashGoAnalytics: () => this.dashSetSection('analytics'),
       dashGoBackups: () => this.dashSetSection('backups'),
+      dashGoMail: () => { this.dashSetSection('mail'); this.setState({ dashMailView: 'inbox' }); this.dashLoadEmails(); },
 
       // Section flags
-      dIsOverview: dashSection === 'overview' || (isModerator && (dashSection === 'analytics' || dashSection === 'backups')),
+      dIsOverview: dashSection === 'overview' || (isModerator && (dashSection === 'analytics' || dashSection === 'backups' || dashSection === 'mail')),
       dIsProducts: dashSection === 'products',
       dIsOrders: dashSection === 'orders',
       dIsUsers: dashSection === 'users',
       // Analiza Sklepu i Kopie zapasowe — tylko dla administratora
       dShowAnalytics: !isModerator,
       dShowBackups: !isModerator,
+      dShowMail: !isModerator,
       dIsAnalytics: !isModerator && dashSection === 'analytics',
       dIsBackups: !isModerator && dashSection === 'backups',
+      dIsMail: !isModerator && dashSection === 'mail',
 
-      dSectionTitle: (isModerator && (dashSection === 'analytics' || dashSection === 'backups')) ? 'Przegląd' : (titles[dashSection] || 'Przegląd'),
+      dSectionTitle: (isModerator && (dashSection === 'analytics' || dashSection === 'backups' || dashSection === 'mail')) ? 'Przegląd' : (titles[dashSection] || 'Przegląd'),
       dDateStr: dateStr,
       dUserInitials: initials,
       dUserName: fullName,
@@ -2365,6 +2688,96 @@ class Component extends DCLogic {
       dCreateLabel: this.state.dashBackupBusy === 'create' ? 'TWORZENIE…' : 'STWÓRZ KOPIĘ ZAPASOWĄ',
       dExportLabel: this.state.dashBackupBusy === 'export' ? 'EKSPORTOWANIE…' : 'EKSPORTUJ BAZĘ DANYCH',
       dImportLabel: this.state.dashBackupBusy === 'import' ? 'IMPORTOWANIE…' : 'IMPORTUJ BAZĘ DANYCH',
+
+      // Mail
+      dUnreadMailCount: (() => { const c = (this.state.dashEmails || []).filter(e => !e.read && e.folder === 'inbox').length; return c || ''; })(),
+      dIsMailInbox: this.state.dashMailView === 'inbox',
+      dIsMailCompose: this.state.dashMailView === 'compose',
+      dIsMailDetail: this.state.dashMailView === 'detail',
+      dMailLoading: this.state.dashMailLoading,
+      dashMailStartCompose: this.dashMailStartCompose,
+      dashMailBackToInbox: this.dashMailBackToInbox,
+      dashMailRefresh: () => this.dashLoadEmails(),
+      dRefreshLabel: this.state.dashMailLoading ? 'ŁADOWANIE...' : 'ODŚWIEŻ',
+
+      // Mail tabs
+      dashMailTabInbox: () => this.setState({ dashMailTab: 'inbox' }),
+      dashMailTabSent: () => this.setState({ dashMailTab: 'sent' }),
+      dMailTabInboxClr: this.state.dashMailTab === 'inbox' ? '#0E1810' : '#9A9480',
+      dMailTabInboxBg: this.state.dashMailTab === 'inbox' ? '#8ABA82' : 'transparent',
+      dMailTabInboxBrd: this.state.dashMailTab === 'inbox' ? '#8ABA82' : 'rgba(138,186,130,.15)',
+      dMailTabSentClr: this.state.dashMailTab === 'sent' ? '#0E1810' : '#9A9480',
+      dMailTabSentBg: this.state.dashMailTab === 'sent' ? '#8ABA82' : 'transparent',
+      dMailTabSentBrd: this.state.dashMailTab === 'sent' ? '#8ABA82' : 'rgba(138,186,130,.15)',
+
+      // Mail list
+      dMailList: (() => {
+        const tab = this.state.dashMailTab || 'inbox';
+        const emails = (this.state.dashEmails || []).filter(e => e.folder === tab);
+        return emails.map(e => ({
+          id: e.id,
+          from: tab === 'sent' ? ((e.to_addresses || [])[0]?.email || 'Do: ...') : (e.from_name || e.from_address || '—'),
+          subject: e.subject || '(brak tematu)',
+          date: fmtDate(e.received_at),
+          fontWeight: e.read ? 'normal' : '600',
+          dotColor: e.read ? 'transparent' : '#8ABA82',
+          subjectColor: e.read ? '#9A9480' : '#DDD8C6',
+          rowBg: e.read ? '#0E1810' : 'rgba(138,186,130,.04)',
+          onClick: () => this.dashMailOpenDetail(e.id),
+        }));
+      })(),
+      dMailEmpty: !this.state.dashMailLoading && (this.state.dashEmails || []).filter(e => e.folder === (this.state.dashMailTab || 'inbox')).length === 0,
+      dMailEmptyHint: (this.state.dashMailTab || 'inbox') === 'inbox' ? 'Kliknij „Odśwież", aby pobrać e-maile.' : 'Nie wysłano jeszcze żadnych wiadomości.',
+
+      // Mail detail
+      dMailDetail: (() => {
+        const e = (this.state.dashEmails || []).find(x => x.id === this.state.dashMailSelectedId);
+        if (!e) return { subject: '', from: '', to: '', date: '', body: '' };
+        return {
+          subject: e.subject || '(brak tematu)',
+          from: e.from_name ? (e.from_name + ' <' + e.from_address + '>') : (e.from_address || ''),
+          to: (e.to_addresses || []).map(r => r.name || r.email).join(', ') || '',
+          date: e.received_at ? new Date(e.received_at).toLocaleString('pl-PL') : '',
+          body: e.body_text || (e.body_html ? e.body_html.replace(/<[^>]*>/g, '') : ''),
+        };
+      })(),
+      dashMailReply: this.dashMailReply,
+
+      // Compose
+      dashMailOnSearch: this.dashMailOnSearch,
+      dashMailOnSubject: this.dashMailOnSubject,
+      dashMailRecipientSearch: this.state.dashMailRecipientSearch || '',
+      dashMailComposeSubject: this.state.dashMailComposeSubject || '',
+      dashMailAddCustomEmail: this.dashMailAddCustomEmail,
+      dashMailAddAllUsers: this.dashMailAddAllUsers,
+      dashMailSend: this.dashMailSend,
+      dashMailSending: this.state.dashMailSending,
+      dashMailMsg: this.state.dashMailMsg || '',
+      dHasMailMsg: !!this.state.dashMailMsg,
+      dashMailSendLabel: this.state.dashMailSending ? 'WYSYŁANIE...' : 'WYŚLIJ',
+      dashMailFmtBold: this.dashMailFmtBold,
+      dashMailFmtItalic: this.dashMailFmtItalic,
+      dashMailFmtUl: this.dashMailFmtUl,
+      dashMailFmtLink: this.dashMailFmtLink,
+      dMailRecipientChips: (this.state.dashMailComposeTo || []).map(r => ({
+        label: r.name || r.email,
+        onRemove: () => this.dashMailRemoveRecipient(r.email),
+      })),
+      dShowRecipientDropdown: !!(this.state.dashMailRecipientSearch && this.state.dashMailRecipientSearch.length >= 1),
+      dMailUserOptions: (() => {
+        const q = (this.state.dashMailRecipientSearch || '').toLowerCase();
+        if (!q) return [];
+        const selected = new Set((this.state.dashMailComposeTo || []).map(r => r.email));
+        return (this.state.dashUsers || [])
+          .filter(u => u.email && !u.isGuest && !selected.has(u.email))
+          .filter(u => (u.full_name || '').toLowerCase().includes(q) || u.email.toLowerCase().includes(q))
+          .slice(0, 8)
+          .map(u => ({
+            email: u.email,
+            name: u.full_name || u.email,
+            onClick: () => this.dashMailAddRecipient(u.email, u.full_name || u.email),
+          }));
+      })(),
 
       // Edit product modal
       dashIsEditing: this.state.dashEditId !== null,

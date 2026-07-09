@@ -137,7 +137,7 @@
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px;">
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
         <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.24); border-radius:14px; padding:18px; display:flex; flex-direction:column;">
-          <div style="position:relative; border-radius:10px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08;">
+          <a href="{{ p.detailUrl }}" style="display:block; position:relative; border-radius:10px; overflow:hidden; aspect-ratio:4/3.2; background:#080c08; text-decoration:none;">
             <img src="{{ p.image }}" alt="{{ p.name }}" style="width:100%; height:100%; object-fit:cover; display:block;">
             <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.6) 100%);"></div>
             <span style="position:absolute; left:12px; top:12px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.1em; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:999px; padding:5px 10px;">{{ p.tag }}</span>
@@ -146,9 +146,9 @@
               <span style="width:6px; height:6px; border-radius:50%; background:#7aaa72; box-shadow:0 0 5px rgba(122,170,114,.7);"></span>
               <span style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#a9c0a0;">{{ p.stock }}&nbsp;available</span>
             </div>
-          </div>
-          <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic;">{{ p.latin }}</div>
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em;">{{ p.name }}</div>
+          </a>
+          <a href="{{ p.detailUrl }}" style="display:block; font-family:'Space Mono',monospace; font-size:10.5px; color:#7aaa72; margin:16px 0 4px; letter-spacing:.04em; font-style:italic; text-decoration:none;">{{ p.latin }}</a>
+          <a href="{{ p.detailUrl }}" style="display:block; font-family:'Cinzel',serif; font-weight:600; font-size:20px; color:#ddd8c6; letter-spacing:.02em; text-decoration:none;">{{ p.name }}</a>
           <p style="font-size:14.5px; line-height:1.55; color:#9a9480; margin:10px 0 16px; min-height:46px;">{{ p.desc }}</p>
           <div style="margin-top:auto; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(90,120,70,.18); padding-top:14px; gap:12px;">
             <div>
@@ -390,7 +390,8 @@ class Component extends DCLogic {
     const mapped = (products || []).map(p => ({
       id: p.id, cat: p.category, name: p.name, latin: p.latin,
       price: Number(p.price), image: p.image, tag: p.tag,
-      stock: p.stock, unit: p.unit, desc: p.description
+      stock: p.stock, unit: p.unit, desc: p.description,
+      detailUrl: 'produkt.html#' + p.id
     }));
 
     const { data: { session } } = await sb.auth.getSession();
