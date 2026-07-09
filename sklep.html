@@ -1429,8 +1429,10 @@ class Component extends DCLogic {
 
     const wantsDrawer = window.location.hash === '#cart' || window.location.hash === '#koszyk';
     const wantsDash = window.location.hash === '#dashboard';
+    const hashCat = window.location.hash.replace('#', '');
+    const wantsCat = (hashCat === 'akwariowe' || hashCat === 'sadownicze') ? hashCat : null;
     const isDashUser = user && (userRank || 0) >= this.STAFF_RANK;
-    this.setState({ products: mapped, cart, user, userRole, userRank, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds, dashboardMode: wantsDash && isDashUser });
+    this.setState({ products: mapped, cart, user, userRole, userRank, hydrated: true, drawerOpen: wantsDrawer && cart.length > 0, watchedIds, dashboardMode: wantsDash && isDashUser, category: wantsCat || 'akwariowe' });
 
     if (isDashUser) this.loadDashboardData();
 
