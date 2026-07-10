@@ -7,6 +7,7 @@
 <script src="./supabase-config.js"></script>
 <script src="./support.js"></script>
 <script src="./transitions.js"></script>
+<script src="./content-editor.js"></script>
 </head>
 <body>
 <x-dc>
@@ -73,16 +74,16 @@
   <!-- ============================================================ -->
   <div style="position:relative; max-width:1440px; margin:0 auto; padding:70px 40px 40px;">
     <div style="display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:start;">
-      <div style="background:linear-gradient(180deg,rgba(14,22,16,.6),rgba(10,18,11,.4)); border:1px solid rgba(90,120,70,.12); border-radius:14px; padding:40px;">
+      <div style="background:linear-gradient(180deg,#0a140d,#060906); border:1px solid rgba(90,120,70,.2); border-radius:14px; padding:40px;">
         <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;">
           <span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>
           plants · culta sub vitro
         </div>
-        <h1 style="font-family:'Cinzel',serif; font-weight:700; font-size:56px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">
+        <h1 data-edit-key="sklep-hero-title" style="font-family:'Cinzel',serif; font-weight:700; font-size:56px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">
           Plants from glass<br>
           <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">for aquarium and orchard.</span>
         </h1>
-        <p style="font-size:18px; line-height:1.66; color:#9a9480; max-width:520px; margin:22px 0 0;">
+        <p data-edit-key="sklep-hero-lead" style="font-size:18px; line-height:1.66; color:#9a9480; max-width:520px; margin:22px 0 0;">
           All specimens from the laboratory in Wałbrzych — tissue culture <em>in vitro</em>, genetically identical to the mother plants, 100% free of pathogens. Shipping across Poland within 48 h.
         </p>
       </div>

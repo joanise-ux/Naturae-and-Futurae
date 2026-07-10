@@ -96,7 +96,7 @@
   }
   function isEditableImg(el) {
     if (el.tagName !== 'IMG') return false;
-    if (el.closest('.nf-nav, header, a, button, [data-nf-skip], [data-screen-label="Footer"], [data-screen-label="Stopka"]')) return false;
+    if (el.closest('.nf-nav, header, button, [data-nf-skip], [data-screen-label="Footer"], [data-screen-label="Stopka"]')) return false;
     return true;
   }
 
