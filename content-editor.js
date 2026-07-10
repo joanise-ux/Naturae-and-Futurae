@@ -79,15 +79,16 @@
     return el.tagName.toLowerCase() + '_' + hashStr(sectionLabel(el) + '|' + normText(el));
   }
 
+  function isInFooter(el) {
+    return !!(el.closest && el.closest('#nf-footer'));
+  }
+
   // --- Czy element to edytowalny liść tekstu? -----------------------------
   function isEditableText(el) {
     if (SKIP_TAG[el.tagName]) return false;
-    // Elementy inline (span, b, i…) nie są samodzielnym blokiem — obejmuje je
-    // nadrzędny blok tekstu, więc nie kluczujemy ich osobno (unika zagnieżdżeń).
     if (INLINE[el.tagName]) return false;
     if (el.closest('.nf-nav, .nf-lang, header, a, button, select, [data-nf-skip]')) return false;
     if (!normText(el)) return false;
-    // wszystkie dzieci muszą być inline (brak zagnieżdżonych bloków)
     var kids = el.children;
     for (var i = 0; i < kids.length; i++) {
       if (!INLINE[kids[i].tagName]) return false;
@@ -96,7 +97,7 @@
   }
   function isEditableImg(el) {
     if (el.tagName !== 'IMG') return false;
-    if (el.closest('.nf-nav, header, button, [data-nf-skip], [data-screen-label="Footer"], [data-screen-label="Stopka"]')) return false;
+    if (el.closest('.nf-nav, header, button, [data-nf-skip]')) return false;
     return true;
   }
 
@@ -138,8 +139,8 @@
   function loadOverrides() {
     if (!sb()) return Promise.resolve();
     return sb().from('site_content')
-      .select('block,type,value')
-      .eq('page', INFO.page)
+      .select('block,type,value,page')
+      .in('page', [INFO.page, '_shared'])
       .eq('lang', INFO.lang)
       .then(function (res) {
         if (res.error) { console.warn('[content-editor] load:', res.error.message); return; }
@@ -221,6 +222,12 @@
 
     document.addEventListener('mouseover', function (e) {
       var t = e.target.closest ? e.target.closest('[data-nf-key]') : null;
+      if (!t) {
+        var els = document.elementsFromPoint(e.clientX, e.clientY);
+        for (var i = 0; i < els.length; i++) {
+          if (els[i].hasAttribute && els[i].hasAttribute('data-nf-key')) { t = els[i]; break; }
+        }
+      }
       if (t && t !== editingEl) { hoverEl = t; positionPencil(t); }
     }, true);
     window.addEventListener('scroll', function () {
@@ -494,8 +501,9 @@
 
   // --- Zapis do Supabase ---------------------------------------------------
   function persist(key, type, value) {
+    var page = (editingEl && isInFooter(editingEl)) ? '_shared' : INFO.page;
     var row = {
-      page: INFO.page, block: key, lang: INFO.lang,
+      page: page, block: key, lang: INFO.lang,
       type: type, value: value, updated_at: new Date().toISOString()
     };
     return sb().from('site_content').upsert(row, { onConflict: 'page,block,lang' })
