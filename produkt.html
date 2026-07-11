@@ -66,7 +66,7 @@
   </div>
 
   <!-- BREADCRUMB -->
-  <div style="max-width:1440px; margin:0 auto; padding:24px 40px 0;">
+  <div style="max-width:1680px; margin:0 auto; padding:24px 40px 0;">
     <div style="font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e; display:flex; align-items:center; gap:8px;">
       <a href="sklep.html" style="color:#a9c0a0;">Sklep</a>
       <span style="opacity:.4;">/</span>
@@ -76,7 +76,7 @@
 
   <!-- PRODUCT DETAIL -->
   <sc-if value="{{ loaded }}" hint-placeholder-val="{{ true }}">
-    <div style="max-width:1440px; margin:0 auto; padding:30px 40px 80px;">
+    <div style="max-width:1680px; margin:0 auto; padding:30px 40px 80px;">
       <div style="display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:start;">
 
         <!-- LEFT: image -->
@@ -152,7 +152,7 @@
   </sc-if>
 
   <sc-if value="{{ notFound }}" hint-placeholder-val="{{ false }}">
-    <div style="max-width:1440px; margin:0 auto; padding:80px 40px; text-align:center;">
+    <div style="max-width:1680px; margin:0 auto; padding:56px 40px; text-align:center;">
       <div style="font-family:'Cinzel',serif; font-size:28px; color:#ddd8c6;">Nie znaleziono produktu</div>
       <p style="font-family:'EB Garamond',serif; font-style:italic; font-size:16px; color:#8c7d5e; margin-top:12px;">Produkt o podanym identyfikatorze nie istnieje lub zostal usuniety.</p>
       <a href="sklep.html" style="display:inline-block; margin-top:24px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:12px 22px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45);">Wróć do sklepu</a>

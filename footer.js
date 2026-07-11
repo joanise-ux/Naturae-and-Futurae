@@ -36,7 +36,7 @@
 
   var html =
     '<div data-screen-label="Footer" style="border-top:1px solid rgba(90,120,70,.2); margin-top:20px; background:rgba(4,10,7,.5);">'
-    + '<div style="max-width:1440px; margin:0 auto; padding:50px 40px 40px;">'
+    + '<div style="max-width:1680px; margin:0 auto; padding:50px 40px 40px;">'
     +   '<div style="display:grid; grid-template-columns:1.2fr 1fr 1fr .8fr; gap:40px;">'
     +     '<div>'
     +       '<div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">'
