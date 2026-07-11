@@ -273,8 +273,8 @@
     attachLinkOpener(el);
     showToolbar(el, function save() {
       var value = el.innerHTML;
-      finishText(el);
       persist(el.__nfKey, 'html', value);
+      finishText(el);
     }, function cancel() {
       el.innerHTML = original;
       finishText(el);
