@@ -144,7 +144,11 @@
       .eq('lang', INFO.lang)
       .then(function (res) {
         if (res.error) { console.warn('[content-editor] load:', res.error.message); return; }
-        (res.data || []).forEach(function (row) {
+        var rows = res.data || [];
+        rows.sort(function (a, b) {
+          return (a.page === '_shared' ? 1 : 0) - (b.page === '_shared' ? 1 : 0);
+        });
+        rows.forEach(function (row) {
           overrides[row.block] = { type: row.type, value: row.value };
         });
         applyAll();
