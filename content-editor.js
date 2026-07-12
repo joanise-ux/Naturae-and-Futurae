@@ -106,10 +106,23 @@
     var all = document.querySelectorAll('h1,h2,h3,h4,h5,h6,p,div,span,li,td,th,blockquote,figcaption,img,[data-edit-key]');
     for (var i = 0; i < all.length; i++) {
       var el = all[i];
-      if (el.__nfKeyed) continue;
+      if (el.__nfKeyed) {
+        // Reaktywny framework strony (x-dc) potrafi przy re-renderze ZDJĄĆ
+        // atrybut data-nf-key, zachowując sam obiekt węzła (i naszą właściwość
+        // __nfKeyed). Wtedy element „znika" dla edytora — najazd go nie znajduje,
+        // a zapisane treści się nie nakładają. Dlatego przywracamy atrybut.
+        if (el.__nfKey && el.getAttribute('data-nf-key') !== el.__nfKey) {
+          el.setAttribute('data-nf-key', el.__nfKey);
+        }
+        continue;
+      }
+      // Ręczny data-edit-key ma PIERWSZEŃSTWO: taki element jest edytowalny
+      // nawet jeśli to element inline (np. <span> z rokiem na osi czasu),
+      // który auto-wykrywanie normalnie pomija.
+      var manual = el.getAttribute('data-edit-key');
       var type = null;
-      if (el.tagName === 'IMG') { if (isEditableImg(el)) type = 'image'; }
-      else if (isEditableText(el)) type = 'html';
+      if (el.tagName === 'IMG') { if (manual || isEditableImg(el)) type = 'image'; }
+      else if (manual || isEditableText(el)) type = 'html';
       if (!type) continue;
       el.__nfKeyed = true;
       el.__nfKey = computeKey(el);
