@@ -23,7 +23,10 @@ $files = @(
     "konto-en.html",
     "admin.html",
     "support.js",
-    "supabase-config.js"
+    "supabase-config.js",
+    "content-editor.js",
+    "footer.js",
+    "transitions.js"
 )
 
 $assetFiles = @(

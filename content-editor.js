@@ -156,10 +156,33 @@
   }
 
   // --- Sprawdzenie uprawnień personelu ------------------------------------
+  // Supabase odtwarza sesję z pamięci ASYNCHRONICZNIE — zaraz po załadowaniu
+  // strony getSession() potrafi jeszcze zwrócić null. Dlatego jeśli sesji nie
+  // ma od razu, czekamy na zdarzenie onAuthStateChange (INITIAL_SESSION /
+  // SIGNED_IN) do 3 s, zamiast od razu wyłączać tryb edycji. Bez tego przy
+  // wejściu z panelu ołówki „raz się pojawiały, raz nie".
+  function getUserWhenReady() {
+    return new Promise(function (resolve) {
+      var done = false, sub = null;
+      function finish(user) {
+        if (done) return; done = true;
+        try { if (sub && sub.data && sub.data.subscription) sub.data.subscription.unsubscribe(); } catch (e) {}
+        resolve(user || null);
+      }
+      sb().auth.getSession().then(function (r) {
+        var user = r && r.data && r.data.session && r.data.session.user;
+        if (user) finish(user);
+      });
+      sub = sb().auth.onAuthStateChange(function (event, session) {
+        if (session && session.user) finish(session.user);
+      });
+      setTimeout(function () { finish(null); }, 3000);
+    });
+  }
+
   function checkStaff() {
     if (!sb()) return Promise.resolve(false);
-    return sb().auth.getSession().then(function (r) {
-      var user = r && r.data && r.data.session && r.data.session.user;
+    return getUserWhenReady().then(function (user) {
       if (!user) return false;
       return sb().from('profiles').select('rank').eq('id', user.id).single()
         .then(function (p) { return !!(p && p.data && p.data.rank >= 10); });
