@@ -53,6 +53,8 @@
   var editingEl = null;        // element aktualnie edytowany (pomijamy w apply)
   var staff = false;
   var editMode = false;
+  var reobs = null;            // MutationObserver wznawiający applyAll po zmianach DOM
+  var applying = false;        // strażnik przed rekurencją własnych mutacji
 
   function sb() { return window.supabaseClient; }
   function css(el, s) { for (var k in s) el.style[k] = s[k]; }
@@ -132,19 +134,39 @@
   }
 
   // --- Nałożenie nadpisań na DOM ------------------------------------------
+  // Nasze własne mutacje (ustawianie data-nf-key, src, innerHTML) TEŻ trafiają
+  // do MutationObservera. Bez ochrony powstaje pętla: przeglądarka renormalizuje
+  // HTML (encje, kolejność atrybutów, style=""), więc porównanie innerHTML !== value
+  // zostaje true na zawsze → observer wywołuje applyAll → applyAll ustawia znowu
+  // → observer znowu strzela → renderer zamraża. Dlatego:
+  //   1) rozłączamy observer na czas applyAll,
+  //   2) po podmianie synchronizujemy ov.value z tym, co realnie osiadło w DOM,
+  //   3) chronimy się też flagą applying na wypadek reentrancji.
   function applyAll() {
-    ensureKeyed();
-    var nodes = document.querySelectorAll('[data-nf-key]');
-    for (var i = 0; i < nodes.length; i++) {
-      var el = nodes[i];
-      if (el === editingEl) continue;
-      var ov = overrides[el.__nfKey];
-      if (!ov) continue;
-      if (el.tagName === 'IMG') {
-        if (el.getAttribute('src') !== ov.value) el.setAttribute('src', ov.value);
-      } else if (el.innerHTML !== ov.value) {
-        el.innerHTML = ov.value;
+    if (applying) return;
+    applying = true;
+    if (reobs) reobs.disconnect();
+    try {
+      ensureKeyed();
+      var nodes = document.querySelectorAll('[data-nf-key]');
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (el === editingEl) continue;
+        var ov = overrides[el.__nfKey];
+        if (!ov) continue;
+        if (el.tagName === 'IMG') {
+          if (el.getAttribute('src') !== ov.value) {
+            el.setAttribute('src', ov.value);
+            ov.value = el.getAttribute('src');
+          }
+        } else if (el.innerHTML !== ov.value) {
+          el.innerHTML = ov.value;
+          ov.value = el.innerHTML; // sync po normalizacji HTML przez przeglądarkę
+        }
       }
+    } finally {
+      if (reobs) reobs.observe(document.body, { childList: true, subtree: true });
+      applying = false;
     }
   }
 
@@ -605,7 +627,7 @@
       started = true;
 
       loadOverrides();
-      var reobs = new MutationObserver(function () { applyAll(); });
+      reobs = new MutationObserver(function () { applyAll(); });
       reobs.observe(document.body, { childList: true, subtree: true });
 
       checkStaff().then(function (isStaff) {
