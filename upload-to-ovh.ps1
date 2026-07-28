@@ -21,7 +21,6 @@ $files = @(
     "panel-klienta-en.html",
     "konto.html",
     "konto-en.html",
-    "admin.html",
     "support.js",
     "supabase-config.js",
     "content-editor.js",
