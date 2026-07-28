@@ -1,0 +1,84 @@
+name: Supabase keepalive + daily backup
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  SUPABASE_URL: https://qhhrtqxtoguymtmiypdk.supabase.co
+  BACKUP_TABLES: site_content products sales_targets
+  RETENTION_DAYS: 90
+
+jobs:
+  keepalive-and-backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ping Supabase (keep-alive)
+        env:
+          KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          code=$(curl -s -o /tmp/ping.json -w "%{http_code}" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
+            "$SUPABASE_URL/rest/v1/site_content?select=id&limit=1")
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "Keepalive ping failed"
+            cat /tmp/ping.json
+            exit 1
+          fi
+
+      - name: Download backup tables
+        env:
+          KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          DATE=$(date -u +%F)
+          DIR="backups/$DATE"
+          mkdir -p "$DIR"
+          for table in $BACKUP_TABLES; do
+            echo "Dumping $table ..."
+            code=$(curl -s -o "$DIR/$table.json" -w "%{http_code}" \
+              -H "apikey: $KEY" \
+              -H "Authorization: Bearer $KEY" \
+              -H "Accept: application/json" \
+              "$SUPABASE_URL/rest/v1/$table?select=*")
+            if [ "$code" != "200" ]; then
+              echo "Failed to dump $table (HTTP $code)"
+              cat "$DIR/$table.json"
+              exit 1
+            fi
+            rows=$(jq 'length' "$DIR/$table.json")
+            echo "  -> $rows rows"
+          done
+
+      - name: Prune old backups
+        run: |
+          set -euo pipefail
+          if [ -d backups ]; then
+            find backups -mindepth 1 -maxdepth 1 -type d -mtime +${RETENTION_DAYS} -print -exec rm -rf {} +
+          fi
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "No backup changes to commit"
+            exit 0
+          fi
+          git commit -m "backup: $(date -u +%F) [skip ci]"
+          git push

@@ -24,3 +24,4 @@ jobs:
             upload-to-ovh.ps1
             .claude/**
             admin.html
+            backups/**
