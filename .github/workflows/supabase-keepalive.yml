@@ -31,7 +31,7 @@ jobs:
           code=$(curl -s -o /tmp/ping.json -w "%{http_code}" \
             -H "apikey: $KEY" \
             -H "Authorization: Bearer $KEY" \
-            "$SUPABASE_URL/rest/v1/site_content?select=id&limit=1")
+            "$SUPABASE_URL/rest/v1/site_content?select=page&limit=1")
           echo "HTTP $code"
           if [ "$code" != "200" ]; then
             echo "Keepalive ping failed"
