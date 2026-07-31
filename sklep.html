@@ -123,19 +123,19 @@
     <!-- CATEGORY TABS -->
     <!-- ============================================================ -->
     <div style="display:flex; align-items:center; justify-content:space-between; margin-top:48px; padding-top:24px; border-top:1px solid rgba(90,120,70,.18); gap:24px; flex-wrap:wrap;">
-      <div style="display:flex; gap:0; align-items:stretch; background:rgba(8,12,8,.5); border:1px solid rgba(90,120,70,.3); border-radius:8px; padding:5px;">
+      <div data-nf-skip style="display:flex; gap:0; align-items:stretch; background:rgba(8,12,8,.5); border:1px solid rgba(90,120,70,.3); border-radius:8px; padding:5px;">
         <span onClick="{{ setAkwa }}" style="cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 22px; border-radius:6px; background:{{ akwaTabBg }}; transition:background .25s;">
           <span style="width:9px; height:9px; border-radius:50%; background:#7aaa72; box-shadow:0 0 8px rgba(122,170,114,.6);"></span>
-          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ akwaTabColor }}; letter-spacing:.04em;">Rośliny akwariowe</span>
-          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ in&nbsp;vitro</span>
+          <span data-edit-key="shop-tab-akwa-label" style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ akwaTabColor }}; letter-spacing:.04em;">Rośliny akwariowe</span>
+          <span data-edit-key="shop-tab-akwa-sub" style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ in&nbsp;vitro</span>
         </span>
         <span onClick="{{ setSad }}" style="cursor:pointer; display:flex; align-items:center; gap:12px; padding:14px 22px; border-radius:6px; background:{{ sadTabBg }}; transition:background .25s;">
           <span style="width:9px; height:9px; border-radius:50%; background:#8aba82; box-shadow:0 0 8px rgba(122,170,114,.5);"></span>
-          <span style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ sadTabColor }}; letter-spacing:.04em;">Drzewa owocowe</span>
-          <span style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ sad Walim</span>
+          <span data-edit-key="shop-tab-sad-label" style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:{{ sadTabColor }}; letter-spacing:.04em;">Drzewa owocowe</span>
+          <span data-edit-key="shop-tab-sad-sub" style="font-family:'Space Mono',monospace; font-size:10px; color:#8c7d5e;">/ sad Walim</span>
         </span>
       </div>
-      <div style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
+      <div data-nf-skip style="display:flex; align-items:center; gap:18px; font-family:'Space Mono',monospace; font-size:11px; color:#8c7d5e;">
         <span>SORTUJ:</span>
         <span onClick="{{ sortAll }}" style="cursor:pointer; color:{{ sortAllColor }};">Wszystkie</span>
         <span onClick="{{ sortPrice }}" style="cursor:pointer; color:{{ sortPriceColor }};">Cena ↑</span>
