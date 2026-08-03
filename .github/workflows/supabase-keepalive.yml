@@ -1,8 +1,14 @@
 name: Supabase keepalive + daily backup
 
 on:
+  # GitHub kolejkuje zadania cron i przy obciążeniu potrafi je opóźnić o godziny
+  # albo POMINĄĆ cały przebieg (tak stało się 2026-08-03: backupu w ogóle nie było).
+  # Pełne godziny są najbardziej zatłoczone, dlatego: nietypowa minuta + druga
+  # próba po południu. Job jest idempotentny (katalog backups/<data>), więc drugi
+  # przebieg tego samego dnia po prostu odświeża dane i pinguje bazę raz jeszcze.
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '37 5 * * *'
+    - cron: '43 15 * * *'
   workflow_dispatch:
 
 concurrency:

@@ -227,7 +227,14 @@
   // ========================================================================
   //  TRYB EDYCJI (tylko personel, tylko po włączeniu)
   // ========================================================================
-  var pencil, toolbar, fileInput, topbar, hoverEl = null;
+  var pencil, toolbar, fileInput, topbar, retryBtn, hoverEl = null;
+
+  function updateRetryBtn() {
+    if (!retryBtn) return;
+    var n = queueRead().length;
+    retryBtn.textContent = 'Zapisz ponownie (' + n + ')';
+    retryBtn.style.display = n ? '' : 'none';
+  }
 
   function buildUI() {
     pencil = document.createElement('button');
@@ -277,9 +284,27 @@
       borderRadius: '5px', padding: '6px 12px'
     });
     endBtn.addEventListener('click', endEditMode);
+
+    // Widoczny tylko, gdy są zmiany zakolejkowane po nieudanym zapisie.
+    retryBtn = document.createElement('button');
+    retryBtn.type = 'button';
+    css(retryBtn, {
+      cursor: 'pointer', fontFamily: "'Space Mono',monospace", fontSize: '11px',
+      letterSpacing: '.08em', textTransform: 'uppercase', color: '#fff',
+      background: '#7a2a2a', border: '1px solid rgba(0,0,0,.35)',
+      borderRadius: '5px', padding: '6px 12px', display: 'none'
+    });
+    retryBtn.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      retryBtn.disabled = true;
+      flushPending(false).then(function () { retryBtn.disabled = false; });
+    }, true);
+
     topbar.appendChild(label);
+    topbar.appendChild(retryBtn);
     topbar.appendChild(endBtn);
     document.body.appendChild(topbar);
+    updateRetryBtn();
     document.body.style.paddingTop = '38px'; // miejsce na pasek
 
     document.addEventListener('mouseover', function (e) {
@@ -555,7 +580,10 @@
         })
         .catch(function (err) {
           el.style.opacity = '';
-          toast('Błąd wgrywania: ' + (err.message || err), true);
+          // Pliku nie da się sensownie zakolejkować — tylko czytelny komunikat.
+          toast(isOffline(err)
+            ? 'Nie wgrano zdjęcia — baza Supabase jest uśpiona lub niedostępna. Spróbuj ponownie za chwilę.'
+            : 'Błąd wgrywania: ' + describeError(err), true);
         });
     };
     fileInput.click();
@@ -568,13 +596,97 @@
       page: page, block: key, lang: INFO.lang,
       type: type, value: value, updated_at: new Date().toISOString()
     };
-    return sb().from('site_content').upsert(row, { onConflict: 'page,block,lang' })
-      .then(function (res) {
-        if (res.error) throw res.error;
+    return upsertRow(row)
+      .then(function () {
         overrides[key] = { type: type, value: value };
         toast('Zapisano ✓', false);
       })
-      .catch(function (err) { toast('Nie zapisano: ' + (err.message || err), true); });
+      .catch(function (err) {
+        overrides[key] = { type: type, value: value }; // treść zostaje na stronie
+        if (isOffline(err)) {
+          queueAdd(row);
+          toast('Baza Supabase jest uśpiona lub niedostępna — zmiana zapisana lokalnie, ponowię próbę.', true);
+        } else {
+          toast('Nie zapisano: ' + describeError(err), true);
+        }
+      });
+  }
+
+  function upsertRow(row) {
+    return sb().from('site_content').upsert(row, { onConflict: 'page,block,lang' })
+      .then(function (res) { if (res.error) throw res.error; return res; });
+  }
+
+  // --- Rozpoznanie awarii/uśpienia bazy ------------------------------------
+  // Zapauzowany projekt Supabase nie odpowiada wcale (błąd sieci) albo zwraca
+  // 5xx z bramy — w obu wypadkach zapis warto zakolejkować i ponowić.
+  function isOffline(err) {
+    if (!err) return false;
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return true;
+    var code = String((err && err.status) || (err && err.code) || '');
+    if (/^5\d\d$/.test(code) || code === '503' || code === '544') return true;
+    var msg = String((err && err.message) || err);
+    return /failed to fetch|networkerror|network request failed|load failed|fetch failed|timeout|503|504|paused/i.test(msg);
+  }
+
+  function describeError(err) {
+    var msg = String((err && err.message) || err || 'nieznany błąd');
+    if (isOffline(err)) return 'baza Supabase jest uśpiona lub niedostępna';
+    if (/row-level security|permission denied|jwt|401|403/i.test(msg)) {
+      return 'brak uprawnień do zapisu (zaloguj się ponownie jako administrator)';
+    }
+    return msg;
+  }
+
+  // --- Kolejka niezapisanych zmian (localStorage) --------------------------
+  var PENDING_KEY = 'nf-pending-content';
+
+  function queueRead() {
+    try {
+      var raw = localStorage.getItem(PENDING_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Object.prototype.toString.call(arr) === '[object Array]' ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function queueWrite(arr) {
+    try {
+      if (arr.length) localStorage.setItem(PENDING_KEY, JSON.stringify(arr));
+      else localStorage.removeItem(PENDING_KEY);
+    } catch (e) {}
+    updateRetryBtn();
+  }
+
+  function queueAdd(row) {
+    var arr = queueRead().filter(function (r) {
+      return !(r.page === row.page && r.block === row.block && r.lang === row.lang);
+    });
+    arr.push(row);
+    queueWrite(arr);
+  }
+
+  // Wysyła zaległe wiersze; te, które znów się nie udały, zostają w kolejce.
+  function flushPending(silent) {
+    var arr = queueRead();
+    if (!arr.length || !sb()) return Promise.resolve(0);
+    var left = [], ok = 0;
+    return arr.reduce(function (chain, row) {
+      return chain.then(function () {
+        return upsertRow(row)
+          .then(function () {
+            ok++;
+            if (row.page === INFO.page || row.page === '_shared') {
+              overrides[row.block] = { type: row.type, value: row.value };
+            }
+          })
+          .catch(function () { left.push(row); });
+      });
+    }, Promise.resolve()).then(function () {
+      queueWrite(left);
+      if (ok && !silent) toast('Zapisano zaległe zmiany (' + ok + ') ✓', false);
+      if (left.length && !silent) toast('Nadal nie udało się zapisać: ' + left.length, true);
+      return ok;
+    });
   }
 
   // --- Krótki komunikat ----------------------------------------------------
@@ -636,6 +748,9 @@
           try { localStorage.setItem(EDIT_FLAG, '1'); } catch (e) {}
           editMode = true;
           buildUI();
+          flushPending(false); // dośle zmiany, których nie udało się zapisać wcześniej
+        } else if (staff) {
+          flushPending(true);  // personel bez trybu edycji — po cichu
         }
         cleanUrlParam();
       });
