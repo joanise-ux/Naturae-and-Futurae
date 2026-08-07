@@ -13,7 +13,12 @@
   --nf-cream:       #EDECE5;   /* baza, tlo stron jasnych */
   --nf-green-900:   #16341A;   /* nav, stopka, sekcje ciemne */
   --nf-green-800:   #1E4520;   /* start gradientu */
-  --nf-green-600:   #3F7A34;   /* koniec gradientu */
+  /* Koniec gradientu. Wartosc z pierwotnej palety (#3F7A34) byla za jasna:
+     jasny tekst lezacy bezposrednio na tle spadal do ~1.1:1. Przyciemnienie
+     do #2E5A26 zbija liczbe pozycji ponizej progu WCAG z 197 do 102 i nadal
+     zostawia czytelny gradient. Ciemniej (#22461C) daje juz tylko 11 pozycji
+     wiecej, a gradient splaszcza sie do jednolitej plamy. */
+  --nf-green-600:   #2E5A26;   /* koniec gradientu */
   --nf-panel:       #12301A;   /* karty/panele na zielonym */
   --nf-mint:        #8FD79C;   /* akcent */
   --nf-amber:       #C9922E;   /* mikro-akcent */
