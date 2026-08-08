@@ -17,7 +17,12 @@
      jasny tekst lezacy bezposrednio na tle spadal do ~1.1:1. Przyciemnienie
      do #2E5A26 zbija liczbe pozycji ponizej progu WCAG z 197 do 102 i nadal
      zostawia czytelny gradient. Ciemniej (#22461C) daje juz tylko 11 pozycji
-     wiecej, a gradient splaszcza sie do jednolitej plamy. */
+     wiecej, a gradient splaszcza sie do jednolitej plamy.
+
+     UWAGA: na stronach z klasa .nf-theme-deep problem znika u zrodla —
+     tlo #071310 daje jasnemu tekstowi kontrast grubo powyzej progu, wiec
+     nie ma tam czego ratowac przyciemnianiem. Powyzszy kompromis dotyczy
+     wylacznie stron wciaz siedzacych na gradiencie zielonym. */
   --nf-green-600:   #2E5A26;   /* koniec gradientu */
   --nf-panel:       #12301A;   /* karty/panele na zielonym */
   --nf-mint:        #8FD79C;   /* akcent */
@@ -26,6 +31,31 @@
   --nf-bg-gradient: linear-gradient(180deg,
                       var(--nf-green-800) 0%,
                       var(--nf-green-600) 100%);
+
+  /* --- paleta glboka (prototyp Figma Make) -------------------------------
+     Wprowadzana stronami. Strona glowna juz na niej siedzi, reszta serwisu
+     wciaz na gradiencie zielonym powyzej — dlatego oba zestawy zyja obok
+     siebie. Gdy ostatnia strona przejdzie na glboka palete, gradient
+     i --nf-green-* mozna usunac.
+
+     Kolory pochodza wprost z src/styles/theme.css prototypu; akcenty
+     (--nf-accent-*) sa identyczne z tymi, ktore strona uzywala juz wczesniej
+     w inline stylach, wiec nie zmieniaja wygladu — tylko przestaja byc
+     przepisywane recznie w kazdym miejscu.
+     --------------------------------------------------------------------- */
+  --nf-bg-deep:     #071310;   /* tlo bazowe */
+  --nf-card:        #0a140d;   /* karty */
+  --nf-surface-2:   #0e1610;   /* pola formularzy, drugi poziom */
+  --nf-border:      rgba(90,120,70,.2);
+  --nf-border-soft: rgba(90,120,70,.15);
+  --nf-radius:      .375rem;
+
+  --nf-accent:      #8aba82;   /* zielen akcentowa */
+  --nf-brass:       #c69a4c;   /* mosiadz */
+  --nf-heading:     #ddd8c6;   /* naglowki */
+  --nf-body:        #b8b0a0;   /* tekst */
+  --nf-muted:       #9a9480;   /* tekst drugorzedny */
+  --nf-dim:         #5d7a50;   /* etykiety Space Mono */
 
   /* --- warstwa mapujaca -------------------------------------------------
      Projekt nie mial wczesniej ZADNYCH zmiennych CSS (zero blokow :root),
@@ -57,6 +87,23 @@ body {
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+/* --------------------------------------------------------------------------
+   .nf-theme-deep — opt-in na glboka palete, zakladana na <html>.
+   Swiadomie opt-in, a nie zmiana globalna: serwis przechodzi na nowy styl
+   strona po stronie, a strony jeszcze nieprzeniesione musza dalej dostawac
+   gradient zielony. Selektor na <html> (a nie na .nf-shell) jest konieczny,
+   bo tlo maluje body — wrapper jest przezroczysty.
+   -------------------------------------------------------------------------- */
+html.nf-theme-deep,
+html.nf-theme-deep body {
+  background-color: var(--nf-bg-deep);
+  background-image: none;
+}
+
+html.nf-theme-deep body {
+  color: var(--nf-body);
 }
 
 /* --------------------------------------------------------------------------

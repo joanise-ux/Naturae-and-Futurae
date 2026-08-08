@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="nf-theme-deep">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,6 +26,7 @@
 <script src="./transitions.js"></script>
 <script src="./content-editor.js"></script>
 <script src="./footer.js"></script>
+<script src="./assets/nf-motion.js"></script>
 </head>
 <body>
 <x-dc>
@@ -36,6 +37,7 @@
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
 <link rel="stylesheet" href="assets/mobile.css">
 <link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/nf-ui.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -62,114 +64,126 @@
   <!-- ================================================================ -->
   <!-- NAV -->
   <!-- ================================================================ -->
-  <div class="nf-nav" style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; margin:0; background:rgba(10,20,14,.55); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid rgba(90,120,70,.15);">
-    <a href="index.html" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
-      <img src="assets/logo-circle.png" alt="Nature & Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
-      <div style="line-height:1.1;"><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; letter-spacing:.08em; color:#ddd8c6;">NATURE &amp; FUTURE</div><div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.26em; color:#5d7a50; margin-top:3px;">PLANT&nbsp;BIOTECH</div></div>
+  <div class="nf-nav nf-nav--deep">
+    <a href="index.html" class="nf-nav__brand">
+      <img src="assets/logo-circle.png" alt="Nature &amp; Future" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+      <div style="line-height:1.1;">
+        <div class="nf-nav__name">NATURE &amp; FUTURE</div>
+        <div class="nf-nav__tag">PLANT&nbsp;BIOTECH</div>
+      </div>
     </a>
-    <span class="nf-lang" role="button" tabindex="0" style="cursor:pointer" aria-label="Zmień język"><b>PL</b> / EN</span>
-    <button class="nf-burger" aria-label="Menu">☰</button>
-    <div style="display:flex; align-items:center; gap:22px; white-space:nowrap; font-family:'EB Garamond',serif; font-size:15px; letter-spacing:.02em; color:#b8b0a0;">
-      <a href="#kim-jestesmy">O nas</a><a href="technologia.html">Technologia</a><a href="historia.html">Historia</a><a href="sklep.html">Rośliny</a><a href="#kontakt">Współpraca</a>
+
+    <div class="nf-nav__links">
+      <a href="#kim-jestesmy" class="nf-nav__link">O nas</a>
+      <a href="technologia.html" class="nf-nav__link">Technologia</a>
+      <a href="historia.html" class="nf-nav__link">Historia</a>
+      <a href="sklep.html" class="nf-nav__link">Rośliny</a>
+      <a href="#kontakt" class="nf-nav__link">Współpraca</a>
     </div>
-    <div style="display:flex; align-items:center; gap:14px;">
-      <span class="nf-lang" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><b style="color:#8aba82;">PL</b> <span style="opacity:.4">/ EN</span></span>
-      <a href="panel-klienta.html" style="display:inline-flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.08em; color:#a9c0a0; border:1px solid rgba(90,120,70,.4); border-radius:4px; padding:9px 13px;"><span style="width:14px; height:14px; border-radius:50%; border:1.5px solid #a9c0a0; display:inline-flex; align-items:center; justify-content:center;"><span style="width:5px; height:5px; border-radius:50%; background:#a9c0a0;"></span></span>Konto</a>
-      <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:4px; padding:11px 16px;">Koszyk</a>
-      <a href="#kontakt" style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:4px; padding:11px 18px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 18px rgba(90,120,70,.25);">Kontakt</a>
+
+    <div class="nf-nav__right">
+      <span class="nf-lang" role="button" tabindex="0" aria-label="Zmień język" style="cursor:pointer; font-family:'Space Mono',monospace; font-size:12px; color:#b8b0a0;"><b style="color:#8aba82;">PL</b> <span style="opacity:.4">/ EN</span></span>
+      <a href="panel-klienta.html" class="nf-btn nf-btn--ghost" style="font-size:11px; padding:9px 13px; text-transform:none; letter-spacing:.08em;">Konto</a>
+      <a href="sklep.html" class="nf-btn nf-btn--ghost" style="font-size:11px; padding:11px 16px;">Koszyk</a>
+      <a href="#kontakt" class="nf-btn nf-btn--primary" style="font-size:11px; padding:11px 18px;">Kontakt</a>
+      <button class="nf-burger" aria-label="Menu" aria-expanded="false" aria-controls="nf-mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
+
+  <!-- Menu mobilne — te same pozycje co w pasku, plus akcje ukryte na wąskich ekranach. -->
+  <nav class="nf-mobile-menu" id="nf-mobile-menu" aria-label="Menu mobilne">
+    <a href="#kim-jestesmy">O nas</a>
+    <a href="technologia.html">Technologia</a>
+    <a href="historia.html">Historia</a>
+    <a href="sklep.html">Rośliny</a>
+    <a href="#kontakt">Współpraca</a>
+    <a href="panel-klienta.html">Konto</a>
+    <a href="sklep.html">Koszyk</a>
+  </nav>
 
   <!-- ================================================================ -->
   <!-- HERO -->
   <!-- ================================================================ -->
-  <div data-screen-label="Hero" style="position:relative; display:grid; grid-template-columns:1.02fr .98fr; gap:46px; padding:52px 40px 28px; align-items:stretch; max-width:1680px; margin:0 auto; margin-top:20px;">
-    <div style="background:linear-gradient(180deg,#0a140d,#060906); border:1px solid rgba(90,120,70,.2); border-radius:14px; padding:40px;">
-      <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#7aaa72; display:flex; align-items:center; gap:10px;"><span style="width:24px; height:1px; background:#7aaa72; display:inline-block;"></span>in vitro · culta sub vitro</div>
-      <h2 data-edit-key="hero-title" style="font-family:'Cinzel',serif; font-weight:700; font-size:60px; line-height:1.05; letter-spacing:.01em; color:#ddd8c6; margin:22px 0 0; text-shadow:0 2px 30px rgba(0,0,0,.6);">Z natury<br>ku <span style="font-family:'EB Garamond',serif; font-style:italic; font-weight:500; color:#8aba82;">przyszłości.</span></h2>
-      <p data-edit-key="hero-lead" style="font-size:18px; line-height:1.66; color:#9a9480; max-width:440px; margin:24px 0 0;">Rośliny rozmnażane in vitro w sterylnym, mosiężnym gabinecie. Stare odmiany z sadu w Walimiu i Górach Sowich — zachowane pod szkłem, wolne od chorób, gotowe na nowe stulecie.</p>
-      <div style="display:flex; gap:14px; margin-top:32px;">
-        <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.3);">Poznaj rośliny →</a>
-        <a href="historia.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:14px 24px;">Nasza historia</a>
-      </div>
-      <!-- stats with gauges -->
-      <div style="display:flex; gap:26px; margin-top:46px; align-items:center;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 14px rgba(90,120,70,.2); flex:none;">
-            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.45;"></div>
-            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(22deg); animation:sp-needle 6s ease-in-out infinite;"></div>
-            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
-          </div>
-          <div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:24px; color:#ddd8c6;">100+</div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">LAT HISTORII SADU</div></div>
+  <div class="nf-hero" data-screen-label="Hero">
+    <div class="nf-hero__photo" style="background-image:url('https://images.unsplash.com/photo-1727881785113-01363491e084?w=1800&amp;h=1000&amp;fit=crop&amp;auto=format');"></div>
+    <div class="nf-hero__veil"></div>
+
+    <div class="nf-hero__inner">
+      <div>
+        <div class="nf-label nf-fade">in vitro · culta sub vitro</div>
+
+        <h2 data-edit-key="hero-title" class="nf-h1 nf-fade" data-nf-delay="1" style="margin-top:22px;">Z natury<br>ku <span class="nf-em">przyszłości.</span></h2>
+
+        <p data-edit-key="hero-lead" class="nf-lead nf-fade" data-nf-delay="2" style="max-width:440px;">Rośliny rozmnażane in vitro w sterylnym, mosiężnym gabinecie. Stare odmiany z sadu w Walimiu i Górach Sowich — zachowane pod szkłem, wolne od chorób, gotowe na nowe stulecie.</p>
+
+        <div class="nf-btn-row nf-fade" data-nf-delay="3">
+          <a href="sklep.html" class="nf-btn nf-btn--primary">Poznaj rośliny →</a>
+          <a href="historia.html" class="nf-btn nf-btn--ghost">Nasza historia</a>
         </div>
-        <div style="width:1px; height:42px; background:rgba(90,120,70,.25);"></div>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="position:relative; width:54px; height:54px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 12px rgba(0,0,0,.85), 0 0 14px rgba(90,120,70,.2); flex:none;">
-            <div style="position:absolute; inset:5px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.45;"></div>
-            <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:2px; height:18px; background:linear-gradient(#8aba82,#2a4a2a); transform-origin:bottom center; transform:rotate(34deg); animation:sp-needle2 7s ease-in-out infinite;"></div>
-            <div style="position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:#7aaa72;"></div>
+
+        <!-- Statystyki. Liczby odliczają się przy wejściu w kadr — wartość
+             docelową i sufiks bierze nf-motion.js z atrybutów. -->
+        <div class="nf-stats nf-fade" data-nf-delay="4">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="nf-gauge"><div class="nf-gauge__needle"></div></div>
+            <div>
+              <div class="nf-stat__value" data-nf-count="100" data-nf-suffix="+">100+</div>
+              <div class="nf-stat__label">LAT HISTORII SADU</div>
+            </div>
           </div>
-          <div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:24px; color:#ddd8c6;">100%</div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.06em; color:#8c7d5e; margin-top:2px;">WOLNE OD PATOGENÓW</div></div>
+          <div class="nf-stats__divider"></div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="nf-gauge nf-gauge--slow"><div class="nf-gauge__needle"></div></div>
+            <div>
+              <div class="nf-stat__value" data-nf-count="100" data-nf-suffix="%">100%</div>
+              <div class="nf-stat__label">WOLNE OD PATOGENÓW</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prawa kolumna — zdjęcie w mosiężnej ramce. Znika poniżej 900 px. -->
+      <div class="nf-hero__aside nf-fade" data-nf-delay="2" style="position:relative;">
+        <div class="nf-glow"></div>
+        <div class="nf-frame">
+          <div class="nf-frame__rivets"></div>
+          <div class="nf-frame__photo">
+            <img data-edit-key="hero-image" src="assets/sp-library-terrarium.jpg" alt="Terrarium w bibliotece" style="aspect-ratio:4/5;">
+            <div class="nf-botanical nf-anim" style="animation:sp-float 4s ease-in-out infinite;">
+              <div class="nf-botanical__name">Echeveria elegans</div>
+              <div class="nf-botanical__meta">in vitro · 12 maja<br>gen. identyczna z matką</div>
+            </div>
+          </div>
+          <div class="nf-specimen-tag">SPECIMEN&nbsp;//&nbsp;in-vitro&nbsp;·&nbsp;ster.</div>
         </div>
       </div>
     </div>
 
-    <!-- hero image — library terrarium in brass frame -->
-    <div style="position:relative; display:flex; flex-direction:column;">
-      <div style="position:absolute; inset:-8% -5%; background:radial-gradient(55% 45% at 52% 44%, rgba(122,170,114,.22), transparent 70%); filter:blur(10px);"></div>
-      <div style="position:relative; flex:1; display:flex; flex-direction:column; border-radius:12px; padding:10px; background:linear-gradient(145deg,#241a10,#120c08); border:1px solid #c69a4c; box-shadow:0 30px 70px -38px rgba(0,0,0,.9), inset 0 0 0 1px rgba(122,170,114,.2);">
-        <span style="position:absolute; left:7px; top:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
-        <span style="position:absolute; right:7px; top:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
-        <span style="position:absolute; left:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
-        <span style="position:absolute; right:7px; bottom:7px; width:7px; height:7px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#f3dca0,#7a531f); box-shadow:0 0 4px rgba(0,0,0,.6);"></span>
-        <div style="position:relative; flex:1; min-height:300px; border-radius:7px; overflow:hidden;">
-          <img data-edit-key="hero-image" src="assets/sp-library-terrarium.jpg" alt="Terrarium w bibliotece" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;">
-          <div style="position:absolute; left:16px; top:16px; transform:rotate(-3deg); background:linear-gradient(180deg,#d8dcc8,#c4ccb0); border:1px solid #8a9a70; border-radius:3px; padding:9px 12px 10px; box-shadow:0 8px 18px -8px rgba(0,0,0,.7); max-width:182px;">
-            <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:#2a3a1a; line-height:1.3;">Echeveria elegans</div>
-            <div style="font-family:'EB Garamond',serif; font-size:11.5px; color:#4a5a36; line-height:1.4; margin-top:3px;">in vitro · 12 maja<br>gen. identyczna z matką</div>
-          </div>
-          <div style="position:absolute; right:16px; bottom:16px; width:124px; height:124px; border-radius:50%; padding:7px; background:linear-gradient(145deg,#241a10,#120c08); border:1px solid #c69a4c; box-shadow:0 12px 26px -10px rgba(0,0,0,.85);">
-            <div style="width:100%; height:100%; border-radius:50%; overflow:hidden; border:1px solid rgba(122,170,114,.25);">
-              <video src="assets/sp-animation.mp4" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>
-            </div>
-            <span class="nf-anim" style="position:absolute; inset:7px; border-radius:50%; box-shadow:0 0 22px rgba(122,170,114,.4) inset; animation:sp-glow 4s ease-in-out infinite; pointer-events:none;"></span>
-          </div>
-        </div>
-      </div>
-      <div style="position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:3px; padding:5px 12px; white-space:nowrap;">SPECIMEN&nbsp;//&nbsp;in-vitro&nbsp;·&nbsp;ster.</div>
+    <div class="nf-scroll-hint">
+      <div class="nf-scroll-hint__line"></div>
+      <span>scroll</span>
     </div>
   </div>
 
   <!-- ================================================================ -->
   <!-- KIM JESTEŚMY — brief intro -->
   <!-- ================================================================ -->
-  <div id="kim-jestesmy" data-screen-label="Kim jesteśmy">
-    <!-- ornamental brass divider -->
-    <div style="max-width:1680px; margin:0 auto; padding:24px 40px 0;">
-      <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:28px;">
-        <div style="width:80px; height:1px; background:linear-gradient(90deg, transparent, rgba(90,120,70,.5));"></div>
-        <div style="position:relative; width:14px; height:14px;">
-          <div style="position:absolute; inset:0; border:1.5px solid #c69a4c; transform:rotate(45deg);"></div>
-          <div style="position:absolute; inset:4px; border-radius:50%; background:#c69a4c;"></div>
-        </div>
-        <div style="width:80px; height:1px; background:linear-gradient(90deg, rgba(90,120,70,.5), transparent);"></div>
-      </div>
-    </div>
-
-    <!-- full-bleed panel -->
-    <div style="background:linear-gradient(180deg,#0a140d,#060906); border-top:1px solid rgba(90,120,70,.2); border-bottom:1px solid rgba(90,120,70,.2);">
-      <div style="max-width:1680px; margin:0 auto; padding:36px 40px; display:grid; grid-template-columns:.85fr 1.15fr; gap:40px; align-items:center;">
-        <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(90,120,70,.3); box-shadow:0 24px 60px -30px rgba(0,0,0,.8);">
+  <div id="kim-jestesmy" data-screen-label="Kim jesteśmy" class="nf-section nf-section--panel">
+    <div class="nf-wrap">
+      <div class="nf-split">
+        <div class="nf-fade" style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(90,120,70,.3); box-shadow:0 24px 60px -30px rgba(0,0,0,.8);">
           <img data-edit-key="about-image" src="assets/sp-desk-bottles.jpg" alt="Pracownia" style="width:100%; height:100%; object-fit:cover; display:block;">
           <div style="position:absolute; inset:0; background:radial-gradient(70% 60% at 50% 45%, transparent, rgba(6,10,6,.4) 100%);"></div>
-          <span style="position:absolute; left:16px; bottom:16px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.12em; color:#a9c0a0; background:rgba(8,12,8,.6); border:1px solid rgba(90,120,70,.3); border-radius:4px; padding:5px 10px;">LABORATORIUM · WAŁBRZYCH</span>
+          <span class="nf-mono" style="position:absolute; left:16px; bottom:16px; font-size:9px; letter-spacing:.12em; color:#a9c0a0; background:rgba(8,12,8,.6); border:1px solid rgba(90,120,70,.3); border-radius:4px; padding:5px 10px;">LABORATORIUM · WAŁBRZYCH</span>
         </div>
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// kim jesteśmy</div>
-          <h3 data-edit-key="about-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:32px; line-height:1.16; color:#ddd8c6; margin:14px 0 0; letter-spacing:.02em;">Laboratorium w sercu Gór Sowich</h3>
-          <p data-edit-key="about-p1" style="font-size:18px; line-height:1.66; color:#9a9480; margin:20px 0 0; max-width:480px;">Nature &amp; Future to laboratorium mikropropagacji roślin z siedzibą w Wałbrzychu. Łączymy precyzję technologii in vitro z pasją do ratowania historycznych odmian — wiśni, czereśni i jabłoni z sadów, które rosną tu od ponad stu lat.</p>
-          <p data-edit-key="about-p2" style="font-size:18px; line-height:1.66; color:#9a9480; margin:14px 0 0; max-width:480px;">Produkujemy też rośliny akwariowe w kulturze in vitro — <span style="color:#7aaa72;">100% wolne od glonów, ślimaków i patogenów</span>.</p>
-          <a href="historia.html" style="display:inline-block; margin-top:26px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#a9c0a0;">Poznaj naszą historię →</a>
+        <div class="nf-fade" data-nf-delay="1">
+          <div class="nf-label">kim jesteśmy</div>
+          <h3 data-edit-key="about-title" class="nf-h2">Laboratorium w sercu Gór Sowich</h3>
+          <p data-edit-key="about-p1" class="nf-lead" style="max-width:480px;">Nature &amp; Future to laboratorium mikropropagacji roślin z siedzibą w Wałbrzychu. Łączymy precyzję technologii in vitro z pasją do ratowania historycznych odmian — wiśni, czereśni i jabłoni z sadów, które rosną tu od ponad stu lat.</p>
+          <p data-edit-key="about-p2" class="nf-lead" style="max-width:480px; margin-top:14px;">Produkujemy też rośliny akwariowe w kulturze in vitro — <span style="color:#7aaa72;">100% wolne od glonów, ślimaków i patogenów</span>.</p>
+          <a href="historia.html" class="nf-mono" style="display:inline-block; margin-top:26px; font-size:12px; letter-spacing:.08em; color:#a9c0a0;">Poznaj naszą historię →</a>
         </div>
       </div>
     </div>
@@ -178,114 +192,104 @@
   <!-- ================================================================ -->
   <!-- PROCES — 6 etapów mikropropagacji -->
   <!-- ================================================================ -->
-  <div data-screen-label="Proces" style="max-width:1680px; margin:0 auto; padding:56px 40px 0; border-top:1px solid rgba(90,120,70,.12); margin-top:56px;">
-    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px;">
-      <div>
-        <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// proces</div>
-        <h3 data-edit-key="process-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; color:#ddd8c6; margin:10px 0 0; letter-spacing:.02em;">Sześć etapów mikropropagacji</h3>
-      </div>
-      <span style="font-family:'Space Mono',monospace; font-size:11px; color:#5a5a4e;">eksplantat → aklimatyzacja</span>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px; padding:18px 20px;">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#8aba82; transform-origin:bottom center; transform:rotate(-30deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+  <div data-screen-label="Proces" class="nf-section nf-section--deep">
+    <div class="nf-wrap">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:28px;">
+        <div class="nf-fade">
+          <div class="nf-label">proces</div>
+          <h3 data-edit-key="process-title" class="nf-h2">Sześć etapów mikropropagacji</h3>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_01</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Eksplantat</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Pobranie materiału z rośliny-matki.</div></div>
+        <span class="nf-mono" style="font-size:11px; color:#5a5a4e;">eksplantat → aklimatyzacja</span>
       </div>
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px; padding:18px 20px;">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#8aba82; transform-origin:bottom center; transform:rotate(-8deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+
+      <div class="nf-grid-3">
+        <div class="nf-card nf-fade" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px;">
+          <div class="nf-gauge" style="width:48px; height:48px;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(-30deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_01</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Eksplantat</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Pobranie materiału z rośliny-matki.</div></div>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_02</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Sterylizacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Dezynfekcja — koniec patogenów i glonów.</div></div>
-      </div>
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px; padding:18px 20px;">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#8aba82; transform-origin:bottom center; transform:rotate(12deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+        <div class="nf-card nf-fade" data-nf-delay="1" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px;">
+          <div class="nf-gauge" style="width:48px; height:48px;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(-8deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_02</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Sterylizacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Dezynfekcja — koniec patogenów i glonów.</div></div>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_03</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Inicjacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Założenie kultury na sterylnej pożywce.</div></div>
-      </div>
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px; padding:18px 20px;">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#7aaa72; transform-origin:bottom center; transform:rotate(28deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%);"></div>
+        <div class="nf-card nf-fade" data-nf-delay="2" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px;">
+          <div class="nf-gauge" style="width:48px; height:48px;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(12deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_03</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Inicjacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Założenie kultury na sterylnej pożywce.</div></div>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_04</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Multiplikacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Namnażanie — setki identycznych roślin.</div></div>
-      </div>
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:10px; padding:18px 20px;">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#7aaa72; transform-origin:bottom center; transform:rotate(40deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%);"></div>
+        <div class="nf-card nf-fade" data-nf-delay="3" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px;">
+          <div class="nf-gauge" style="width:48px; height:48px;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(28deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_04</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Multiplikacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Namnażanie — setki identycznych roślin.</div></div>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_05</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Ukorzenianie</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Rozwój systemu korzeniowego in vitro.</div></div>
-      </div>
-      <div style="display:flex; gap:16px; align-items:flex-start; background:linear-gradient(180deg,#142016,#0c160e); border:1px solid rgba(122,170,114,.45); border-radius:10px; padding:18px 20px; box-shadow:0 0 34px -14px rgba(122,170,114,.5);">
-        <div style="position:relative; width:48px; height:48px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a2014,#080c08); border:2px solid #8aba82; box-shadow:inset 0 0 10px rgba(0,0,0,.85), 0 0 16px rgba(122,170,114,.35); flex:none;">
-          <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#7aaa72 0deg .8deg,transparent .8deg 30deg); opacity:.5;"></div>
-          <div style="position:absolute; left:50%; bottom:50%; width:1.5px; height:15px; background:#7aaa72; transform-origin:bottom center; transform:rotate(48deg);"></div>
-          <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#7aaa72; transform:translate(-50%,-50%);"></div>
+        <div class="nf-card nf-fade" data-nf-delay="4" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px;">
+          <div class="nf-gauge" style="width:48px; height:48px;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(40deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#5d7a50;">ETAP_05</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Ukorzenianie</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Rozwój systemu korzeniowego in vitro.</div></div>
         </div>
-        <div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#7aaa72;">ETAP_06</div><div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0 5px;">Aklimatyzacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Przejście do warunków naturalnych.</div></div>
+        <!-- Etap 6 wyróżniony — koniec procesu. -->
+        <div class="nf-card nf-fade" data-nf-delay="5" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px; border-color:rgba(122,170,114,.45); box-shadow:0 0 34px -14px rgba(122,170,114,.5);">
+          <div class="nf-gauge" style="width:48px; height:48px; border-color:#8aba82;"><div class="nf-gauge__needle" style="animation:none; transform:rotate(48deg); height:15px;"></div></div>
+          <div><div class="nf-mono" style="font-size:9.5px; letter-spacing:.1em; color:#7aaa72;">ETAP_06</div><div class="nf-serif" style="font-weight:600; font-size:16px; color:#ddd8c6; margin:5px 0;">Aklimatyzacja</div><div style="font-size:14.5px; line-height:1.5; color:#9a9480;">Przejście do warunków naturalnych.</div></div>
+        </div>
       </div>
-    </div>
-    <div style="text-align:center; margin-top:28px;">
-      <a href="technologia.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.08em; color:#a9c0a0;">Poznaj technologię szczegółowo →</a>
+
+      <div style="text-align:center; margin-top:28px;">
+        <a href="technologia.html" class="nf-mono" style="font-size:12px; letter-spacing:.08em; color:#a9c0a0;">Poznaj technologię szczegółowo →</a>
+      </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <!-- DLACZEGO IN VITRO — full-width image split -->
+  <!-- DLACZEGO IN VITRO -->
   <!-- ================================================================ -->
-  <div data-screen-label="Dlaczego in vitro" style="position:relative; display:grid; grid-template-columns:.82fr 1.18fr; margin-top:56px; border-top:1px solid rgba(90,120,70,.16); border-bottom:1px solid rgba(90,120,70,.16);">
-    <div style="position:relative; min-height:440px; overflow:hidden;">
-      <img data-edit-key="why-image" src="assets/sp-flasks.jpg" alt="Kolby in vitro" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
-      <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(6,10,6,.15), rgba(6,10,6,.6));"></div>
-      <span style="position:absolute; left:20px; top:20px; font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#7aaa72; background:rgba(6,10,6,.55); border:1px solid rgba(90,120,70,.35); border-radius:5px; padding:6px 11px;">RACK_A · kultury in vitro</span>
-      <!-- steam wisps -->
-      <div class="nf-anim" style="position:absolute; left:30%; bottom:10%; width:30px; height:30px; border-radius:50%; background:radial-gradient(circle,rgba(122,170,114,.35),transparent 70%); filter:blur(6px); animation:sp-steam 9s ease-in infinite;"></div>
-    </div>
-    <div style="padding:56px 48px; display:flex; flex-direction:column; justify-content:center; background:linear-gradient(180deg,#0a140d,#060906);">
-      <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// dlaczego in vitro</div>
-      <h3 data-edit-key="why-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:30px; line-height:1.18; color:#ddd8c6; margin:14px 0 26px; letter-spacing:.02em;">Czystość gwarantowana — od kolby po Twój ogród.</h3>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-        <div style="border-left:2px solid #c69a4c; padding:2px 0 2px 16px;">
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#8aba82;">Bez patogenów</div>
-          <div style="font-size:14.5px; line-height:1.5; color:#9a9480; margin-top:5px;">Zero glonów i ślimaków — kluczowe dla akwarystyki.</div>
+  <div data-screen-label="Dlaczego in vitro" class="nf-section nf-section--panel">
+    <div class="nf-wrap">
+      <div class="nf-split" style="align-items:stretch; margin-bottom:60px;">
+        <div class="nf-fade" style="position:relative; min-height:380px; border-radius:12px; overflow:hidden; border:1px solid rgba(90,120,70,.25);">
+          <img data-edit-key="why-image" src="assets/sp-flasks.jpg" alt="Kolby in vitro" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(6,10,6,.15), rgba(6,10,6,.6));"></div>
+          <span class="nf-mono" style="position:absolute; left:20px; top:20px; font-size:9.5px; letter-spacing:.1em; color:#7aaa72; background:rgba(6,10,6,.55); border:1px solid rgba(90,120,70,.35); border-radius:5px; padding:6px 11px;">RACK_A · kultury in vitro</span>
+          <div class="nf-anim" style="position:absolute; left:30%; bottom:10%; width:30px; height:30px; border-radius:50%; background:radial-gradient(circle,rgba(122,170,114,.35),transparent 70%); filter:blur(6px); animation:sp-steam 9s ease-in infinite;"></div>
         </div>
-        <div style="border-left:2px solid #c69a4c; padding:2px 0 2px 16px;">
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#8aba82;">Identyczność</div>
-          <div style="font-size:14.5px; line-height:1.5; color:#9a9480; margin-top:5px;">Każda roślina wierną kopią rośliny-matki.</div>
+        <div class="nf-fade" data-nf-delay="1" style="display:flex; flex-direction:column; justify-content:center;">
+          <div class="nf-label">dlaczego in vitro</div>
+          <h3 data-edit-key="why-title" class="nf-h2" style="max-width:560px;">Czystość gwarantowana — od kolby po Twój ogród.</h3>
         </div>
-        <div style="border-left:2px solid #7aaa72; padding:2px 0 2px 16px;">
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#7aaa72;">Ratowanie odmian</div>
-          <div style="font-size:14.5px; line-height:1.5; color:#9a9480; margin-top:5px;">Zachowanie historycznych odmian z Gór Sowich.</div>
+      </div>
+
+      <div class="nf-grid-4">
+        <div class="nf-card nf-fade" style="padding:28px 24px;">
+          <div class="nf-serif" style="font-size:15px; color:var(--nf-accent); letter-spacing:.02em; margin-bottom:10px;">Bez patogenów</div>
+          <p style="font-size:14.5px; line-height:1.6; color:#8a8470; margin:0;">Zero glonów i ślimaków — kluczowe dla akwarystyki.</p>
         </div>
-        <div style="border-left:2px solid #7aaa72; padding:2px 0 2px 16px;">
-          <div style="font-family:'Cinzel',serif; font-weight:600; font-size:16px; color:#7aaa72;">Skala</div>
-          <div style="font-size:14.5px; line-height:1.5; color:#9a9480; margin-top:5px;">Rozmnażanie rzadkich gatunków bez utraty jakości.</div>
+        <div class="nf-card nf-fade" data-nf-delay="1" style="padding:28px 24px;">
+          <div class="nf-serif" style="font-size:15px; color:var(--nf-accent); letter-spacing:.02em; margin-bottom:10px;">Identyczność</div>
+          <p style="font-size:14.5px; line-height:1.6; color:#8a8470; margin:0;">Każda roślina wierną kopią rośliny-matki.</p>
+        </div>
+        <div class="nf-card nf-fade" data-nf-delay="2" style="padding:28px 24px;">
+          <div class="nf-serif" style="font-size:15px; color:#7aaa72; letter-spacing:.02em; margin-bottom:10px;">Ratowanie odmian</div>
+          <p style="font-size:14.5px; line-height:1.6; color:#8a8470; margin:0;">Zachowanie historycznych odmian z Gór Sowich.</p>
+        </div>
+        <div class="nf-card nf-fade" data-nf-delay="3" style="padding:28px 24px;">
+          <div class="nf-serif" style="font-size:15px; color:#7aaa72; letter-spacing:.02em; margin-bottom:10px;">Skala</div>
+          <p style="font-size:14.5px; line-height:1.6; color:#8a8470; margin:0;">Rozmnażanie rzadkich gatunków bez utraty jakości.</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <!-- KATALOG — okazy z kolekcji -->
+  <!-- KATALOG — okazy z kolekcji (dane z Supabase) -->
   <!-- ================================================================ -->
-  <div id="katalog" data-screen-label="Katalog" style="max-width:1680px; margin:0 auto; padding:52px 40px 0;">
-    <div style="display:flex; align-items:baseline; justify-content:space-between;">
-      <h3 style="font-family:'Cinzel',serif; font-weight:600; font-size:24px; color:#ddd8c6; margin:0; letter-spacing:.03em;">Okazy z kolekcji</h3>
-      <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:12px; color:#a9c0a0;">cały katalog →</a>
+  <div id="katalog" data-screen-label="Katalog" class="nf-section nf-section--deep">
+    <div class="nf-wrap">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div class="nf-label">rośliny</div>
+          <h3 class="nf-h2">Okazy z kolekcji</h3>
+        </div>
+        <a href="sklep.html" class="nf-mono" style="font-size:12px; color:#a9c0a0;">cały katalog →</a>
+      </div>
+      <div id="katalog-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding-top:30px;">
+      </div>
     </div>
-  </div>
-  <div id="katalog-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1680px; margin:0 auto; padding:22px 40px 0;">
   </div>
   <script>
   (async function() {
@@ -343,9 +347,12 @@
       }
 
       var card = document.createElement('div');
-      card.className = 'nf-specimen';
+      /* Klasa .nf-specimen jest tu nazwą techniczną — szuka po niej funkcja
+         na dole strony, żeby podmienić linki na produkt.html. Wygląd karty
+         daje .nf-card z assets/nf-ui.css. */
+      card.className = 'nf-specimen nf-card nf-card--link nf-fade';
       card.setAttribute('data-latin', p.latin || '');
-      card.setAttribute('style', 'background:linear-gradient(180deg,#0e1610,#0a120b);border:1px solid rgba(90,120,70,.24);border-radius:12px;padding:16px;');
+      card.setAttribute('style', 'padding:16px;');
       card.innerHTML =
         '<a href="' + href + '" class="nf-specimen-img" style="display:block;position:relative;border-radius:9px;overflow:hidden;aspect-ratio:4/3.4;background:#080c08;align-items:center;justify-content:center;">'
           + imgHtml
@@ -366,98 +373,148 @@
   <!-- ================================================================ -->
   <!-- HISTORIA — storytelling teaser -->
   <!-- ================================================================ -->
-  <div id="historia" data-screen-label="Historia" style="position:relative; margin-top:56px; min-height:520px; overflow:hidden;">
+  <div id="historia" data-screen-label="Historia" style="position:relative; overflow:hidden;">
     <img data-edit-key="history-image" src="assets/sp-street.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.6;">
     <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,12,8,.95) 0%, rgba(8,12,8,.8) 45%, rgba(8,12,8,.4) 100%);"></div>
     <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,12,8,.5) 0%, transparent 25%, rgba(8,12,8,.6) 100%);"></div>
-    <!-- steam wisps -->
     <div class="nf-anim" style="position:absolute; right:22%; bottom:12%; width:36px; height:36px; border-radius:50%; background:radial-gradient(circle,rgba(122,170,114,.3),transparent 70%); filter:blur(7px); animation:sp-steam 10s ease-in infinite;"></div>
     <div class="nf-anim" style="position:absolute; right:55%; bottom:6%; width:28px; height:28px; border-radius:50%; background:radial-gradient(circle,rgba(122,170,114,.25),transparent 70%); filter:blur(6px); animation:sp-steam 12s ease-in infinite 3s;"></div>
 
-    <div style="position:relative; z-index:2; max-width:1680px; margin:0 auto; padding:52px 40px; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
-      <div>
-        <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// nasza historia</div>
-        <h3 data-edit-key="history-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:34px; line-height:1.16; color:#ddd8c6; margin:16px 0 0; letter-spacing:.02em;">Sad w Walimiu — ponad sto lat pod niebem Gór Sowich</h3>
-        <p data-edit-key="history-quote" style="font-family:'EB Garamond',serif; font-style:italic; font-size:22px; line-height:1.5; color:#a9c0a0; margin:24px 0 0; max-width:480px;">„Stare drzewa przetrwały dwie wojny i pół wieku zaniedbania. My przenosimy ich geny w przyszłość — probówka po probówce."</p>
-        <p data-edit-key="history-text" style="font-size:16px; line-height:1.6; color:#9a9480; margin:20px 0 0; max-width:480px;">Region Gór Sowich, majątki rodów von Zedlitz i von Seher-Thoss, pałac w Jedlince. Od XVIII-wiecznych sadów, przez wojny i PRL, aż po nasze laboratorium in vitro.</p>
-        <a href="historia.html" style="display:inline-block; margin-top:28px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:14px 24px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.3);">Poznaj pełną historię →</a>
-      </div>
-      <!-- atmospheric brass-framed timeline preview -->
-      <div style="display:flex; flex-direction:column; gap:18px; padding:30px; background:rgba(8,12,8,.4); border:1px solid rgba(90,120,70,.25); border-radius:14px; backdrop-filter:blur(6px);">
-        <div style="display:flex; gap:16px; align-items:center;">
-          <span data-edit-key="timeline-1-year" style="font-family:'Space Mono',monospace; font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">~1900</span>
-          <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
-          <div data-edit-key="timeline-1-text" style="font-size:14.5px; color:#b8b0a0;">Założenie sadu w Walimiu — odmiany śląskie i saskie</div>
+    <div class="nf-wrap nf-section" style="position:relative; z-index:2;">
+      <div class="nf-split" style="align-items:center;">
+        <div class="nf-fade">
+          <div class="nf-label">nasza historia</div>
+          <h3 data-edit-key="history-title" class="nf-h2">Sad w Walimiu — ponad sto lat pod niebem Gór Sowich</h3>
+          <p data-edit-key="history-quote" class="nf-em" style="display:block; font-size:22px; line-height:1.5; color:#a9c0a0; margin:24px 0 0; max-width:480px;">„Stare drzewa przetrwały dwie wojny i pół wieku zaniedbania. My przenosimy ich geny w przyszłość — probówka po probówce."</p>
+          <p data-edit-key="history-text" style="font-size:16px; line-height:1.6; color:#9a9480; margin:20px 0 0; max-width:480px;">Region Gór Sowich, majątki rodów von Zedlitz i von Seher-Thoss, pałac w Jedlince. Od XVIII-wiecznych sadów, przez wojny i PRL, aż po nasze laboratorium in vitro.</p>
+          <a href="historia.html" class="nf-btn nf-btn--primary" style="margin-top:28px;">Poznaj pełną historię →</a>
         </div>
-        <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
-        <div style="display:flex; gap:16px; align-items:center;">
-          <span data-edit-key="timeline-2-year" style="font-family:'Space Mono',monospace; font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">1939–45</span>
-          <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
-          <div data-edit-key="timeline-2-text" style="font-size:14.5px; color:#b8b0a0;">Wojny — majątek przetrwał, drzewa rosły dalej</div>
-        </div>
-        <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
-        <div style="display:flex; gap:16px; align-items:center;">
-          <span data-edit-key="timeline-3-year" style="font-family:'Space Mono',monospace; font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">1945–89</span>
-          <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
-          <div data-edit-key="timeline-3-text" style="font-size:14.5px; color:#b8b0a0;">PRL — sad zaniedbany, ale wciąż żywy</div>
-        </div>
-        <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
-        <div style="display:flex; gap:16px; align-items:center;">
-          <span data-edit-key="timeline-4-year" style="font-family:'Space Mono',monospace; font-size:11px; color:#7aaa72; white-space:nowrap; min-width:60px;">2020+</span>
-          <div style="width:8px; height:8px; border-radius:50%; background:#7aaa72; flex:none; box-shadow:0 0 8px rgba(122,170,114,.5);"></div>
-          <div data-edit-key="timeline-4-text" style="font-size:14.5px; color:#ddd8c6; font-weight:500;">Nature &amp; Future — in vitro, nowe życie starych odmian</div>
+
+        <div class="nf-fade" data-nf-delay="1" style="display:flex; flex-direction:column; gap:18px; padding:30px; background:rgba(8,12,8,.4); border:1px solid rgba(90,120,70,.25); border-radius:14px; backdrop-filter:blur(6px);">
+          <div style="display:flex; gap:16px; align-items:center;">
+            <span data-edit-key="timeline-1-year" class="nf-mono" style="font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">~1900</span>
+            <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
+            <div data-edit-key="timeline-1-text" style="font-size:14.5px; color:#b8b0a0;">Założenie sadu w Walimiu — odmiany śląskie i saskie</div>
+          </div>
+          <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
+          <div style="display:flex; gap:16px; align-items:center;">
+            <span data-edit-key="timeline-2-year" class="nf-mono" style="font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">1939–45</span>
+            <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
+            <div data-edit-key="timeline-2-text" style="font-size:14.5px; color:#b8b0a0;">Wojny — majątek przetrwał, drzewa rosły dalej</div>
+          </div>
+          <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
+          <div style="display:flex; gap:16px; align-items:center;">
+            <span data-edit-key="timeline-3-year" class="nf-mono" style="font-size:11px; color:#8aba82; white-space:nowrap; min-width:60px;">1945–89</span>
+            <div style="width:8px; height:8px; border-radius:50%; border:2px solid #c69a4c; flex:none;"></div>
+            <div data-edit-key="timeline-3-text" style="font-size:14.5px; color:#b8b0a0;">PRL — sad zaniedbany, ale wciąż żywy</div>
+          </div>
+          <div style="margin-left:30px; width:1px; height:14px; background:rgba(90,120,70,.3);"></div>
+          <div style="display:flex; gap:16px; align-items:center;">
+            <span data-edit-key="timeline-4-year" class="nf-mono" style="font-size:11px; color:#7aaa72; white-space:nowrap; min-width:60px;">2020+</span>
+            <div style="width:8px; height:8px; border-radius:50%; background:#7aaa72; flex:none; box-shadow:0 0 8px rgba(122,170,114,.5);"></div>
+            <div data-edit-key="timeline-4-text" style="font-size:14.5px; color:#ddd8c6; font-weight:500;">Nature &amp; Future — in vitro, nowe życie starych odmian</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ================================================================ -->
-  <!-- CTA KONTAKTOWY -->
+  <!-- WSPÓŁPRACA / KONTAKT -->
   <!-- ================================================================ -->
-  <div id="kontakt" data-screen-label="Kontakt CTA" style="max-width:1680px; margin:0 auto; padding:60px 40px; text-align:center;">
-    <div style="background:linear-gradient(180deg,#0e1610,#0a120b); border:1px solid rgba(90,120,70,.2); border-radius:14px; padding:48px 40px;">
-    <!-- ornamental divider -->
-    <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:40px;">
-      <div style="width:60px; height:1px; background:linear-gradient(90deg, transparent, rgba(90,120,70,.4));"></div>
-      <!-- decorative gauge -->
-      <div style="position:relative; width:42px; height:42px; border-radius:50%; background:radial-gradient(circle at 50% 38%,#1a1812,#080c08); border:2px solid #c69a4c; box-shadow:inset 0 0 10px rgba(0,0,0,.85), 0 0 14px rgba(90,120,70,.2);">
-        <div style="position:absolute; inset:4px; border-radius:50%; background:repeating-conic-gradient(from 0deg,#8c7d5e 0deg .8deg,transparent .8deg 30deg); opacity:.4;"></div>
-        <div class="nf-anim" style="position:absolute; left:50%; bottom:50%; width:1.5px; height:14px; background:#8aba82; transform-origin:bottom center; transform:rotate(15deg); animation:sp-needle 8s ease-in-out infinite;"></div>
-        <div style="position:absolute; left:50%; top:50%; width:5px; height:5px; border-radius:50%; background:#8aba82; transform:translate(-50%,-50%);"></div>
+  <div id="kontakt" data-screen-label="Kontakt CTA" class="nf-section nf-section--panel">
+    <div class="nf-wrap">
+      <div class="nf-fade" style="text-align:center; margin-bottom:60px;">
+        <div class="nf-label nf-label--center">współpraca</div>
+        <h3 data-edit-key="contact-title" class="nf-h2">Zainteresowany naszymi roślinami?</h3>
+        <p data-edit-key="contact-lead" class="nf-lead" style="max-width:520px; margin-left:auto; margin-right:auto;">Napisz do nas — odpowiadamy na pytania o dostępność, ceny i współpracę hurtową. Jesteśmy w Wałbrzychu, ale wysyłamy rośliny w całą Polskę.</p>
       </div>
-      <div style="width:60px; height:1px; background:linear-gradient(90deg, rgba(90,120,70,.4), transparent);"></div>
-    </div>
-    <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:#5d7a50;">// współpraca</div>
-    <h3 data-edit-key="contact-title" style="font-family:'Cinzel',serif; font-weight:600; font-size:36px; line-height:1.16; color:#ddd8c6; margin:16px auto 0; max-width:640px; letter-spacing:.02em;">Zainteresowany naszymi roślinami?</h3>
-    <p data-edit-key="contact-lead" style="font-size:18px; line-height:1.62; color:#9a9480; max-width:520px; margin:18px auto 0;">Napisz do nas — odpowiadamy na pytania o dostępność, ceny i współpracę hurtową. Jesteśmy w Wałbrzychu, ale wysyłamy rośliny w całą Polskę.</p>
-    <div style="display:flex; gap:16px; justify-content:center; margin-top:32px;">
-      <a href="mailto:kontakt@nfplantbiotech.com" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#0a1a0c; background:linear-gradient(180deg,#6a9a62,#3d6a38); border:1px solid #8aba82; border-radius:5px; padding:16px 30px; box-shadow:inset 0 1px 0 rgba(180,220,170,.45), 0 0 28px rgba(90,120,70,.35);">Napisz do nas →</a>
-      <a href="sklep.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#a9c0a0; border:1px solid rgba(90,120,70,.5); border-radius:5px; padding:16px 30px;">Współpraca B2B</a>
-    </div>
+
+      <div class="nf-split" style="align-items:start;">
+        <!-- Dane kontaktowe -->
+        <div class="nf-card nf-fade" style="padding:40px;">
+          <div style="margin-bottom:32px;">
+            <div class="nf-mono" style="font-size:9.5px; letter-spacing:.2em; color:#5d7a50; margin-bottom:6px;">EMAIL</div>
+            <a href="mailto:kontakt@nfplantbiotech.com" style="font-size:18px; color:#a9c0a0;">kontakt@nfplantbiotech.com</a>
+          </div>
+          <div style="margin-bottom:32px;">
+            <div class="nf-mono" style="font-size:9.5px; letter-spacing:.2em; color:#5d7a50; margin-bottom:6px;">LOKALIZACJA</div>
+            <div style="font-size:18px; color:#ddd8c6;">Wałbrzych, Dolny Śląsk</div>
+          </div>
+          <div>
+            <div class="nf-mono" style="font-size:9.5px; letter-spacing:.2em; color:#5d7a50; margin-bottom:6px;">WYSYŁKA</div>
+            <div style="font-size:16px; color:#9a9480; line-height:1.5;">Cała Polska · 48h · DPD / InPost</div>
+          </div>
+          <div style="margin-top:36px; padding-top:28px; border-top:1px solid var(--nf-border);">
+            <a href="sklep.html" class="nf-btn nf-btn--ghost" style="font-size:11px; padding:13px 22px;">Współpraca B2B</a>
+          </div>
+        </div>
+
+        <!-- Formularz -->
+        <div class="nf-card nf-fade" data-nf-delay="1" style="padding:40px;">
+          <form id="nf-contact-form" novalidate>
+            <label class="nf-field">
+              <span class="nf-field__label">Imię i nazwisko</span>
+              <input class="nf-input" type="text" name="name" required autocomplete="name" placeholder="Jan Kowalski">
+            </label>
+            <label class="nf-field">
+              <span class="nf-field__label">Adres e-mail</span>
+              <input class="nf-input" type="email" name="email" required autocomplete="email" placeholder="jan@example.com">
+            </label>
+            <label class="nf-field">
+              <span class="nf-field__label">Wiadomość</span>
+              <textarea class="nf-input" name="message" required placeholder="W czym możemy pomóc?"></textarea>
+            </label>
+            <!-- Pułapka na boty. Pole niewidoczne i pomijane przez czytniki
+                 ekranu; wypełnione oznacza automat i funkcja odrzuca wysyłkę.
+                 Świadomie NIE display:none — część botów pomija takie pola. -->
+            <div style="position:absolute; left:-9999px;" aria-hidden="true">
+              <label>Strona WWW<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <button type="submit" class="nf-btn nf-btn--primary" style="width:100%; margin-top:8px;">Wyślij wiadomość →</button>
+            <!-- Chowanie stylem inline, nie atrybutem hidden: support.js przy
+                 renderze <x-dc> zdejmuje `hidden`, wiec komunikat bledu
+                 i potwierdzenie bylyby widoczne od wejscia na strone.
+                 Atrybut style runtime zostawia nietkniety. -->
+            <div class="nf-form__error" id="nf-contact-error" role="alert" style="display:none;"></div>
+          </form>
+
+          <!-- Potwierdzenie — pokazywane dopiero PO udanym zapisie. -->
+          <!-- display ustawiamy dopiero przy pokazywaniu: inline display:flex
+               wygralby z atrybutem hidden i potwierdzenie widac by bylo od razu. -->
+          <div id="nf-contact-sent" style="display:none; text-align:center; flex-direction:column; align-items:center; gap:14px; padding:8px 0;">
+            <div style="width:56px; height:56px; border-radius:50%; background:rgba(138,186,130,.15); border:2px solid #8aba82; display:flex; align-items:center; justify-content:center; font-size:24px; color:#8aba82;">✓</div>
+            <div class="nf-serif" style="font-size:22px; color:#ddd8c6;">Wiadomość wysłana</div>
+            <div style="font-size:16px; color:#9a9480;">Odezwiemy się tak szybko, jak to możliwe.</div>
+            <button type="button" id="nf-contact-again" class="nf-btn nf-btn--ghost" style="margin-top:8px; font-size:10px; padding:9px 18px;">Wyślij kolejną</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <div id="nf-footer"></div>
 
-
 </div>
 
 </x-dc>
 <script>
-/* Nature & Future — menu mobilne (hamburger). Faza capture, bo x-dc renderuje się dynamicznie. */
+/* Nature & Future — przełącznik języka PL/EN.
+   Faza capture, bo x-dc renderuje się dynamicznie.
+   Obsługa hamburgera przeniesiona do assets/nf-motion.js: ta strona ma nowy
+   nav zbudowany z klas, a stary mechanizm (.nf-open + reguły pozycyjne
+   w mobile.css) działa tylko dla starego markupu i obsługuje pozostałe strony. */
 (function(){
   document.addEventListener('click', function(e){
     var t = e.target;
     var lg = t.closest ? t.closest('.nf-lang') : null;
     if (lg){ e.preventDefault(); var pg=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,''); location.href = /-en$/.test(pg) ? pg.replace(/-en$/,'')+'.html' : pg+'-en.html'; return; }
-    var b = t.closest ? t.closest('.nf-burger') : null;
-    if (b){ var n = b.closest('.nf-nav'); if(n) n.classList.toggle('nf-open'); return; }
-    var l = t.closest ? t.closest('.nf-nav.nf-open a') : null;
-    if (l){ var o = l.closest('.nf-nav'); if(o) o.classList.remove('nf-open'); }
   }, true);
 })();
 
+/* Karty katalogu prowadzą do produkt.html, jeśli produkt da się dopasować
+   po nazwie łacińskiej; w przeciwnym razie zostaje link do sklepu. */
 (function(){
   var sb = window.supabaseClient;
   if (!sb) return;
@@ -473,6 +530,95 @@
       if (!url) return;
       c.querySelectorAll('.nf-specimen-link, .nf-specimen-img').forEach(function(a){ a.href = url; });
     });
+  });
+})();
+
+/* Formularz kontaktowy → tabela `emails`, ta sama, którą czyta panel Poczta
+   w sklep.html. Wiadomość ląduje w skrzynce odbiorczej jako nieprzeczytana.
+
+   Świadomie NIE pokazujemy potwierdzenia przed odpowiedzią z bazy: prototyp
+   z Figmy robił dokładnie to i zawsze meldował sukces, także gdy nic nie
+   zostało zapisane. */
+/* Nasluch na dokumencie, a nie na samym formularzu: ten skrypt wykonuje sie
+   zanim support.js wyrenderuje zawartosc <x-dc>, wiec w tym momencie
+   formularza jeszcze nie ma w DOM. Delegacja dziala niezaleznie od tego,
+   kiedy element sie pojawi — i przetrwa ponowny render. */
+(function(){
+  function showError(msg){
+    var errBox = document.getElementById('nf-contact-error');
+    if (!errBox) return;
+    errBox.textContent = msg;
+    errBox.style.display = 'block';
+  }
+
+  document.addEventListener('click', function(e){
+    var again = e.target.closest ? e.target.closest('#nf-contact-again') : null;
+    if (!again) return;
+    var form = document.getElementById('nf-contact-form');
+    var sentBox = document.getElementById('nf-contact-sent');
+    if (!form || !sentBox) return;
+    form.reset();
+    form.style.display = '';
+    sentBox.style.display = 'none';
+  });
+
+  document.addEventListener('submit', async function(e){
+    var form = e.target;
+    if (!form || form.id !== 'nf-contact-form') return;
+    e.preventDefault();
+
+    var errBox = document.getElementById('nf-contact-error');
+    var sentBox = document.getElementById('nf-contact-sent');
+    var submit = form.querySelector('button[type="submit"]');
+    if (errBox) errBox.style.display = 'none';
+
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var message = form.message.value.trim();
+
+    if (!name || !email || !message) return showError('Uzupełnij wszystkie pola.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Sprawdź adres e-mail.');
+
+    var sb = window.supabaseClient;
+    if (!sb) return showError('Brak połączenia z serwerem. Napisz na kontakt@nfplantbiotech.com.');
+
+    /* Blokada podwójnej wysyłki — bez tego szybkie dwuklik daje dwa wpisy. */
+    submit.disabled = true;
+    var label = submit.textContent;
+    submit.textContent = 'Wysyłanie…';
+
+    /* Zapis idzie przez funkcję `contact`, nie prosto do tabeli: polityka RLS
+       na `emails` wymaga is_staff(), a otwarcie jej dla anonimów oznaczałoby,
+       że każdy z jawnym kluczem anon z repozytorium może zasypać skrzynkę.
+       Funkcja waliduje dane i pilnuje limitu po stronie serwera. */
+    var res = await sb.functions.invoke('contact', {
+      body: {
+        name: name,
+        email: email,
+        message: message,
+        website: form.website ? form.website.value : ''
+      }
+    });
+
+    submit.disabled = false;
+    submit.textContent = label;
+
+    if (res.error) {
+      console.error('[nf] wysylka wiadomosci nieudana:', res.error);
+      /* Limit wyczerpany to inna sytuacja niż awaria — użytkownik ma wiedzieć,
+         że wiadomość dotarła wcześniej, a nie wysyłać ją w kółko. */
+      var status = res.error.context && res.error.context.status;
+      if (status === 429) {
+        return showError('Wysłano już kilka wiadomości z tego adresu. Spróbuj za godzinę.');
+      }
+      return showError('Nie udało się wysłać wiadomości. Napisz na kontakt@nfplantbiotech.com.');
+    }
+
+    /* Przelaczamy widok stylem inline, a nie atrybutem hidden: atrybuty
+       pochodzace z szablonu potrafia wrocic przy ponownym renderze x-dc,
+       styl inline zostaje. */
+    form.style.display = 'none';
+    sentBox.style.display = 'flex';
   });
 })();
 </script>
