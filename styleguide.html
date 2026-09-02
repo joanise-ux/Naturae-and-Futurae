@@ -810,6 +810,251 @@
   </div>
 </section>
 
+
+
+<!-- ===== Panel — komponenty interfejsów zalogowanych =================== -->
+<!-- Celowo bez .sg-canvas: panel nie używa jasnych wysp (8A), więc jego
+     sekcja nie reaguje na przełącznik wariantu. Pokazywanie .table na
+     --paper byłoby pokazywaniem stanu, który w produkcie nie istnieje. -->
+<section class="section section--deeper" aria-labelledby="sgPanel">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgPanel">Panel klienta</h2>
+      <p class="sg-ref"><b>.panel</b> · <b>.panel-nav</b> · <b>.table</b> · <b>.status</b> ·
+         <b>.empty</b> · <b>.skeleton</b> · <b>.modal</b> · <b>.num</b> · rozdz. <b>8A</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Panel jest narzędziem: odstęp <code>--space-l</code> zamiast pasm
+      marketingowych, nagłówki groteskiem do H2, zero mosiądzu, zero jasnych
+      wysp. Róż pojawia się raz na ekran i tylko na akcji głównej danego widoku.
+    </p>
+
+
+    <!-- --- Status --- -->
+    <p class="sg-states__label">.status — kropka koloru jest dodatkiem do słowa, nigdy zamiast niego</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <p><span class="status status--progress">W realizacji</span></p>
+        <p class="sg-ref"><b>.status.status--progress</b> — kropka <code>--warn</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--sent">Wysłane</span></p>
+        <p class="sg-ref"><b>.status.status--sent</b> — kropka <code>--brand-300</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--delivered">Dostarczone</span></p>
+        <p class="sg-ref"><b>.status.status--delivered</b> — kropka <code>--brand-500</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--cancelled">Anulowane</span></p>
+        <p class="sg-ref"><b>.status.status--cancelled</b> — kropka <code>--error</code></p>
+      </div>
+    </div>
+
+
+
+    <!-- --- Postęp realizacji --- -->
+    <p class="sg-states__label">.progress — postęp realizacji: ptaszek dla etapu przebytego, kropka dla bieżącego</p>
+    <div style="margin-bottom: var(--space-l)">
+      <ol class="progress" aria-label="Postęp realizacji zamówienia">
+        <li class="progress__step is-done">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Przyjęte<span class="visually-hidden"> — etap ukończony</span></span>
+        </li>
+        <li class="progress__step is-done">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">W realizacji<span class="visually-hidden"> — etap ukończony</span></span>
+        </li>
+        <li class="progress__step is-current" aria-current="step">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Wysłane<span class="visually-hidden"> — etap bieżący</span></span>
+        </li>
+        <li class="progress__step">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Dostarczone<span class="visually-hidden"> — etap przed nami</span></span>
+        </li>
+      </ol>
+    </div>
+    <p class="sg-ref" style="margin-bottom: var(--space-l)">
+      Stan nie zależy od koloru: etap przebyty ma ptaszek, bieżący wypełnioną
+      kropkę, przyszły jest pusty. Bieżący niesie <code>aria-current="step"</code>,
+      a każdy etap ukryty tekst stanu. Poniżej 560px pasek prostuje się w pion.
+      Wariant <b>.progress--cancelled</b> wygasza cały pasek — anulowane
+      zamówienie nie idzie dalej.
+    </p>
+
+    <!-- --- Pola: podgląd hasła, checkbox, separator --- -->
+    <p class="sg-states__label">.input-action · .checkbox · .divider — uzupełnienia rozdz. 6.5 dla ekranów logowania</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgPass">Hasło</label>
+          <div class="input-wrap">
+            <input class="input" id="sgPass" type="password" value="tajnehaslo">
+            <button class="input-action" type="button" aria-label="Pokaż hasło" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="sg-ref"><b>.input-wrap</b> + <b>.input-action</b> — przycisk w polu;
+           <code>aria-label</code> mówi, co zrobi, <code>aria-pressed</code> niesie stan</p>
+      </div>
+
+      <div class="sg-item">
+        <label class="checkbox" for="sgChk">
+          <input type="checkbox" id="sgChk" checked>
+          <span>Zapamiętaj mnie</span>
+        </label>
+        <p class="sg-ref"><b>.checkbox</b> — prawdziwy <code>&lt;input type="checkbox"&gt;</code>
+           z <code>accent-color</code>, nie podrobiony <code>&lt;span&gt;</code></p>
+      </div>
+
+      <div class="sg-item">
+        <p class="divider"><span>lub</span></p>
+        <p class="sg-ref"><b>.divider</b> — kreska, słowo, kreska</p>
+      </div>
+    </div>
+
+    <!-- --- Tabela --- -->
+    <p class="sg-states__label">.table — wiersz 52px; poniżej 760px zamienia się w listę kart, nie w poziomy scroll</p>
+    <div class="table-wrap" style="margin-bottom: var(--space-l)">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Zamówienie</th>
+            <th scope="col">Data</th>
+            <th scope="col">Pozycje</th>
+            <th scope="col" class="th--right">Kwota</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Zamówienie"><a class="table__link num" href="#sgPanel">NF-0156</a></td>
+            <td data-label="Data" class="num">18.08.2026</td>
+            <td data-label="Pozycje" class="num">3</td>
+            <td data-label="Kwota" class="num td--right">189,00 zł</td>
+            <td data-label="Status"><span class="status status--sent">Wysłane</span></td>
+          </tr>
+          <tr>
+            <td data-label="Zamówienie"><a class="table__link num" href="#sgPanel">NF-0151</a></td>
+            <td data-label="Data" class="num">02.07.2026</td>
+            <td data-label="Pozycje" class="num">1</td>
+            <td data-label="Kwota" class="num td--right">64,00 zł</td>
+            <td data-label="Status"><span class="status status--delivered">Dostarczone</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sg-ref" style="margin-bottom: var(--space-l)">
+      Nagłówki mają <code>scope="col"</code>, a każda komórka <code>data-label</code> —
+      etykieta wraca wtedy w wariancie kartowym. Klikalny jest link w pierwszej
+      komórce, nie <code>onclick</code> na wierszu: inaczej wiersza nie da się
+      otworzyć klawiaturą ani skopiować adresu.
+    </p>
+
+
+    <!-- --- Stan pusty i stan ładowania --- -->
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <div class="empty">
+          <p>Nie masz jeszcze żadnych zamówień.</p>
+          <a class="btn btn--secondary" href="sklep-nf.html">Zobacz rośliny</a>
+        </div>
+        <p class="sg-ref"><b>.empty</b> — jedno zdanie, jedno wyjście. Bez ilustracji.</p>
+      </div>
+
+      <div class="sg-item">
+        <div class="skeleton-stack" aria-hidden="true">
+          <div class="skeleton skeleton--row"></div>
+          <div class="skeleton skeleton--row"></div>
+          <div class="skeleton skeleton--row"></div>
+        </div>
+        <p class="sg-ref"><b>.skeleton</b> — bloki <code>--brand-800</code>, bez spinnera
+           i bez animowanego połysku</p>
+      </div>
+    </div>
+
+
+    <!-- --- Dane liczbowe --- -->
+    <p class="sg-states__label">.num — numery, kwoty, daty i ilości stoją w kolumnie</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <p class="num">NF-0156<br>1 240,00 zł<br>18.08.2026<br>×3</p>
+        <p class="sg-ref"><b>.num</b> — <code>--font-mono</code> +
+           <code>lining-nums tabular-nums</code></p>
+      </div>
+      <div class="sg-item">
+        <p>NF-0156<br>1 240,00 zł<br>18.08.2026<br>×3</p>
+        <p class="sg-ref">bez <b>.num</b> — cyfry o różnej szerokości, kolumna się rozjeżdża</p>
+      </div>
+    </div>
+
+
+    <!-- --- Modal --- -->
+    <p class="sg-states__label">.modal — potwierdzenie z nazwą tego, co ginie, i czasownikiem skutku</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <button class="btn btn--secondary" type="button" data-sg-modal-open="sgModal">Pokaż modal</button>
+        <dialog class="modal" id="sgModal">
+          <h3 class="h3 modal__title">Usunąć adres „Dom”?</h3>
+          <div class="modal__body">
+            <p>Anna Kowalska, ul. Świdnicka 12, 50-068 Wrocław. Tego nie da się cofnąć.</p>
+          </div>
+          <div class="modal__actions">
+            <button class="btn btn--primary" type="button" data-sg-modal-close="sgModal">Usuń adres</button>
+            <button class="btn btn--secondary" type="button" data-sg-modal-close="sgModal">Zachowaj</button>
+          </div>
+        </dialog>
+        <p class="sg-ref"><b>.modal</b> na <code>&lt;dialog&gt;</code> — pułapka focusu
+           i zamknięcie <kbd>Esc</kbd> są zachowaniem przeglądarki, nie kodem do napisania</p>
+      </div>
+    </div>
+
+
+    <!-- --- Układ i nawigacja --- -->
+    <p class="sg-states__label">.panel + .panel-nav — lewa kolumna 240px, .glass, przyklejona</p>
+    <div class="sg-frame">
+      <div class="panel" style="padding-block: var(--space-s)">
+        <nav class="panel-nav glass" aria-label="Panel klienta">
+          <button class="btn btn--secondary btn--small panel-nav__toggle" type="button"
+                  aria-expanded="false" aria-controls="sgPanelNavList">Menu konta</button>
+          <ul class="panel-nav__list" id="sgPanelNavList">
+            <li><a class="panel-nav__link" href="#sgPanel" aria-current="page">Przegląd</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Zamówienia</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Dane i adresy</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Zapisane rośliny</a></li>
+          </ul>
+        </nav>
+
+        <div class="panel__main">
+          <div class="panel__block">
+            <div class="panel__head">
+              <h3 class="h3">Ostatnie zamówienie</h3>
+              <a class="btn btn--underline" href="#sgPanel">Szczegóły</a>
+            </div>
+            <p class="muted small">
+              <span class="status status--sent">Wysłane</span> ·
+              <span class="num">18.08.2026</span> ·
+              <span class="num">189,00 zł</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="sg-ref" style="margin-top: var(--space-m)">
+      Poniżej 900px kolumna chowa się pod <b>.panel-nav__toggle</b> i wysuwa jako
+      panel ze szkła. Nagłówek serwisu zostaje ten sam co na stronach — powrót do
+      sklepu ma być jednym kliknięciem.
+    </p>
+
+  </div>
+</section>
+
 </main>
 
 <script src="assets/nf-components.js"></script>

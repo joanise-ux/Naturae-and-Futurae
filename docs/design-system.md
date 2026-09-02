@@ -748,6 +748,76 @@ Różowy przycisk „Dodaj do koszyka" jest tu jedynym różowym elementem na ca
 
 ---
 
+## 8A. Interfejsy zalogowane — panel klienta i admin
+
+Panel to narzędzie, nie opowieść. Ta sama paleta, te same tokeny i to samo szkło, ale inne proporcje: mniej powietrza, więcej informacji na ekran, zero dekoracji, która nie niesie treści.
+
+### Co zmienia się względem stron marketingowych
+
+| | Strony | Panel |
+|---|---|---|
+| Odstęp między sekcjami | `clamp(--space-xl, 5.5vw, --space-2xl)` | `--space-l` |
+| Nagłówki | antykwa, Display XL | grotesk, maks. H2 |
+| Wysokość wiersza tabeli | — | 52px, `--space-s` w pionie |
+| Mosiądz | 2 elementy na ekran | **0 — panel jest bez mosiądzu** |
+| Zdjęcia | duże, kadrowane | miniatury 64px |
+| Róż | 1 na ekran | akcje zapisujące, dodające i nieodwracalne |
+| Tło bloku treści | jasna wyspa co drugie pasmo | **jasna karta `.section--light`** na ciemnej bazie |
+
+### Zasady, które obowiązują tylko tutaj
+
+1. **Stan pusty jest zaprojektowany, nie domyślny.** Każda lista ma wersję bez danych: jedno zdanie, co się tu pojawi, i jedno wyjście (link do sklepu). Bez ilustracji i bez żartów.
+
+2. **Stan ładowania to szkielet, nie spinner.** Kształt zawartości w `--brand-800`, bez animowanego połysku.
+
+3. **Każdy status ma słowo, nie tylko kolor.** *W realizacji*, *Wysłane*, *Dostarczone*, *Anulowane* — kropka koloru jest dodatkiem do etykiety, nigdy zamiast niej.
+
+4. **Nic nie znika bez potwierdzenia.** Usunięcie adresu, anulowanie zamówienia — modal z nazwą tego, co ginie, i przyciskiem opisującym skutek („Usuń adres"), nie „OK".
+
+5. **Dane liczbowe w `--font-mono` z `tabular-nums`:** numery zamówień, kwoty, daty, ilości. Mają stać w kolumnie.
+
+6. **Tabela na mobile zamienia się w listę kart** — nie w poziomy scroll.
+
+7. **Formularze zapisują się jawnie.** Przycisk „Zapisz zmiany" jest nieaktywny, dopóki nic się nie zmieniło, a po zapisie pojawia się potwierdzenie tekstowe przy formularzu, nie znikający toast w rogu.
+
+### Nawigacja panelu
+
+Lewa kolumna 240px, `.glass`, przyklejona. Na mobile chowa się pod przycisk i wysuwa jako panel ze szkła. Nagłówek serwisu zostaje ten sam co wszędzie — użytkownik ma jednym kliknięciem wrócić do sklepu.
+
+### Stan wdrożenia
+
+Wszystkie osiem komponentów stoi w `nf-components.css` i jest pokazane w `styleguide.html` (sekcja „Panel klienta"). Panel klienta korzysta z nich w pięciu widokach: `konto-nf.html`, `konto-zamowienia-nf.html`, `konto-zamowienie-nf.html`, `konto-dane-nf.html`, `konto-ulubione-nf.html` — kompozycja tych stron mieszka w `nf-panel.css`, wspólna logika w `nf-panel.js`.
+
+| Komponent | Odpowiada zasadzie |
+|---|---|
+| `.panel` — układ z lewą kolumną 240px | Nawigacja panelu |
+| `.panel-nav` — przyklejona kolumna `.glass` + wysuwka na mobile | Nawigacja panelu |
+| `.table` — wiersz 52px, wariant kartowy poniżej 760px | 6 |
+| `.status` — kropka + etykieta słowna | 3 |
+| `.empty` — stan pusty z jednym zdaniem i jednym wyjściem | 1 |
+| `.skeleton` — bloki `--brand-800`, bez połysku | 2 |
+| `.modal` — potwierdzenie z nazwą i czasownikiem skutku | 4 |
+| `.num` — `--font-mono` + `lining-nums tabular-nums` | 5 |
+| `.progress` — postęp realizacji zamówienia, ptaszek/kropka/pusto | 3, 10 |
+
+**Zmiana z 2026-09-02.** Pierwsza wersja rozdziału mówiła „ciemna baza, bez jasnych wysp”. W praktyce panel stanął na jednym ciemnozielonym gradiencie, a szkło różniło się od niego o kilka procent jasności — bloki zlewały się w jedną płaszczyznę i nie było widać, gdzie kończy się jeden, a zaczyna drugi. Bloki treści dostały więc `.section--light`: ciemna baza zostaje tłem strony i nawigacji, jasna karta niesie treść. Karta produktu idzie tak samo — jasna, z różowym „Do koszyka” jak w sklepie; ciemne zostają tylko tag i wskaźnik stanu leżące na zdjęciu.
+
+Ta sama decyzja poluzowała róż: w narzędziu prowadzą akcje, a obrysowany przycisk na ciemnej zieleni ginie. Różowe są „Zapisz zmiany”, „Dodaj adres”, „Wyloguj” i potwierdzenie w modalu.
+
+Istniejące komponenty wchodzą do panelu bez zmian: `.btn` (6.1), `.field` / `.input` (6.5), `.glass` (3), `.nav` (6.3), `.card` i `.listing` (6.2 / 8.1 — widok „Zapisane rośliny”). Panel **nie** używa: `.gauge` i `.rule-rivet` (mosiądz), `.anno`, `.hero`, `.card--split`.
+
+Jeden wyjątek od „bez zmian”: w panelu przycisk na karcie produktu jest `.btn--secondary`, nie `.btn--primary`. Kilka kart na ekranie dałoby kilka różów, a tabela wyżej dopuszcza jeden — i rezerwuje go dla akcji nieodwracalnej, czyli dla modala usunięcia.
+
+Słownik statusów w bazie ma pięć wartości, bo tyle ma panel staffa: `Nowe`, `W realizacji`, `Wysłane`, `Dostarczone`, `Anulowane` (pilnuje ich `orders_status_check`). Klient widzi cztery — `Nowe` i `W realizacji` to dla niego ten sam etap. Mapowanie robi `nf-panel.js`, w jednym miejscu.
+
+Odstęp sekcji nadpisuje się raz, na kontenerze panelu, a nie na każdej sekcji z osobna:
+
+```css
+.panel .section { padding-block: var(--space-l); }
+```
+
+---
+
 ## 9. Ruch
 
 Jeden orkiestrowany moment na stronę, reszta reaguje na użytkownika.

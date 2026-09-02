@@ -168,3 +168,33 @@
   readTypeSizes();
   window.addEventListener('resize', readTypeSizes, { passive: true });
 })();
+
+
+/* Podgląd .modal i .panel-nav__toggle (rozdz. 8A). Tyle kodu, ile trzeba,
+   żeby przykład dało się otworzyć — reszta zachowania modala (pułapka
+   focusu, Esc, backdrop) należy do <dialog>, nie do tego pliku. */
+(function () {
+  'use strict';
+
+  document.addEventListener('click', function (e) {
+    var open = e.target.closest('[data-sg-modal-open]');
+    if (open) {
+      var dlg = document.getElementById(open.getAttribute('data-sg-modal-open'));
+      if (dlg && typeof dlg.showModal === 'function') dlg.showModal();
+      return;
+    }
+
+    var close = e.target.closest('[data-sg-modal-close]');
+    if (close) {
+      var target = document.getElementById(close.getAttribute('data-sg-modal-close'));
+      if (target && typeof target.close === 'function') target.close();
+      return;
+    }
+
+    var toggle = e.target.closest('.panel-nav__toggle');
+    if (toggle) {
+      toggle.setAttribute('aria-expanded',
+        toggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+    }
+  });
+})();
