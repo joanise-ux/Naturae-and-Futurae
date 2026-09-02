@@ -160,7 +160,7 @@ window.NF_CATALOGUE = (function () {
         title: 'Rośliny akwariowe',
         lead: 'Każda sadzonka pochodzi z jednej komórki matecznej i całe życie spędziła w zamkniętym słoiku. Nie miała kontaktu z wodą z akwarium, więc nie przywozi glonów, ślimaków ani pasożytów. Aklimatyzacja trwa siedem dni i opisujemy ją krok po kroku.',
         spec: [['Rodzina', 'Araceae, Hydrocharitaceae, Lythraceae'], ['Kategoria', 'Rośliny wodne i bagienne'], ['Pielęgnacja', 'Od łatwej do wymagającej']],
-        img: 'assets/akwarium%20sklep.jpg',
+        img: 'assets/akwarium-sklep.jpg',
         alt: 'Zarośnięte akwarium roślinne na komodzie: korzeń porośnięty mchem, paproć jawajska, trawiasty przedplan i ławica neonów.',
         annos: ['Cała obsada tego zbiornika to <b>9 gatunków</b> z jednej hodowli.', 'Aklimatyzacja z kubka do zbiornika: <b>7 dni</b>.'] },
 
