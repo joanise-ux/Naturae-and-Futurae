@@ -1,5 +1,7 @@
-# Strony, które nie mają jeszcze odpowiednika w redesignie. Nawigacja stron -nf
-# wciąż do nich linkuje (konto 15x, produkt 6x, panel-klienta 5x, historia 1x).
+# Strony starego frontu bez odpowiednika w redesignie. Nawigacja stron -nf
+# już do nich nie linkuje — konto, panel klienta i status zamówienia mają
+# swoje odpowiedniki (konto-*-nf.html). Reguły zostają dla linków z zewnątrz
+# i ze starych zakładek.
 # Zamiast 404 pokazujemy zaślepkę wyjaśniającą zakres podglądu.
 #
 # Kod 200 = przepisanie, nie przekierowanie: adres w pasku zostaje, więc
