@@ -1,0 +1,176 @@
+/* ==========================================================================
+   Nature & Future — nf-home.css
+   Kompozycja strony głównej i NIC WIĘCEJ: blok bestsellera, rząd dwóch kart,
+   blog, opinie. Komponenty są w nf-components.css.
+
+   Ten arkusz wczytuje wyłącznie index-nf.html. Jeśli coś stąd okaże się
+   potrzebne na drugiej stronie, przenosi się to do nf-components.css —
+   nie dopina się tego pliku do podstrony. Stopka, newsletter, pasmo
+   edukacyjne i .section__head wyjechały stąd tą drogą 2026-09-02, bo
+   siedziały tu mimo użycia na wszystkich stronach (rozdz. 0.1).
+
+   RYTM SEKCJI (rozdz. 1):
+     hero              deep        (materiał wideo)
+     bestseller        deep
+     dwie karty        LIGHT ISLAND 1
+     pasek faktów      deep        (mosiądz na szkle, gradient pod spodem)
+     kafle sub-marek   deep
+     pasmo edukacyjne  LIGHT ISLAND 2
+     blog              deep
+     opinie            deep
+     stopka            --brand-900
+   Między jasnymi wyspami stoją trzy ciemne sekcje. Obie wyspy mają realną
+   krawędź — pełna szerokość, twarde przejście, bez rozmycia gradientowego.
+
+   MOSIĄDZ — dokładnie dwa miejsca na całej stronie:
+     1. pasek faktów (pierścienie, podziałki, wskazówki, separatory)
+     2. narożniki ramki kafla PomonaLab
+   Kamino zamiast mosiądzu dostaje --brand-300 z własnej palety (3A.4).
+
+   RÓŻ — jeden wyjątek: focus. Na stronie głównej nie ma akcji na konkretnym
+   produkcie, więc różowy nie występuje w żadnym przycisku, tagu ani napisie.
+
+   SPECYFICZNOŚĆ: odstępy między sekcjami ustawia wyłącznie reguła .section
+   w nf-base.css. Żaden wariant sekcji ani komponent nie nadpisuje
+   padding-block — warianty zmieniają tylko tło i kolor tekstu.
+   ========================================================================== */
+
+/* --- 2. Hero -------------------------------------------------------------
+   Hero przeniesione do nf-components.css (rozdz. 7.1): używają go teraz
+   trzy strony — główna (.hero) oraz /kamino i /pomona (.hero--sub).
+   ------------------------------------------------------------------------- */
+
+/* --- 3. Blok bestsellera (rozdz. 7.2) ------------------------------------ */
+
+.bestseller {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-m);
+  align-items: stretch;
+}
+
+.feature {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-l);
+  padding: var(--space-l);
+}
+
+.feature__photo {
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--brand-900);
+}
+.feature__photo img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; }
+
+.feature__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-s);
+}
+
+.aside-photo {
+  position: relative;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  min-height: 420px;
+}
+.aside-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.aside-photo__card {
+  position: absolute;
+  left: var(--space-s);
+  right: var(--space-s);
+  bottom: var(--space-s);
+  padding: var(--space-m);
+}
+.aside-photo__card p { margin-bottom: var(--space-xs); }
+
+/* W jasnej wyspie karta zostaje ciemnym szkłem, bo pod nią jest zdjęcie,
+   a nie papier — więc tekst nie może zejść na tusz razem z sekcją. */
+.section--light .aside-photo__card { color: var(--brand-100); }
+.aside-photo__card a {
+  font-size: var(--type-small);
+  color: var(--brand-100);
+  text-underline-offset: 4px;
+}
+
+
+/* --- 4. Rząd dwóch kart — jasna wyspa 1 ----------------------------------
+   Same karty to komponent .card z wariantem .card--split (nf-components.css).
+   -------------------------------------------------------------------------- */
+
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-m);
+}
+
+/* Pasek faktów (3A.2) zamyka jasną wyspę pod rzędem dwóch kart. Bez odstępu
+   obie płyty szkła stykają się krawędziami, a cień paska kładzie się na
+   kartach i wygląda, jakby na nie nachodził. */
+.card-row + .facts { margin-top: var(--space-xl); }
+
+
+/* --- 8. Blog ------------------------------------------------------------- */
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-m);
+}
+
+.post { display: flex; flex-direction: column; gap: var(--space-s); padding: var(--space-s); }
+.post__photo { border-radius: var(--radius-s); overflow: hidden; }
+.post__photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.post__date { font-size: var(--type-small); color: var(--brand-300); font-variant-numeric: lining-nums tabular-nums; }
+.post h3 a { text-decoration: none; }
+.post h3 a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.post p { padding-inline: var(--space-xs); padding-bottom: var(--space-s); }
+
+
+/* --- 9. Opinie ------------------------------------------------------------ */
+
+.opinion {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+.opinion__photo {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  /* kształt organiczny, nie koło */
+  border-radius: 58% 42% 47% 53% / 45% 55% 45% 55%;
+}
+
+.opinion blockquote { font-family: var(--font-display); font-size: var(--type-h2); line-height: 1.35; }
+.opinion figcaption { margin-top: var(--space-m); font-size: var(--type-small); color: var(--brand-300); }
+
+/* Na jasnej wyspie --brand-300 nie ma kontrastu na papierze — podpis schodzi
+   do --brand-700, tak samo jak etykiety w pasku faktów. */
+.section--light .opinion figcaption { color: var(--brand-700); }
+
+
+/* --- Responsywność --------------------------------------------------------
+   Komponenty łamią się same (nf-components.css). Tutaj tylko kompozycja.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1040px) {
+  .bestseller { grid-template-columns: 1fr; }
+  .posts { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .feature { grid-template-columns: 1fr; padding: var(--space-m); }
+  .card-row { grid-template-columns: 1fr; }
+  .posts { grid-template-columns: 1fr; }
+  .opinion { grid-template-columns: 1fr; gap: var(--space-l); }
+  .opinion blockquote { font-size: 1.5rem; }
+  .aside-photo { min-height: 320px; }
+}
+

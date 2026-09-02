@@ -1,0 +1,297 @@
+/* ==========================================================================
+   Nature & Future — nf-shop.css
+   Warstwa UKŁADU sklepu (rozdz. 8). Dokładnie ta sama rola, jaką dla strony
+   głównej pełni nf-home.css: rozmieszczenie i nic poza tym.
+
+   Wszystkie komponenty przychodzą z gotowych plików i nie są tu nadpisywane:
+     .card .card--split .badge .tag .stock .price .btn .glass .anno .input
+       → nf-components.css
+     .feature .bestseller .aside-photo .card-row .footer
+       → nf-home.css  (rozdz. 8 mówi wprost: blok wyróżniony „jak na
+         stronie głównej”, karta pełnej szerokości „jak blok bestsellera”)
+
+   Każda wartość poniżej pochodzi z tokens.css. Nie ma tu ani jednego
+   koloru, promienia ani odstępu spoza tokenów.
+   ========================================================================== */
+
+
+/* --- Rytm sekcji sklepu (rozdz. 5) ---------------------------------------
+   „Odstęp między sekcjami: --space-3xl na stronach storytellingowych,
+   --space-xl w sklepie i panelach, gdzie liczy się gęstość.”
+   -------------------------------------------------------------------------- */
+
+/* Odstęp liczy się MIĘDZY sekcjami, nie po --space-xl z każdej strony.
+   Przy dwóch stykających się sekcjach padding z góry i z dołu sumował się
+   do 128px, a z separatorem po środku dawał blisko 300px — czyli pustą
+   połowę ekranu między hero a pierwszą kartą. Sekcja dostaje odstęp tylko
+   u dołu; górę pierwszej sekcji ustawia padding na .shop-page. */
+.shop-page .section { padding-block: 0 var(--space-xl); }
+
+/* Separator siedzi w tym odstępie, zamiast dokładać własny z obu stron. */
+.shop-page .rule-rivet { margin-block: 0 var(--space-l); }
+
+/* Jasna wyspa jest wyjątkiem od gęstego rytmu sklepu: rozdz. 1 żąda
+   96–144px marginesu wewnętrznego na styku, żeby zmiana tła czytała się
+   jako osobne pasmo, a nie jako jasny prostokąt wciśnięty między sekcje. */
+.shop-page .section--light { padding-block: var(--space-2xl); }
+
+/* Dolne rogi wyspy wycinają otwór w tym, co leży pod nią. Tłem strony jest
+   --grad-deep z background-attachment: fixed, więc w tym otworze pokazywał
+   się jaśniejszy fragment gradientu, a stopka obok jest płaskim --brand-900.
+   Efekt: jaśniejszy pasek w rogu, dokładnie na styku ze stopką.
+
+   Podciągamy stopkę o promień pod wyspę i podnosimy wyspę ponad nią —
+   wtedy rogi wycinają się w --brand-900 i kolor się zgadza.
+   Klasę ustawia nf-shop.js, bo przy kategorii z jednym produktem siatka
+   jest pusta, wyspa znika i stopki nie ma czego podciągać. */
+.shop-page--light-end > .section--light:last-child {
+  position: relative;
+  z-index: 1;
+}
+.shop-page--light-end + .footer { margin-top: calc(-1 * var(--radius-l)); }
+
+/* Nawigacja jest position:fixed i na podstronie od razu zwinięta w pigułkę:
+   16px marginesu od góry + 72px wysokości, czyli kończy się na 88px.
+
+   --nav-clear dokłada do tego --space-l odstępu i obsługuje oba miejsca,
+   które muszą go znać: górę pierwszej sekcji i próg przyklejenia paska.
+   Wcześniej oba stały na 88px, więc pasek dotykał pigułki nawigacji —
+   dwie duże powierzchnie szkła zlewały się w jeden blok. */
+.shop-page {
+  --nav-clear: calc(var(--space-s) + 72px + var(--space-l));
+  padding-top: var(--nav-clear);
+}
+
+/* Wariant z hero na wejściu: materiał sięga pod nawigację (6.3), więc górny
+   odstęp znika. --nav-clear zostaje, bo pasek kategorii nadal się o niego
+   przykleja. */
+.shop-page--hero { padding-top: 0; }
+
+/* Pasek stoi między hero kategorii a listingiem. Odstęp nad nim daje
+   sekcja wyżej (.shop-page .section ma padding tylko u dołu), więc bierze
+   tylko własny margines pod spodem, do nagłówka listingu. */
+.shop-page .shopbar { margin-bottom: var(--space-l); }
+
+
+/* --- Pasek nad listingiem (rozdz. 8, schemat) -----------------------------
+   [ ● Rośliny akwariowe ] [ ● Drzewa owocowe ] ...        SORTUJ: ...
+   Szkło, przyklejony pod nawigacją na wysokości --nav-clear, żeby przy
+   scrollu trzymał od niej stały odstęp zamiast się z nią stykać.
+   -------------------------------------------------------------------------- */
+
+.shopbar {
+  position: sticky;
+  top: var(--nav-clear);
+  z-index: 30;
+  margin-bottom: var(--space-xl);
+}
+
+/* Dwa rzędy: sub-marki + sortowanie u góry, kategorie pod spodem.
+   Promień własny, a nie pożyczony z .glass — pasek ma trzymać kształt
+   także wtedy, gdy szkła pod nim nie ma (wariant w jasnej wyspie). */
+.shopbar__inner {
+  display: grid;
+  gap: var(--space-s);
+  padding: var(--space-s);
+  border-radius: var(--radius-m);
+}
+
+/* Wariant w jasnej wyspie. Szkła tu nie ma i nie ma go być: pod paskiem
+   leży papier, a nie materiał, a szkło na jednolitym tle to zwykły jasny
+   prostokąt (rozdz. 3, reguła 2). Zostaje sam obrys z zaokrąglonymi
+   rogami, tło płynie przez pasek z wyspy — dzięki temu kolory się
+   zgadzają i nie ma białej płyty wokół kontrolek. */
+.section--light .shopbar__inner {
+  background: transparent;
+  border: 1px solid rgba(26, 29, 24, 0.12);
+  box-shadow: none;
+}
+
+/* Bez własnego tła pasek nie może się przyklejać — przewijana treść
+   przechodziłaby pod jego napisami. W wyspie stoi normalnie. */
+.section--light .shopbar { position: static; }
+
+.shopbar__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+/* Sortowanie po prawej stronie rzędu — jak na schemacie w rozdz. 8. */
+.shopbar__sortlabel { margin-left: auto; }
+
+/* <select class="input"> — komponent pola z 6.5, zwężony do swojej treści,
+   bo .input domyślnie zajmuje całą szerokość formularza. */
+.shopbar__sort { width: auto; padding-block: 7px; }
+
+
+/* --- Przełącznik sub-marek (rozdz. 6.3) -----------------------------------
+   Segmentowany kontrolek. Aktywny segment: ciemniejsze szkło + kropka
+   w kolorze marki. Kolor kropki nie jest wpisany z ręki — każdy przycisk
+   niesie własne data-brand, więc var(--brand-500) rozwiązuje się do palety
+   tej sub-marki prosto z tokens.css.
+
+   Kategorie w drugim rzędzie używają tego samego kontrolka.
+   -------------------------------------------------------------------------- */
+
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 7px 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: var(--type-small);
+  cursor: pointer;
+}
+
+.seg button::before {
+  content: "";
+  flex: none;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .45;
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--glass-bg);
+  color: #FFFFFF;
+}
+.seg button[aria-pressed="true"]::before {
+  opacity: 1;
+  background: var(--brand-500);
+}
+
+/* Wariant w jasnej wyspie (rozdz. 1). Kontrolek stoi na papierze, więc
+   biel z wariantu ciemnego znika — obrys, tło i tekst schodzą na tusz,
+   a aktywny segment robi się bielą, nie ciemnym szkłem. Kropka zostaje
+   w kolorze marki: na papierze --brand-500 daje wystarczający kontrast
+   tylko jako element nietekstowy, a obok stoi zawsze nazwa kategorii. */
+.section--light .seg {
+  border-color: rgba(26, 29, 24, 0.16);
+  background: rgba(26, 29, 24, 0.04);
+}
+.section--light .seg button { color: var(--ink-muted); }
+.section--light .seg button[aria-pressed="true"] {
+  background: #FFFFFF;
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(26, 29, 24, 0.12);
+}
+.section--light .seg button[aria-pressed="true"]::before { background: var(--brand-700); }
+
+
+/* --- Hero kategorii (rozdz. 8) --------------------------------------------
+   Lewa: nazwa kolekcji jako element graficzny + 3 zdania + tabelka
+   parametrów w trzech kolumnach (z Plantified).
+   Prawa: duże zdjęcie z adnotacjami (.anno, 6.4).
+   -------------------------------------------------------------------------- */
+
+.cat-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+.cat-hero__body { display: flex; flex-direction: column; gap: var(--space-m); }
+
+.cat-hero__media {
+  position: relative;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: var(--brand-900);
+}
+/* 3:2, nie 4:3 jak karty produktu. Zdjęcia kategorii są ujęciami poziomymi
+   (zbiornik, sad, regał hodowlany) — w kadrze 4:3 object-fit: cover ucinał
+   im oba końce i z akwarium zostawał środek bez szkła. */
+.cat-hero__media img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+
+/* Adnotacje (6.4) siedzą na zdjęciu — max trzy na obraz. */
+.cat-hero__anno {
+  position: absolute;
+  left: var(--space-l);
+  right: var(--space-l);
+  bottom: var(--space-l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  align-items: flex-start;
+}
+
+/* Tabelka parametrów: trzy kolumny pod opisem. */
+.spec {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-m);
+  margin: 0;
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--glass-border);
+}
+.spec > div { display: grid; gap: var(--space-2xs); }
+.spec dt { font-size: var(--type-small); }
+.spec dd { margin: 0; }
+
+
+/* --- Siatka listingu (rozdz. 8.1) -----------------------------------------
+   Liczba kolumn NIE jest zapisana w CSS. Ustala ją nf-shop.js na podstawie
+   liczby produktów w kategorii i wpisuje w --listing-cols. CSS zna tylko
+   zasadę „tyle równych kolumn, ile każe logika”.
+   -------------------------------------------------------------------------- */
+
+.listing {
+  display: grid;
+  grid-template-columns: repeat(var(--listing-cols, 3), 1fr);
+  gap: var(--space-m);
+}
+
+.listing__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-bottom: var(--space-l);
+}
+
+/* Blok wyróżniony 2/3 + 1/3 i karta pełnej szerokości mają odstęp
+   od siatki pod sobą. Drugi wiersz obsługuje przypadek, w którym blok
+   i siatka są osobnymi kontenerami: pusty blok jest schowany przez
+   nf-shop.js i wtedy odstępu nie ma czego dokładać. */
+.shop-listing > * + * { margin-top: var(--space-xl); }
+.shop-listing + .shop-listing { margin-top: var(--space-xl); }
+.shop-listing[hidden] + .shop-listing { margin-top: 0; }
+
+
+/* --- Tablet: 6 kolumn (rozdz. 5) ------------------------------------------ */
+
+@media (max-width: 1040px) {
+  .cat-hero { grid-template-columns: 1fr; gap: var(--space-l); }
+  .shopbar { top: var(--nav-clear); }
+  /* Trzy kolumny nie mieszczą się — schodzimy do dwóch, nadal bez
+     niepełnego rzędu w trójce, bo trójki tu już nie ma. */
+  .listing { grid-template-columns: repeat(min(var(--listing-cols, 3), 2), 1fr); }
+}
+
+
+/* --- Mobile: 4 kolumny, listing jednokolumnowy (rozdz. 5, 6.2) ------------ */
+
+@media (max-width: 760px) {
+  .listing { grid-template-columns: 1fr; }
+  .spec { grid-template-columns: 1fr; gap: var(--space-s); }
+  .cat-hero__anno { position: static; padding: var(--space-s); }
+  .shopbar__inner { justify-content: flex-start; }
+}

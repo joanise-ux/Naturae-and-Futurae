@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Technologia in vitro — Nature &amp; Future</title>
+<meta name="description" content="Mikropropagacja roślin krok po kroku: od eksplantatu po aklimatyzację. Sterylna kultura tkankowa, bez chorób i patogenów.">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Trzy wspólne arkusze plus arkusz tej strony, w tej kolejności (0.1). -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-tech.css">
+</head>
+
+<!-- Skórka Nature & Future (2.2). Cała strona ciemna: pasma § 02, § 03 i § 05
+     stoją na --grad-deep, a § 04 i § 06 na --brand-900 (.section--deeper),
+     żeby rytm dało się czytać bez ani jednej jasnej wyspy. Wcześniej sekcje
+     02–05 miały jasny, żółtozielony gradient — ciemne karty wyglądały na nim
+     jak wycięte dziury, a przygaszone etykiety znikały.
+
+     Ruch: rozdz. 9 bez wyjątków. Bez sceny sterowanej scrollem (9.1),
+     bez fade-in-up, bez parallaxu. Dozwolone: hover 150ms, FAQ 200ms. -->
+<body data-brand="nf">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+
+<!-- ===== Nawigacja (6.3) — identyczna jak na pozostałych podstronach ==== -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html">Sklep</a></li>
+        <li><a href="technologia-nf.html" aria-current="page">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html">Pomona</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="nav__icon" type="button" aria-label="Szukaj roślin">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      </button>
+
+      <a class="nav__icon" href="#koszyk" aria-label="Koszyk, 2 pozycje">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="nav__count" aria-hidden="true">2</span>
+      </a>
+
+      <a class="btn btn--ghost btn--small" href="konto.html">Zaloguj</a>
+      <a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto.html">Zaloguj</a></li>
+      <li><a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main">
+
+  <!-- ===== Hero (7.1, wariant --sub) ==================================
+       Zdjęcie plus jedno zdanie. Bez wielkiej tarczy, którą hero miał
+       wcześniej: to był mosiądz jako wypełnienie i wskazówka bez skali
+       (3A.1, 3A.2). Oba przyciski prowadzą w dół tej samej strony,
+       więc żaden nie jest różowy (6.1).
+  ==================================================================== -->
+  <section class="hero hero--sub hero--tech">
+    <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+    <img class="hero__media" src="assets/sp-flasks.jpg" decoding="async"
+         alt="Kolby z kulturą in vitro w szafie hodowlanej.">
+
+    <div class="hero__scrim"></div>
+
+    <div class="hero__content container">
+      <p class="hero__eyebrow">rozdz. III · technologia</p>
+      <h1 class="h1 hero__title">Mikropropagacja <i>pod szkłem.</i></h1>
+      <p class="hero__lede">
+        <i lang="la">In vitro</i> — z łac. „w szkle". Rozmnażamy rośliny w sterylnych
+        warunkach, na pożywce, z fragmentów tkanki. Bez chorób, bez patogenów,
+        identyczne genetycznie z rośliną matką. Stary sad z Walimia żyje dalej
+        — w probówce.
+      </p>
+      <p class="tech-hero__actions">
+        <a class="btn btn--secondary" href="#etapy">Zobacz proces ↓</a>
+        <a class="btn btn--ghost" href="#faq">FAQ ↗</a>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ===== § 01 Czym jest in vitro ===================================== -->
+  <section class="section" id="in-vitro" aria-labelledby="introTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 01</span>
+          <h2 class="h2 tech-head__title" id="introTitle">Czym jest <em lang="la">in vitro</em>?</h2>
+        </div>
+        <span class="tech-head__label">mikropropagacja roślin</span>
+      </div>
+
+      <div class="tech-about">
+
+        <!-- Ramka z mosiężnymi narożnikami (3A.3) — jedno z dwóch miejsc
+             na stronie, gdzie mosiądz obrysowuje materiał. -->
+        <figure class="tech-frame glass">
+          <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <div class="tech-frame__photo">
+            <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+            <img src="assets/bottle-vial.jpg" alt="Probówki z kulturą tkankową na stole laboratoryjnym." decoding="async">
+          </div>
+          <figcaption class="plate tech-frame__plate">PL. 014 · in&nbsp;vitro · kultura&nbsp;tkankowa</figcaption>
+        </figure>
+
+        <div class="tech-about__text">
+          <p class="lead">
+            To metoda rozmnażania roślin w sterylnych warunkach laboratoryjnych — z mikroskopijnego
+            fragmentu tkanki <i>(eksplantatu)</i> wyrasta nowa, samodzielna roślina, identyczna
+            genetycznie z matką.
+          </p>
+          <p class="muted">
+            Zamiast nasion, sadzonek czy szczepień — szkło, pożywka i regulatory wzrostu. Tysiące
+            roślin z jednego liścia, w skali, której tradycyjna szkółka nie udźwignie. Bez patogenów,
+            bez wirusów, bez utraty cech odmianowych.
+          </p>
+
+          <!-- Trzy wskaźniki (3A.2). Tylko tutaj: każda z tych liczb ma skalę,
+               więc wskazówka coś znaczy. W kartach etapów i argumentów tarcze
+               zostały zdjęte — tam wskazówka była ozdobą. -->
+          <div class="facts tech-about__facts">
+            <div class="fact">
+              <!-- 100 % w skali 0–100 % → 120deg (maksimum) -->
+              <div class="gauge" data-angle="120deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+              <p class="fact__value">100%<span class="fact__label">wolne od patogenów</span></p>
+            </div>
+            <div class="fact">
+              <!-- 10⁴ w skali logarytmicznej 10⁰–10⁴ → 120deg (maksimum) -->
+              <div class="gauge" data-angle="120deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+              <p class="fact__value">1 → 10⁴<span class="fact__label">roślin z eksplantatu</span></p>
+            </div>
+            <div class="fact">
+              <!-- 21 °C w skali 0–40 °C → 6deg -->
+              <div class="gauge" data-angle="6deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+              <p class="fact__value fact__value--data">21 °C<span class="fact__label">szafa hodowlana</span></p>
+            </div>
+          </div>
+
+          <blockquote class="tech-quote">
+            „Stare odmiany ze sadu w Walimiu — Antonówka, Glogierówka, Kosztela — zachowane pod
+            szkłem, wolne od chorób, gotowe na nowe stulecie."
+          </blockquote>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== § 02 Sześć etapów procesu ===================================
+       Karty na komponencie .card + .glass (6.2). Zamiast sześciu tarcz:
+       numer rzymski antykwą w mosiądzu i czas trwania jako etykieta obok.
+  ==================================================================== -->
+  <section class="section" id="etapy" aria-labelledby="stepsTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 02</span>
+          <h2 class="h2 tech-head__title" id="stepsTitle">Sześć etapów <em>procesu</em></h2>
+        </div>
+        <span class="tech-head__label">od liścia do sadzonki · 6–14 tygodni</span>
+      </div>
+
+      <div class="tech-grid">
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">I</p>
+              <p class="tech-step-card__time">etap&nbsp;I · ~1 dzień</p>
+            </div>
+            <h3 class="tech-step-card__title">Pobranie eksplantatu</h3>
+            <p class="tech-card__text muted">Z rośliny matki wycinamy fragment tkanki — wierzchołek pędu, kawałek liścia, fragment korzenia. To <em>eksplantat</em>.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">II</p>
+              <p class="tech-step-card__time">etap&nbsp;II · ~30 min</p>
+            </div>
+            <h3 class="tech-step-card__title">Sterylizacja powierzchniowa</h3>
+            <p class="tech-card__text muted">Kąpiel w roztworze podchlorynu, etanolu i detergentu. Eliminujemy bakterie i grzyby na powierzchni — wszystko, co mogłoby zniszczyć kulturę.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">III</p>
+              <p class="tech-step-card__time">etap&nbsp;III · 2–4 tyg.</p>
+            </div>
+            <h3 class="tech-step-card__title">Inicjacja na pożywce</h3>
+            <p class="tech-card__text muted">Eksplantat trafia na pożywkę agarową (Murashige &amp; Skoog) z cukrem, solami i hormonami. Pojawiają się pierwsze pączki — kultura rusza.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">IV</p>
+              <p class="tech-step-card__time">etap&nbsp;IV · 4–8 tyg.</p>
+            </div>
+            <h3 class="tech-step-card__title">Multiplikacja — namnażanie</h3>
+            <p class="tech-card__text muted">Co kilka tygodni dzielimy kępkę pędów i przekładamy na świeżą pożywkę. Z jednego eksplantatu — dziesiątki, potem setki, potem tysiące pędów.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">V</p>
+              <p class="tech-step-card__time">etap&nbsp;V · 2–4 tyg.</p>
+            </div>
+            <h3 class="tech-step-card__title">Ukorzenianie pędów</h3>
+            <p class="tech-card__text muted">Pojedyncze pędy przekładamy na pożywkę z auksyną. W ciągu 2–4 tygodni wypuszczają własne korzenie — to już prawie roślina.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <div class="tech-step-card__head">
+              <p class="tech-step-card__no">VI</p>
+              <p class="tech-step-card__time">etap&nbsp;VI · 3–6 tyg.</p>
+            </div>
+            <h3 class="tech-step-card__title">Aklimatyzacja do natury</h3>
+            <p class="tech-card__text muted">Wyciągamy roślinkę ze szkła. Trafia do podłoża, do szklarni z kontrolowaną wilgotnością. Powoli — do prawdziwego powietrza, prawdziwego słońca.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== § 03 Dlaczego tą drogą =====================================
+       Cztery karty. Zamiast tarczy: cienka mosiężna linia nad nagłówkiem.
+  ==================================================================== -->
+  <section class="section" id="dlaczego" aria-labelledby="whyTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 03</span>
+          <h2 class="h2 tech-head__title" id="whyTitle">Dlaczego <em>tą drogą</em>?</h2>
+        </div>
+        <span class="tech-head__label">cztery argumenty</span>
+      </div>
+
+      <div class="tech-grid tech-grid--four">
+
+        <article class="card glass">
+          <div class="card__body">
+            <hr class="tech-arg__rule">
+            <h3 class="tech-arg__title">Bez chorób, bez wirusów</h3>
+            <p class="tech-card__text muted">Sterylne warunki = brak patogenów. Kluczowe dla roślin akwariowych — żadnych ślimaków, glonów, hydry.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <hr class="tech-arg__rule">
+            <h3 class="tech-arg__title">Identyczność genetyczna</h3>
+            <p class="tech-card__text muted">Każda roślina to dokładna kopia matki. Cechy odmianowe — kolor, smak, pokrój — zachowane bez ubytków.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <hr class="tech-arg__rule">
+            <h3 class="tech-arg__title">Stare odmiany żyją dalej</h3>
+            <p class="tech-card__text muted">Sto lat sadu w Walimiu zapisanych pod szkłem. Drzewa, które inaczej znikłyby z mapy — wracają w setkach.</p>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <div class="card__body">
+            <hr class="tech-arg__rule">
+            <h3 class="tech-arg__title">Skala bez kompromisu</h3>
+            <p class="tech-card__text muted">Tysiące roślin z jednego liścia, w przewidywalnym czasie. Rzadkie gatunki — dostępne, bez wyniszczania stanowisk.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== § 04 In vitro vs klasyka ====================================
+       Pasmo Deep+ (--brand-900): realna zmiana tonu tam, gdzie strona
+       zmienia temat z opowieści na zestawienie (rozdz. 1).
+  ==================================================================== -->
+  <section class="section section--deeper" id="porownanie" aria-labelledby="vsTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 04</span>
+          <h2 class="h2 tech-head__title" id="vsTitle"><span lang="la">In vitro</span> <em>vs</em> klasyka</h2>
+        </div>
+        <span class="tech-head__label">porównanie metod</span>
+      </div>
+
+      <div class="vs glass">
+
+        <div class="vs__row">
+          <div class="vs__col vs__head">
+            <span class="vs__dot" aria-hidden="true"></span>
+            <h3 class="vs__name">Metoda tradycyjna</h3>
+            <span class="vs__tag">szczepienie · sadzonki · nasiona</span>
+          </div>
+          <div class="vs__col vs__col--ivt vs__head">
+            <span class="vs__dot" aria-hidden="true"></span>
+            <h3 class="vs__name" lang="la">In vitro</h3>
+            <span class="vs__tag">kultura&nbsp;tkankowa · mikropropagacja</span>
+          </div>
+        </div>
+
+        <div class="vs__row">
+          <div class="vs__col">
+            <p class="vs__no">01</p>
+            <div>
+              <span class="vs__who">tradycyjna</span>
+              <p class="vs__title">Sezon</p>
+              <p class="muted">Zależność od pory roku, pogody, dostępności materiału.</p>
+            </div>
+          </div>
+          <div class="vs__col vs__col--ivt">
+            <p class="vs__no">01</p>
+            <div>
+              <span class="vs__who">in vitro</span>
+              <p class="vs__title">Cały rok</p>
+              <p class="muted">Szafa hodowlana, 21 °C, 16 h światła. Niezależnie od pogody.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vs__row">
+          <div class="vs__col">
+            <p class="vs__no">02</p>
+            <div>
+              <span class="vs__who">tradycyjna</span>
+              <p class="vs__title">Choroby</p>
+              <p class="muted">Wirusy, grzyby, mszyce — przechodzą z matki na potomstwo.</p>
+            </div>
+          </div>
+          <div class="vs__col vs__col--ivt">
+            <p class="vs__no">02</p>
+            <div>
+              <span class="vs__who">in vitro</span>
+              <p class="vs__title">Sterylność</p>
+              <p class="muted">Brak patogenów. Roślina zaczyna życie od czystej karty.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vs__row">
+          <div class="vs__col">
+            <p class="vs__no">03</p>
+            <div>
+              <span class="vs__who">tradycyjna</span>
+              <p class="vs__title">Skala</p>
+              <p class="muted">Dziesiątki sadzonek z drzewa w sezonie. Rzadkie odmiany — trudno dostępne.</p>
+            </div>
+          </div>
+          <div class="vs__col vs__col--ivt">
+            <p class="vs__no">03</p>
+            <div>
+              <span class="vs__who">in vitro</span>
+              <p class="vs__title">Skala</p>
+              <p class="muted">Tysiące roślin z jednego eksplantatu. Rzadkie odmiany — w zasięgu.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vs__row">
+          <div class="vs__col">
+            <p class="vs__no">04</p>
+            <div>
+              <span class="vs__who">tradycyjna</span>
+              <p class="vs__title">Tożsamość</p>
+              <p class="muted">Nasiona — rozrzut cech. Szczepienia — częściowe, z podkładką.</p>
+            </div>
+          </div>
+          <div class="vs__col vs__col--ivt">
+            <p class="vs__no">04</p>
+            <div>
+              <span class="vs__who">in vitro</span>
+              <p class="vs__title">Klon</p>
+              <p class="muted">Genetyczna identyczność z matką. Cechy zachowane w 100 %.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== § 05 Galeria laboratorium =================================== -->
+  <section class="section" id="galeria" aria-labelledby="galleryTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 05</span>
+          <h2 class="h2 tech-head__title" id="galleryTitle">Galeria <em>laboratorium</em></h2>
+        </div>
+        <span class="tech-head__label">Wałbrzych, ul. Orkana 148</span>
+      </div>
+
+      <div class="gallery">
+
+        <figure class="gallery__item gallery__item--tall">
+          <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+          <img src="assets/sp-desk-bottles.jpg" alt="Stół roboczy z butlami i naczyniami do przygotowania pożywek." decoding="async">
+          <figcaption class="gallery__caption">
+            <span class="plate">PL. 021</span>
+            <span class="gallery__title">Stół roboczy · pożywki</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery__item">
+          <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+          <img src="assets/sp-flasks.jpg" alt="Kolby z kulturami na półce szafy hodowlanej." decoding="async">
+          <figcaption class="gallery__caption">
+            <span class="plate">PL. 022</span>
+            <span class="gallery__title">Kolby — szafa hodowlana</span>
+          </figcaption>
+        </figure>
+
+        <!-- Kafel z materiałem filmowym. Etykieta „REC · LIVE" obiecywała
+             podgląd na żywo, którego nie ma — zapis jest przyspieszony,
+             więc znacznik mówi TIME-LAPSE. -->
+        <figure class="gallery__item">
+          <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+          <video src="assets/sp-animation.mp4" autoplay loop muted playsinline
+                 aria-label="Przyspieszony zapis wzrostu kultury w naczyniu."></video>
+          <span class="plate gallery__mark">TIME-LAPSE</span>
+          <figcaption class="gallery__caption">
+            <span class="gallery__title">Wzrost kultury · time-lapse</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery__item">
+          <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+          <img src="assets/sp-library-terrarium.jpg" alt="Terrarium aklimatyzacyjne z roślinami po wyjęciu ze szkła." decoding="async">
+          <figcaption class="gallery__caption">
+            <span class="plate">PL. 023</span>
+            <span class="gallery__title">Terrarium · aklimatyzacja</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery__item">
+          <!-- ZDJĘCIE DO PODMIANY: materiał z laboratorium -->
+          <img src="assets/sp-terrarium-gauge.jpg" alt="Przyrząd kontrolujący wilgotność przy terrarium." decoding="async">
+          <figcaption class="gallery__caption">
+            <span class="plate">PL. 024</span>
+            <span class="gallery__title">Kontrola wilgotności</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== § 06 Najczęstsze pytania ====================================
+       Pytania rozwijane na <details>/<summary>: obsługa klawiaturą wchodzi
+       z przeglądarki, bez ani jednej linii JS. Otwarcie 200ms (rozdz. 9).
+  ==================================================================== -->
+  <section class="section section--deeper" id="faq" aria-labelledby="faqTitle">
+    <div class="container">
+
+      <div class="tech-head">
+        <div class="tech-head__left">
+          <span class="tech-head__no">§ 06</span>
+          <h2 class="h2 tech-head__title" id="faqTitle">Najczęstsze <em>pytania</em></h2>
+        </div>
+        <span class="tech-head__label">FAQ</span>
+      </div>
+
+      <div class="faq-grid">
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Czy roślina <em lang="la">in vitro</em> to GMO?</span>
+          </summary>
+          <p class="faq__a muted">Nie. Mikropropagacja to kopia wegetatywna — żadnej ingerencji w geny. To samo, co sadzonkowanie, tylko sterylne i w skali laboratoryjnej.</p>
+        </details>
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Jak długo trwa cały proces?</span>
+          </summary>
+          <p class="faq__a muted">Od eksplantatu do gotowej, zaaklimatyzowanej rośliny — 3 do 6 miesięcy, zależnie od gatunku. Multiplikacja jest cykliczna — z każdej tury więcej materiału.</p>
+        </details>
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Czy rośliny akwariowe in vitro są bezpieczne?</span>
+          </summary>
+          <p class="faq__a muted">Tak — to ich największa zaleta. Żadnych ślimaków, glonów, hydry, planarii. Roślina trafia do akwarium z gwarancją czystości, bez kwarantanny.</p>
+        </details>
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Jak roślina przeżywa wyjście ze szkła?</span>
+          </summary>
+          <p class="faq__a muted">Powoli. Aklimatyzacja w szklarni z wysoką wilgotnością, stopniowo obniżaną. To najdelikatniejszy etap — wymaga uwagi, ale skuteczność u nas to ponad 95 %.</p>
+        </details>
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Skąd biorą się stare odmiany jabłoni?</span>
+          </summary>
+          <p class="faq__a muted">Z sadu w Walimiu, gdzie drzewa rosną od XIX wieku. Pobieramy maleńki fragment, oczyszczamy z wirusów i zakładamy kulturę. Stary sad — w nowych roślinach.</p>
+        </details>
+
+        <details class="faq card glass">
+          <summary class="faq__q">
+            <span class="faq__icon" aria-hidden="true">Q.</span>
+            <span class="faq__title">Współpracujecie ze szkółkami i hurtem?</span>
+          </summary>
+          <p class="faq__a muted">Tak. Dostarczamy partie roślin akwariowych do sklepów i hurtowni, oraz pojedyncze odmiany historyczne dla kolekcjonerów i sadowników. Wystarczy napisać.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== Pasek do sklepu ============================================
+       Strona kończyła się na FAQ i nie prowadziła nigdzie. Różowy
+       dokładnie raz na całej stronie (2.1, 6.1).
+  ==================================================================== -->
+  <section class="section" aria-label="Przejdź do sklepu">
+    <div class="container">
+      <div class="tech-cta glass">
+        <p>Rośliny z tego procesu są w sprzedaży — w kubkach, prosto z laboratorium.</p>
+        <a class="btn btn--primary" href="sklep-nf.html">Zobacz rośliny</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ===== Stopka (--brand-900) — identyczna jak na pozostałych stronach == -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer__top">
+      <div class="newsletter">
+        <h2 class="h3">Nowe odmiany raz w miesiącu</h2>
+        <p class="muted small">Jeden e-mail miesięcznie: co weszło do sprzedaży i co wychodzi z hodowli. Wypisujesz się jednym kliknięciem.</p>
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="visually-hidden" for="mail">Adres e-mail</label>
+          <input class="input" id="mail" name="mail" type="email" placeholder="imie@example.com" autocomplete="email" required>
+          <button class="btn btn--secondary" type="submit">Zapisz mnie</button>
+        </form>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Sklep</h3>
+          <ul>
+            <li><a href="sklep-nf.html">Rośliny akwariowe</a></li>
+            <li><a href="sklep-nf.html">Zestawy startowe</a></li>
+            <li><a href="sklep-nf.html">Poziomy trudności</a></li>
+            <li><a href="sklep-nf.html">Wysyłka i zwroty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Laboratorium</h3>
+          <ul>
+            <li><a href="technologia-nf.html">Technologia in vitro</a></li>
+            <li><a href="kamino-nf.html">Kamino BioLabs</a></li>
+            <li><a href="pomona-nf.html">PomonaLab</a></li>
+            <li><a href="#blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a></li>
+            <li><a href="tel:+48000000000">+48 000 000 000</a></li>
+            <li><a href="konto.html">Twoje konto</a></li>
+            <li><a href="panel-klienta.html">Status zamówienia</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      <span>© 2026 Nature &amp; Future. Laboratorium kultur in vitro.</span>
+      <span>Regulamin · Polityka prywatności</span>
+    </p>
+
+  </div>
+</footer>
+
+<!-- Jedyny skrypt strony: zachowanie nawigacji, menu mobilnego i wskazówek
+     wskaźnika (3A.6 — raz, przy wejściu w widok). Nic sterowanego scrollem. -->
+<script src="assets/nf-components.js"></script>
+
+</body>
+</html>

@@ -19,6 +19,55 @@ Różowy `#C47B90` jest **wspólnym mianownikiem wszystkich trzech palet** — t
 
 ---
 
+## 0.1 Architektura plików
+
+Ten rozdział istnieje po to, żeby nowa podstrona ruszała bez poprawiania rzeczy, które są już rozwiązane.
+
+### Co wczytuje każda strona
+
+Zawsze te trzy, zawsze w tej kolejności, a potem arkusz tej konkretnej strony:
+
+```html
+<link rel="stylesheet" href="assets/tokens.css">          <!-- 1. zmienne -->
+<link rel="stylesheet" href="assets/nf-base.css">         <!-- 2. fundament -->
+<link rel="stylesheet" href="assets/nf-components.css">   <!-- 3. komponenty -->
+<link rel="stylesheet" href="assets/nf-panel.css">        <!-- 4. tylko ta strona -->
+
+<script src="assets/nf-components.js"></script>           <!-- zachowanie komponentów -->
+```
+
+Kolejność nie jest kosmetyczna. Wszystkie warstwy operują na selektorach klasowych o tej samej specyficzności, więc o wyniku decyduje kolejność wczytania: arkusz strony wygrywa z komponentem, komponent z fundamentem.
+
+### Co gdzie mieszka
+
+| Plik | Zawiera | Kiedy tu dopisujesz |
+|---|---|---|
+| `tokens.css` | zmienne: kolor, typografia, przestrzeń, promienie, ruch; trzy skórki `data-brand` | nowa wartość, która ma się zmieniać między markami |
+| `nf-base.css` | reset, warianty sekcji, skala typograficzna, szkło, focus | rzecz dotycząca wszystkiego, nie konkretnego komponentu |
+| `nf-components.css` | rozdz. 6 i 3A: przyciski, nawigacja, karta, wskaźnik, adnotacja, pola, kroki, hero, stopka | **komponent używany na więcej niż jednej stronie** |
+| `nf-<strona>.css` | wyłącznie kompozycja tej jednej strony | układ, który nigdzie indziej się nie powtórzy |
+
+`nf-components.js` obsługuje nawigację, menu mobilne i wskaźniki. Każdy blok sam sprawdza, czy jego elementy są na stronie, więc plik wczytuje się wszędzie bez warunków.
+
+### Reguła, która pilnuje porządku
+
+> **Komponent użyty na drugiej stronie przenosi się do `nf-components.css`. Nie dopina się arkusza jednej strony do drugiej.**
+
+Do 2026-09-02 stopka, newsletter, pasmo edukacyjne i `.section__head` siedziały w `nf-home.css`. Skutki były dokładnie takie, jakich ta reguła ma zapobiegać:
+
+- `/kamino`, `/pomona` i `/sklep` wczytywały arkusz strony głównej tylko po to, żeby mieć stopkę — razem z blokiem bestsellera i opiniami, których nie używają;
+- `/technologia` tego nie robiła i **renderowała stopkę bez tła, bez paddingu i bez siatki kolumn** — nikt tego nie zauważył, bo błąd nie rzuca wyjątku, tylko cicho psuje wygląd jednej sekcji.
+
+Po przeniesieniu każda strona wczytuje trzy wspólne pliki plus swój własny i nic poza tym.
+
+### Sprawdzenie przed dodaniem strony
+
+Nowa podstrona jest gotowa, kiedy: wczytuje cztery arkusze w podanej kolejności, ma `data-brand` na `<body>`, a każda użyta klasa ma definicję w którymś z wczytanych plików. Ostatnie sprawdza się najszybciej porównując `class="..."` w HTML z selektorami w arkuszach — klasa bez definicji nie zgłasza błędu, tylko cicho wygląda źle.
+
+`styleguide.html` pokazuje wszystkie komponenty w trzech skórkach i w każdym wariancie sekcji. Jeśli komponent wygląda tam inaczej niż na stronie, błąd jest w arkuszu strony, nie w komponencie.
+
+---
+
 ## 1. Fundament: ciemna baza, jasne wyspy
 
 **Cały serwis jest ciemny.** Głęboka zieleń jest domyślnym tłem strony głównej, podstron, sklepu, karty produktu i paneli — nie ma trybu jasnego dla „storytellingu" i ciemnego dla sklepu.
@@ -40,6 +89,14 @@ Reguły rytmu:
 5. Jasne kolory z palety (`--brand-300`, `--brand-100`, biel) są w trybie ciemnym **materiałem kontrastu**: nagłówki, cienkie linie, wykresy, ilustracje na wynos. Im ciemniejsza sekcja, tym jaśniejszy i cieńszy rysunek na niej.
 
 Gradient tła zawsze ma ten sam typ ruchu — jaśniejszy lewy-górny róg, ciemniejszy prawy-dolny, bez ostrych krawędzi.
+
+**Deep+ to `.section--deeper` i ma konkretne zadanie.** Ciemna baza jest jednym gradientem przypiętym do okna (`background-attachment: fixed`), więc dwie sąsiadujące sekcje Deep nie mają między sobą żadnej krawędzi — styk zostaje pustką, a wstawiony w nią separator z nitem czyta się jak kreska w środku niczego, nie jak przejście. Deep+ daje realną zmianę tonu tam, gdzie strona zmienia temat, i robi to bez sięgania po drugą jasną wyspę (reguła 1). Płaskie `--brand-900`, tekst `--brand-300`, nagłówki zostają w `--brand-100`, rogi `--radius-l` jak jasna wyspa, krawędź ostra.
+
+Kolejność, w jakiej sięgamy po przejście między dwiema ciemnymi sekcjami:
+
+1. **Sama przestrzeń** — domyślnie i najczęściej. Dwie sekcje Deep pod sobą są w porządku, dopóki różnią się rytmem treści.
+2. **Deep+** — kiedy zmienia się temat i sam odstęp przestaje wystarczać. Jeden na stronę.
+3. **Separator z nitem** (3A.3) — tylko jako detal wewnątrz sekcji albo na styku, który już ma zmianę tonu. Nigdy jako jedyna rzecz w 250px pustki.
 
 ---
 
@@ -194,7 +251,9 @@ Limit: **maksymalnie dwa mosiężne elementy w jednym widoku ekranu.**
 
 ### 3A.2 Wskaźnik liczbowy (gauge)
 
-Element z obecnej strony, który warto przenieść bez zmian — działa i jest rozpoznawalny.
+> **Status: wycofany z obecnych stron.** Tarcze zostały zdjęte ze strony głównej, `/kamino` i `/pomona` — pasek faktów niesie tam samą liczbę z podpisem. Komponent zostaje w systemie jako rezerwa i wraca **wyłącznie przy realnych danych pomiarowych**: dashboard laboratoryjny, panel odczytów z komory, widok partii. Nie wracać z nim do stron marketingowych, gdzie liczba nie ma skali.
+
+Element z obecnej strony, opisany na wypadek powrotu — działa i jest rozpoznawalny.
 
 ```
    ╭───────────────────────────────────────────╮
@@ -209,9 +268,10 @@ Element z obecnej strony, który warto przenieść bez zmian — działa i jest 
 - Tarcza 56px, pierścień 1.5px `--brass`, wnętrze prawie czarne z ledwo widoczną ziarnistością.
 - Wskazówka odchyla się proporcjonalnie do wartości — jeśli liczba nie ma skali, wskazówka jest ozdobą i wtedy lepiej użyć zwykłej liczby bez tarczy.
 - Separator między wskaźnikami: pionowa kreska 1px `--brass-dim`, wysokość 60% wysokości bloku.
-- Cały blok siedzi na `.glass`.
+- Cały blok siedzi na `.glass` — i **musi mieć pod sobą materiał**. Pasek faktów na stronie głównej stał przez chwilę jako osobna sekcja na płaskiej zieleni i wyglądał dokładnie tak, jak rozdz. 3 ostrzega: szare pudełko z trzema monetami. Naprawa nie polegała na dosypaniu koloru, tylko na przeniesieniu paska tam, gdzie coś pod nim jest — do jasnej wyspy z kartami, na `.glass--light`. Drugie dopuszczalne miejsce to zdjęcie.
+- Na jasnej wyspie zmieniają się trzy rzeczy: wartość bierze `--ink`, podpis `--ink-muted`, a separator `--instrument-strong` (bo `--instrument-dim` jest w Kaminie prawie niewidoczny na papierze). Tarcza dostaje delikatny cień, inaczej biel 82% na papierze zostawia sam pierścień wiszący w powietrzu.
 
-Podpis pod liczbą: kapitaliki antykwy, `--brand-300`, **maksymalnie trzy słowa w jednej linii**. Na obecnej stronie podpis „100% W…" jest ucięty — to nie jest kwestia CSS do naprawy, tylko limitu w treści. Jeśli podpis się nie mieści, zmienia się podpis, nie szerokość tarczy.
+Podpis pod liczbą: kapitaliki antykwy, `--brand-300` na ciemnej sekcji i `--ink-muted` na jasnej wyspie, **maksymalnie trzy słowa w jednej linii**. Na obecnej stronie podpis „100% W…" jest ucięty — to nie jest kwestia CSS do naprawy, tylko limitu w treści. Jeśli podpis się nie mieści, zmienia się podpis, nie szerokość tarczy.
 
 ### 3A.3 Pozostałe dopuszczone motywy
 
@@ -229,7 +289,7 @@ Czego **nie** robimy: zębatek, nitów jako tekstury tła, brązowych papierów,
 | Marka | Poziom | Charakter |
 |---|---|---|
 | **PomonaLab** | mocny | Tu steampunk jest widoczny: tarcze, ramki z narożnikami, antykwa w kapitalikach, podziałki. Sad i stare odmiany uzasadniają mechanikę. |
-| **Nature & Future** | subtelny | 1–2 detale na stronę: wskaźniki w pasku faktów i separator sekcji. Reszta czysta. |
+| **Nature & Future** | subtelny | 1–2 detale na stronę: wskaźniki w pasku faktów i separator sekcji. Reszta czysta. Jedyny wyjątek: podziałka postępu na `/technologia` (patrz 9.1). |
 | **Kamino BioLabs** | przyrządowy | Mosiądz **zamieniamy** na `--brand-300` (`#B5E1E3`). Ten sam gauge, ale jako sterylny przyrząd pomiarowy, nie mechanizm zegarowy. |
 
 ### 3A.5 Typografia sekcji Pomona
@@ -304,7 +364,21 @@ Długość wiersza: max 68 znaków dla groteska, 74 dla antykwy.
 --radius-s:  10px;  --radius-m: 20px;  --radius-l: 32px;
 ```
 
-12 kolumn na desktopie, 6 na tablecie, 4 na mobile. Odstęp między sekcjami: `--space-3xl` na stronach storytellingowych (Seed oddycha właśnie tym), `--space-xl` w sklepie i panelach, gdzie liczy się gęstość.
+12 kolumn na desktopie, 6 na tablecie, 4 na mobile.
+
+### Odstęp między sekcjami
+
+```css
+.section { padding-block: clamp(var(--space-xl), 5.5vw, var(--space-2xl)); }
+```
+
+Czyli 64 px na wąskim ekranie, 96 px na szerokim, płynnie pomiędzy. Jedna reguła dla wszystkich stron — sklep i panele nie mają już własnej gęstości, bo różnica robiła się sama z liczby elementów w sekcji, a nie z paddingu.
+
+Pierwotnie było tu `--space-3xl` (144 px), za Seed. W praktyce dawało to **288 px pustki między pasmami** i strona wyglądała na niedokończoną, a nie na oddychającą — Seed wypełnia te odległości materiałem, którego my w tych miejscach nie mamy. Zmienione 2026-09-02.
+
+Wartości powyżej `--space-xl` nadal są w skali i mają swoje zastosowania (`--space-2xl` na padding stopki, `--space-3xl` w rezerwie na pojedyncze pasma, które mają celowo stać osobno) — ale nie jako domyślny rytm strony.
+
+**Odstępy wewnątrz sekcji** trzymają się tej samej zasady „ciaśniej, niż podpowiada intuicja": nagłówek sekcji `--space-l` od treści, nagłówek pasma edukacyjnego `--space-xl`, kolumny adnotacji `--space-l` między sobą, blok opinii i stopka `--space-xl`.
 
 Promienie: `--radius-m` dla kart, `--radius-l` dla dużych kafli hero/kategorii, `--radius-s` dla inputów i tagów. **Nie jeden promień na wszystko** — hierarchia ma być czytelna także w kształcie.
 
@@ -321,7 +395,11 @@ Secondary   przezroczysty, border 1px --brand-500, tekst --brand-700/--brand-300
 Ghost       sam tekst + podkreślenie na hover
 ```
 
-Primary (różowy) występuje **raz na ekran**. To „Zamów", „Do koszyka", „Napisz do nas", „Wyślij zapytanie". Jeśli na widoku są dwa różowe przyciski, jeden z nich jest źle zaklasyfikowany.
+Primary (różowy) to **jedna akcja pierwszego poziomu na ekran**. To „Zamów", „Do koszyka", „Napisz do nas", „Wyślij zapytanie". Jeśli na widoku stoją obok siebie dwa różowe przyciski prowadzące do **różnych** rzeczy, jeden z nich jest źle zaklasyfikowany.
+
+Rząd identycznych kart produktu jest wyjątkiem, który tę regułę potwierdza: każda karta powtarza tę samą akcję, więc nic ze sobą nie konkuruje. Odbieranie różu drugiej karcie tylko po to, żeby na ekranie był jeden, robi z dwóch równorzędnych produktów jeden ważniejszy — a nie o to chodzi.
+
+Para przycisków w karcie produktu to **primary + secondary**: różowe „Do koszyka" i obwiedzione „Zobacz". Przez pierwsze wersje było odwrotnie — wypełniony „Zobacz" i „Do koszyka" jako podkreślony tekst — przez co najważniejsza akcja w sklepie wyglądała na przypis pod ceną. Warianty `--fill` i `--underline` zostają dla par, w których nie ma zakupu: kafle sub-marek, bloki treściowe, pasek powrotu.
 
 Copy przycisków: czasownik + efekt. „Dodaj do koszyka", nie „Więcej". „Wyślij zapytanie", nie „Submit". Nazwa akcji nie zmienia się w trakcie flow — przycisk „Zamów" prowadzi do potwierdzenia „Zamówiono".
 
@@ -365,7 +443,11 @@ Ten przycisk celowo **nie jest różowy**. Różowy zostaje dla akcji na konkret
 
 Ikony szukania i koszyka z licznikiem siedzą między „Zaloguj" a przyciskiem — na mobile zostają tylko one plus hamburger.
 
-**Zachowanie nad hero:** nawigacja startuje jako przezroczysta, położona na zdjęciu (bez tła, bez obramowania). Po przescrollowaniu wysokości hero zamienia się w `.glass--nav` i zwęża się do pigułki wyśrodkowanej z marginesem 16px od góry — dokładnie ten ruch, który Seed robi przy scrollu. Przejście 250ms.
+**Zachowanie jest identyczne na każdej stronie, niezależnie od tego, co leży pod nawigacją.** Na górze strony nawigacja jest przezroczysta i rozciągnięta na pełną szerokość — bez tła i bez obramowania. Po przewinięciu zamienia się w szkło zwężone do pigułki wyśrodkowanej z marginesem 16px od góry — dokładnie ten ruch, który Seed robi przy scrollu. Przejście 250ms.
+
+Próg przewinięcia zależy od zawartości, ale sam ruch nigdy: strona z hero przełącza się po jego wysokości, strona bez hero po 120px. Wcześniej próg brał się wyłącznie z wysokości hero, więc strony bez niego (sklep, podstrony sub-marek) dostawały pigułkę od razu, przy zerowym scrollu — i serwis miał cztery różne nawigacje na czterech stronach.
+
+**Welon czytelności.** Przezroczysta nawigacja leży wprost na materiale, a materiał nie zawsze jest ciemny — kadr komory w Kaminie jest u góry niemal biały i biały logotyp na nim znika. Pod nierozwiniętą nawigacją leży więc pasmo `--scrim` schodzące do zera na wysokości 128px: ten sam zabieg co gradient czytelności hero (7.1). Na jednolitym tle jest niewidoczne, na zdjęciu ratuje logotyp i linki. Gaśnie w momencie zwinięcia w pigułkę — dalej czytelność bierze na siebie szkło (rozdz. 1, reguła 4).
 
 **Pasek zapowiedzi** (opcjonalny, nad nawigacją): jedna linia 40px, tło `--brand-300`, tekst `--brand-900`, jedno zdanie z linkiem. Używać tylko przy realnej informacji (nowa dostawa, nowa odmiana), nie na stałe.
 
@@ -398,9 +480,75 @@ Kropka 8px `--accent`, linia 1px `rgba(255,255,255,.35)`, etykieta `.glass`. Uż
 
 ### 6.5 Pole formularza
 
-Input: szkło, `--radius-s`, border 1px `rgba(255,255,255,.18)` (deep) / `rgba(11,93,30,.18)` (light). Focus: border `--accent`, `outline: 2px solid var(--accent-soft)`, `outline-offset: 2px`. Focus musi być widoczny w obu wariantach sekcji.
+Input: szkło, `--radius-s`, border 1px `rgba(255,255,255,.18)` (deep) / `rgba(11,93,30,.18)` (light).
+
+**Focus jest w kolorze skórki, nie różowy.** Każda paleta wystawia własną parę tokenów — `--focus` na ciemnej sekcji, `--focus-strong` na jasnej wyspie:
+
+```css
+[data-brand="nf"]     { --focus: var(--brand-300); --focus-strong: var(--brand-700); }  /* zieleń */
+[data-brand="kamino"] { --focus: var(--brand-300); --focus-strong: var(--brand-800); }  /* błękit */
+[data-brand="pomona"] { --focus: var(--brand-300); --focus-strong: var(--brand-800); }  /* miód / oliwka */
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.section--light :focus-visible { outline-color: var(--focus-strong); }
+
+/* pole formularza dokłada obramowanie w tym samym kolorze */
+.input:focus-visible { border-color: var(--focus); }
+```
+
+Pierwotnie focus był różowy (`--accent-soft` / `--accent-strong`). Róż jest kolorem akcji i na pierścieniu czytał się jak ostrzeżenie — zamiast wskazywać „tu jesteś", wyglądał jak „coś jest nie tak". Kolor skórki robi to samo, a wygląda jak część projektu. To zarazem jedyne miejsce, gdzie róż **nie** obowiązuje mimo bycia kolorem interfejsu.
+
+Trzy zasady, od których nie ma odstępstw:
+
+1. **`:focus-visible`, nie `:focus`** — pierścień pokazuje się przy nawigacji klawiaturą, a nie po kliknięciu myszką.
+2. **2px, nie cieniej.** Przy 1px pierścień ginie na zdjęciu pod szkłem. Jeśli wygląda zbyt krzykliwie, zmienia się kolor, nie grubość.
+3. **Nigdy `outline: none` bez zamiennika.** Bez widocznego focusu serwisu nie da się obsłużyć klawiaturą i wypada z WCAG 2.4.7 (poziom AA).
+
+Kontrast pierścienia względem tła sekcji: NF 6.6:1 (deep) / 7.7:1 (light), Kamino 7:1 / 4.4:1, Pomona 6.8:1 / 4.3:1. Minimum dla elementu nietekstowego to 3:1.
 
 Błędy mówią co się stało i co zrobić: „Podaj adres e-mail z @", nie „Nieprawidłowa wartość". Bez przepraszania.
+
+Pole wieloliniowe to ten sam `.input` z modyfikatorem `.input--area`: minimalna wysokość 150px i `resize: vertical`. Poziomo nie, bo rozciągnięte pole wychodzi poza siatkę formularza. Formularze dłuższe niż dwa pola układa `.field-grid` — dwie kolumny, `.field--wide` zajmuje obie, poniżej 760px wszystko wraca do jednej.
+
+### 6.6 Kroki procesu
+
+3–4 kroki w poziomie, połączone cienką linią z kropkami. Ten komponent jest sednem obu podstron sub-marek (7A, pkt 4 i 5) i dlatego siedzi w systemie, a nie na żadnej z nich lokalnie.
+
+```html
+<div class="steps">
+  <div class="step">
+    <p class="step__no">01</p>
+    <h3 class="step__title">Eksplantat</h3>
+    <p class="muted">Jedno zdanie opisu.</p>
+  </div>
+  ...
+</div>
+```
+
+Kropka i linia biorą `--instrument`, więc w NF i Pomonie są mosiężne, a w Kaminie przyrządowo błękitne — przełącznik skórki wystarcza, żeby zmienić temperaturę całego schematu. Kropka jest obrysem 1.5px z poświatą `--instrument-glow`, **nigdy wypełnieniem** (3A). Ostatni krok nie prowadzi linii dalej.
+
+Nagłówek kroku dziedziczy krój po skórce: antykwa w NF, grotesk z ciasnym trackingiem w Kaminie, antykwa w kapitalikach w Pomonie (7A). Numer kroku ma `lining-nums tabular-nums` — przy czterech krokach cyfry muszą stać w kolumnie.
+
+Na jasnej wyspie kropka i linia schodzą na `--instrument-strong`, a numer na `--ink-muted`. Powód jest ten sam co przy wskazówce wskaźnika (3A.2): `--instrument` w Kaminie to `#B5E1E3`, co na papierze daje 1.2:1 i schemat po prostu znika.
+
+Poniżej 760px siatka prostuje się w kolumnę, a linia staje pionowo po lewej stronie kroków. To ten sam schemat obrócony, a nie cztery karty bez związku.
+Kroki stoją zawsze w jednym rzędzie — tyle kolumn, ile kroków (`grid-auto-flow: column`). Zawijanie czwartego kroku do drugiego rzędu jest zabronione z tego samego powodu co niepełny rząd w siatce sklepu (8.1): linia od trzeciej kropki prowadzi wtedy donikąd i schemat przestaje być schematem. Poniżej 760px rząd prostuje się w kolumnę i linia staje pionowo.
+
+### 6.7 Pasek powrotu do Nature & Future
+
+Zamyka każdą podstronę sub-marki (7A, pkt 7). Jedno zdanie po lewej, jeden link po prawej, całość na szkle:
+
+```html
+<div class="backbar glass">
+  <p>Kamino BioLabs jest częścią Nature &amp; Future.</p>
+  <a class="btn btn--secondary btn--small" href="sklep-nf.html">Zobacz rośliny w sklepie</a>
+</div>
+```
+
+Nigdy różowy — róż jest zarezerwowany dla jedynego CTA na stronie, a tym CTA nie jest wyjście z niej. Sub-marka nie ma własnej nawigacji, więc ten pasek jest jedynym powrotem w górę i musi stać na każdej podstronie.
 
 ---
 
@@ -468,7 +616,7 @@ Błędy mówią co się stało i co zrobić: „Podaj adres e-mail z @", nie „
 Pełna szerokość, wysokość ~72vh, materiał wideo w pętli bez dźwięku (`muted autoplay playsinline loop`, plakat jako `poster`, wersja statyczna przy `prefers-reduced-motion`). Nawigacja leży **na** materiale, bez własnego tła.
 
 - Nagłówek: display XL, biały, wyrównany do lewej, dolna trzecia część kadru. Dwie linie, bez podtytułu, bez przycisku w środku hero — przycisk „Zamów rośliny" jest w nawigacji i to on przejmuje rolę CTA.
-- Gradient czytelności: `linear-gradient(to top, rgba(5,59,6,.72) 0%, transparent 55%)` na całym materiale. Bez tego biały tekst rozsypie się na jasnych klatkach.
+- Gradient czytelności: `linear-gradient(to top, var(--scrim) 0%, transparent 55%)` na całym materiale. Bez tego biały tekst rozsypie się na jasnych klatkach. `--scrim` jest tokenem skórki (zieleń w NF, granat w Kaminie, oliwka w Pomonie) — wpisany na sztywno dawał na Kaminie zielony welon na błękicie.
 - Dolne rogi hero zaokrąglone `--radius-l`, żeby sekcja pod spodem „wchodziła" pod niego — u Seeda to jest to, co robi wrażenie warstwowości.
 - Materiał musi mieć spokojny, wolny ruch. Szybki montaż w hero zabija czytelność nagłówka.
 
@@ -480,9 +628,42 @@ Duża karta: 2/3 szerokości, produkt po lewej, treść po prawej, badge „Best
 
 Pod spodem rząd dwóch kart — tu Seed przełącza się na jasne tło i my robimy tak samo: to jedna z dwóch dozwolonych jasnych wysp na stronie głównej (patrz 1). Kontrast ciemny → jasny jest sam w sobie sygnałem „to inna kategoria produktów".
 
-Zasada przycisków w tych blokach, też z Seeda: **dwa poziomy obok siebie** — wypełniony „Zobacz" (biały na ciemnym / ciemny na jasnym) i podkreślony tekstowy „Do koszyka". Różowy pojawia się dopiero na karcie produktu.
+Zasada przycisków w tych blokach: **dwa poziomy obok siebie** — różowe „Do koszyka" (primary) i obwiedzione „Zobacz" (secondary). Karta produktu niesie akcję zakupu wszędzie, gdzie się pojawia, także na stronie głównej; nie ma powodu, żeby jedyne miejsce z widocznym „Do koszyka" było dwa kliknięcia dalej.
 
 Zmiana wobec Group_1: sekcja „dwa kafle" w oryginale to dwie kategorie roślin. U Was to **dwie sub-marki** — i to jedyne miejsce na stronie głównej, gdzie Kamino i Pomona pojawiają się jako osobne byty. Reszta strony mówi głosem NF.
+
+---
+
+## 7A. Podstrony sub-marek — `/kamino` i `/pomona`
+
+Obie strony dziedziczą wszystko: siatkę, komponenty, szkło, rytm ciemnych sekcji, nawigację i stopkę Nature & Future. Zmienia się `data-brand` i trzy rzeczy poniżej. Nie są to osobne serwisy i nie mają własnych nawigacji — użytkownik ma czuć, że wciąż jest u N&F, tylko wszedł głębiej.
+
+|  | **Kamino BioLabs** | **PomonaLab** |
+|---|---|---|
+| `data-brand` | `kamino` | `pomona` |
+| Cel strony | wiarygodność technologiczna → kontakt B2B / partnerski | opowieść o odmianach → zapis na przedsprzedaż |
+| Kto czyta | inwestor, partner naukowy, klient instytucjonalny | osoba prywatna, sadownik, ogród botaniczny |
+| Warstwa 3A | przyrządowa — mosiądz zamieniony na `--brand-300` | mechaniczna — mosiądz w pełni, poziom „mocny" |
+| Krój nagłówków | grotesk, ciasny tracking | antykwa w kapitalikach |
+| Dane | liczby pomiarowe, `--font-mono`, podziałki | daty, wiek odmiany, region, cyfry tabelaryczne |
+| Zdjęcia | sprzęt, komora, sterylność, mało światła | sad, owoc, kora, faktura, światło późnego dnia |
+| CTA | „Napisz do nas" — różowy, raz, na dole | „Zapisz się na przedsprzedaż" — różowy, raz |
+
+Wspólny szkielet obu stron (ta sama kolejność, inna treść):
+
+1. **Hero** — węższy niż na stronie głównej, ~52vh, zdjęcie + jedno zdanie.
+2. **Trzy wskaźniki** (3A.2) — dla Kamino przyrządowe, dla Pomony mosiężne.
+3. **Czym to jest** — jasna wyspa, dwie kolumny tekstu, jedna ilustracja.
+4. **Sedno strony** — jedyna sekcja, która różni się strukturalnie:
+   - Kamino: schemat systemu / etapy procesu, 3–4 kroki w poziomie
+   - Pomona: katalog odmian, karty z nazwą łacińską i datą
+5. **Dowód** — dla Kamino: partnerzy, program, publikacje; dla Pomony: skąd pochodzi materiał, jak wygląda odtwarzanie odmiany.
+6. **CTA** — pojedyncza sekcja, formularz albo jeden różowy przycisk.
+7. **Powrót do N&F** — pasek „To część Nature & Future" z linkiem do sklepu.
+
+Zasada, która trzyma to razem: **sub-marka nie ma prawa mieć własnego komponentu.** Jeśli coś na `/pomona` wymaga elementu, którego nie ma w `/styleguide`, dodaje się go do systemu w trzech skórkach, a nie tworzy lokalnie.
+
+Szkielet z 7A wymusił trzy takie dopisy do systemu, wszystkie zrobione w trzech skórkach i widoczne w `/styleguide`: `.hero--sub` (6.6 / 7.1 — hero podstrony, ~52vh), `.steps` (6.6 — kroki procesu, punkt 4 i 5 szkieletu) oraz `.backbar` (6.7 — pasek powrotu, punkt 7). Do tego doszedł token `--scrim` i modyfikator `.input--area` przy polach formularza.
 
 ---
 
@@ -581,6 +762,21 @@ Jeden orkiestrowany moment na stronę, reszta reaguje na użytkownika.
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 ```
+
+### 9.1 Wyjątek: `/technologia`
+
+Jedna strona w całym serwisie łamie regułę „jeden moment na stronę" — i robi to świadomie, bo tam ruch jest treścią, nie ozdobą. `/technologia` prowadzi przez etapy hodowli in vitro sterowane scrollem: użytkownik przewija, roślina przechodzi kolejne fazy.
+
+Warunki, na jakich ten wyjątek obowiązuje:
+
+1. **Tylko jedna scena.** Jeden przyklejony wizual, przez który przechodzą wszystkie etapy. Nie kilka niezależnych animacji rozrzuconych po stronie.
+2. **Scroll steruje postępem, nie wyzwala odtwarzania.** Przewinięcie w górę cofa etap. Jeśli animacja odpala się raz i nie da się jej cofnąć, jest zrobiona źle.
+3. **Reszta strony bez ruchu.** Poza sceną obowiązuje rozdział 9 bez zmian.
+4. **Bez `scroll-jacking`.** Nie przechwytujemy scrolla, nie wymuszamy przeskoków między sekcjami, nie blokujemy przewijania. Strona ma się dać przewinąć normalnie i szybko.
+5. **Wersja bez animacji jest pełnoprawna.** Przy `prefers-reduced-motion` i przy wyłączonym JS scena rozkłada się na statyczną listę etapów z tą samą treścią. Nic nie znika.
+6. **Animujemy wyłącznie `transform` i `opacity`.** Zero animacji `height`, `top`, `filter` i `backdrop-filter`.
+
+Ta strona jest też jedynym miejscem, gdzie mosiądz może wystąpić w większej liczbie niż dwa elementy na ekran — jako podziałka postępu przy scenie (patrz 3A.4).
 
 ---
 

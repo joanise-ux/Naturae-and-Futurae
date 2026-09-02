@@ -1,0 +1,265 @@
+/* ==========================================================================
+   Nature & Future — nf-base.css
+   Fundament wspólny dla wszystkich stron: reset, warianty sekcji, skala
+   typograficzna i szkło. Wartości pochodzą wyłącznie z tokenów
+   w assets/tokens.css.
+
+   Kolejność wczytywania:
+       assets/tokens.css        zmienne (kolor, typografia, przestrzeń, ruch)
+       assets/nf-base.css       ten plik — fundament
+       assets/nf-components.css komponenty z rozdz. 6 i 3A
+       assets/nf-home.css       kompozycja strony głównej (tylko index-nf)
+
+   Rozdziały: 1 (ciemna baza / jasne wyspy), 3 (szkło), 4 (typografia),
+   5 (siatka i przestrzeń), 6.5 (focus), 9 (ruch).
+   ========================================================================== */
+
+
+/* --- Podstawa ------------------------------------------------------------ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-body);
+  line-height: var(--lh-body);
+  color: var(--brand-100);
+  background: var(--brand-900);
+  background-image: var(--grad-deep);
+  background-attachment: fixed;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+
+a { color: inherit; }
+
+/* 6.5 — pierścień focusu w kolorze marki.
+
+   Wcześniej był różowy (--accent-soft / --accent-strong). Róż jest kolorem
+   akcji i na pierścieniu czytał się jak ostrzeżenie, więc focus schodzi na
+   kolor własnej skórki: --focus na ciemnej sekcji, --focus-strong na jasnej
+   wyspie. Każda skórka podstawia swój (tokens.css) — zieleń w NF, błękit
+   w Kamino, miód w Pomonie. Dzięki temu pierścień wygląda jak część
+   projektu, a nie jak alarm.
+
+   Grubość zostaje 2px. Cieńszy wygląda spokojniej, ale przestaje spełniać
+   swoje zadanie — przy 1px pierścień ginie na zdjęciu pod szkłem.
+
+   :focus-visible, nie :focus — pierścień pokazuje się przy nawigacji
+   klawiaturą, a nie po kliknięciu myszką.
+
+   .is-focus to hak dla styleguide.html: pozwala pokazać ten stan bez
+   przepisywania jego wartości drugi raz. Nie używać na produkcji. */
+:focus-visible,
+.is-focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.section--light :focus-visible,
+.section--light .is-focus { outline-color: var(--focus-strong); }
+
+.skip-link {
+  position: absolute;
+  left: var(--space-s);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-xs) var(--space-s);
+  border-radius: var(--radius-s);
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-size: var(--type-small);
+}
+.skip-link:focus { top: var(--space-s); }
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* --- Warianty sekcji (rozdz. 1) ------------------------------------------ */
+
+/* Odstęp między sekcjami. Dokument (rozdz. 5) przewidywał --space-3xl
+   dla stron storytellingowych, ale 144px góra + 144px dół daje 288px
+   pustki między pasmami i strona wygląda na niedokończoną. Płynnie
+   64-96px: ciaśniej na wąskich ekranach, luźniej na szerokich. */
+.section { padding-block: clamp(var(--space-xl), 5.5vw, var(--space-2xl)); }
+
+/* Jasna wyspa (rozdz. 1). Pasmo pełnej szerokości, realna zmiana tła,
+   a nie jasna karta na ciemnym — dlatego zostaje pełna szerokość
+   i wewnętrzny margines 96px na styku.
+
+   Rogi: pasmo wchodzi w ciemną stronę zaokrągloną krawędzią --radius-l,
+   tak jak duże kafle z rozdz. 5. Krawędź zostaje ostra i wyraźna
+   (dokument zabrania gradientowego rozmycia na styku) — zaokrąglenie
+   samo w sobie jest krawędzią, nie rozmyciem. */
+.section--light {
+  background: var(--paper);
+  background-image: var(--grad-light);
+  color: var(--ink);
+  border-radius: var(--radius-l);
+}
+
+
+/* Deep+ (rozdz. 1) — najciemniejszy wariant: płaskie --brand-900 zamiast
+   gradientu, tekst --brand-300. Jeden na stronę, na akcent.
+
+   Do czego służy: ciemna baza jest jednym gradientem przypiętym do okna
+   (background-attachment: fixed), więc dwie ciemne sekcje pod sobą nie mają
+   między sobą żadnej krawędzi — styk zostaje pustką i cienką kreską, co
+   wygląda na niedokończone. Deep+ daje realną zmianę tonu w miejscu, gdzie
+   strona zmienia temat, i robi to bez sięgania po drugą jasną wyspę
+   (reguła 1: dwa jasne pasma nigdy nie stoją obok siebie).
+
+   Krawędź jest ostra i wyraźna, bez gradientowego rozmycia na styku
+   (rozdz. 1, reguła 3) — te same zaokrąglone rogi co jasna wyspa. */
+.section--deeper {
+  background: var(--brand-900);
+  background-image: none;
+  color: var(--brand-300);
+  border-radius: var(--radius-l);
+}
+
+/* Nagłówki zostają w --brand-100: gdyby wszystko było w --brand-300,
+   sekcja straciłaby hierarchię i czytałaby się jak jeden blok koloru. */
+.section--deeper .h1,
+.section--deeper .h2,
+.section--deeper .h3,
+.section--deeper .display-xl,
+.section--deeper .step__title { color: var(--brand-100); }
+
+
+/* --- Typografia (rozdz. 4) ----------------------------------------------- */
+
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--type-display-xl);
+  line-height: var(--lh-display-xl);
+  letter-spacing: var(--ls-display-xl);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--type-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: var(--ls-h1);
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: var(--ls-h2);
+}
+
+.h3 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--type-h3);
+  line-height: var(--lh-h3);
+}
+
+.lead {
+  font-size: var(--type-body-l);
+  line-height: var(--lh-body-l);
+}
+
+.small { font-size: var(--type-small); line-height: var(--lh-small); }
+
+/* Nazwa gatunkowa zawsze kursywą antykwy, nad nazwą polską (rozdz. 4, 10) */
+.latin {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--type-latin);
+  line-height: 1.4;
+  color: var(--brand-300);
+}
+.section--light .latin { color: var(--brand-700); }
+
+/* Nazwa polska nad opisem — display, kapitaliki (wzór karty z 6.2) */
+.specimen-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h3);
+  line-height: var(--lh-h3);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.01em;
+}
+
+p, li, blockquote { max-width: var(--measure-ui); }
+.display-xl, .h1, .h2 { max-width: var(--measure-display); }
+
+.muted { color: rgba(217, 252, 240, 0.72); }
+.section--light .muted { color: var(--ink-muted); }
+
+
+/* --- Szkło (rozdz. 3) ---------------------------------------------------- */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-m);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28),
+              inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.glass--light {
+  /* Promień własny, nie pożyczony z .glass. Wariant jasny bywa używany
+     samodzielnie (karty w listingu, pasek faktów w jasnej wyspie) i bez
+     tego zostawał ostrymi rogami — czyli białą płytą zamiast szyby. */
+  border-radius: var(--radius-m);
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 6px 24px rgba(11, 93, 30, 0.10),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Fallback: bez backdrop-filter tekst nadal musi być czytelny (3, pkt 4) */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass       { background: var(--brand-800); }
+  .glass--light{ background: var(--paper); }
+}
+
+
+
+/* --- Ruch: prefers-reduced-motion (rozdz. 9) ------------------------------
+   Globalne wyciszenie. Komponenty z własnym zachowaniem przy ograniczonym
+   ruchu (wskazówka wskaźnika, nagłówek hero) dopisują je u siebie.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* Odstęp sekcji skaluje się teraz płynnie przez clamp(), więc osobny
+   próg dla wąskich ekranów jest już niepotrzebny. */

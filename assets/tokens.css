@@ -1,0 +1,253 @@
+/* ==========================================================================
+   Nature & Future — tokens.css
+   Fundament systemu wg docs/design-system.md, rozdz. 2 (kolor), 3A.1 (mosiądz),
+   4 (typografia), 5 (siatka i przestrzeń), 9 (ruch).
+
+   Jeden system, trzy skórki. Struktura i komponenty są wspólne — zmienia się
+   wyłącznie warstwa kolorów, przełączana atrybutem data-brand.
+
+       <body data-brand="nf">        zieleń, domyślnie
+       <body data-brand="kamino">    błękity space-tech
+       <body data-brand="pomona">    miody, oliwka, sad
+
+   data-brand działa też na dowolnym kontenerze wewnątrz strony — kafle
+   sub-marek na stronie głównej korzystają właśnie z tego.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   2.1 Tokeny wspólne
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Akcent akcji — wspólny dla całej rodziny marek.
+     UWAGA: na stronie głównej nie używamy go ani razu. Nie ma tu akcji na
+     konkretnym produkcie, więc róż czeka na kartę produktu i koszyk.
+     #C47B90 na bieli daje 3.2:1 — za mało na tekst i na przycisk z białym
+     napisem. Przyciski biorą --accent-strong (4.8:1, AA), #C47B90 zostaje
+     do dekoracji, obramowań, dużych liczb i tekstu 24px+. */
+  --accent:          #C47B90;
+  --accent-strong:   #A85A72;
+  --accent-soft:     #E7C7D1;
+  --accent-ink:      #FFFFFF;
+
+  /* Neutralne */
+  --paper:           #F7F8F2;
+  --paper-warm:      #FFFBFC;
+  --ink:             #1A1D18;
+  --ink-muted:       #5A6157;
+
+  /* Stany */
+  --ok:              #139A43;
+  --warn:            #FFBE5C;
+  --error:           #B4453F;
+
+
+  /* ------------------------------------------------------------------------
+     3A.1 Mosiądz — warstwa steampunkowa
+     Mosiądz nigdy nie jest wypełnieniem. Wyłącznie linia, pierścień,
+     wskazówka, narożnik ramki albo cienki separator. Grubość 1–1.5px,
+     ustalona przez kreskę w logo. Max dwa mosiężne elementy w jednym
+     widoku ekranu.
+     ---------------------------------------------------------------------- */
+  --brass:      #B89B50;
+  --brass-dim:  #8A7538;
+  --brass-glow: rgba(184, 155, 80, 0.28);
+
+
+  /* ------------------------------------------------------------------------
+     4. Typografia
+     --font-mono tylko w Kamino i tylko dla realnych danych pomiarowych.
+     ---------------------------------------------------------------------- */
+  --font-display: "Fraunces", "Playfair Display", Georgia, serif;
+  --font-ui:      "Inter", "Satoshi", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+  /* Skala major third (1.25) */
+  --type-display-xl: clamp(2.75rem, 6vw, 4.75rem);
+  --type-h1:         clamp(2.25rem, 4vw, 3.25rem);
+  --type-h2:         2rem;
+  --type-h3:         1.5rem;
+  --type-body-l:     1.125rem;
+  --type-body:       1rem;
+  --type-small:      0.875rem;
+  --type-latin:      0.875rem;
+
+  --lh-display-xl: 1.02;   --ls-display-xl: -0.02em;
+  --lh-h1:         1.08;   --ls-h1:         -0.015em;
+  --lh-h2:         1.15;   --ls-h2:         -0.01em;
+  --lh-h3:         1.25;
+  --lh-body-l:     1.65;
+  --lh-body:       1.6;
+  --lh-small:      1.5;
+
+  /* Długość wiersza: 68 znaków dla groteska, 74 dla antykwy */
+  --measure-ui:      68ch;
+  --measure-display: 74ch;
+
+
+  /* ------------------------------------------------------------------------
+     5. Siatka i przestrzeń
+     ---------------------------------------------------------------------- */
+  --space-2xs: 4px;
+  --space-xs:  8px;
+  --space-s:   16px;
+  --space-m:   24px;
+  --space-l:   40px;
+  --space-xl:  64px;
+  --space-2xl: 96px;
+  --space-3xl: 144px;
+
+  --container: 1280px;
+  --gutter:    clamp(20px, 4vw, 48px);
+
+  /* Nie jeden promień na wszystko — hierarchia ma być czytelna w kształcie.
+     radius-l: hero i duże kafle · radius-m: karty · radius-s: inputy i tagi */
+  --radius-s: 10px;
+  --radius-m: 20px;
+  --radius-l: 32px;
+  --radius-pill: 999px;
+
+
+  /* ------------------------------------------------------------------------
+     9. Ruch — jeden orkiestrowany moment na stronę
+     ---------------------------------------------------------------------- */
+  --ease:            cubic-bezier(0.2, 0, 0, 1);
+  --dur-hover:       150ms;
+  --dur-open:        200ms;
+  --dur-nav:         250ms;   /* zwijanie nawigacji w pigułkę */
+  --dur-gauge:       700ms;   /* wskazówka wskaźnika, raz przy wejściu w widok */
+  --dur-headline:    900ms;   /* nagłówek hero, raz */
+  --delay-headline:  200ms;
+  --dur-brand-swap:  400ms;   /* przefarbowanie palety przy zmianie sub-marki */
+}
+
+
+/* --------------------------------------------------------------------------
+   2.2 Nature & Future — marka parasolowa
+   Styl czysty i przejrzysty, najmniej ozdobny z trzech. NF spina i sprzedaje.
+   -------------------------------------------------------------------------- */
+
+[data-brand="nf"] {
+  --brand-900: #053B06;
+  --brand-800: #084C12;
+  --brand-700: #0B5D1E;
+  --brand-600: #0F7C31;
+  --brand-500: #139A43;
+  --brand-300: #76CB9A;
+  --brand-100: #D9FCF0;
+
+  --grad-light: radial-gradient(120% 90% at 12% 0%, #D9FCF0 0%, #F7F8F2 55%, #F7F8F2 100%);
+  --grad-deep:  linear-gradient(150deg, #0B5D1E 0%, #084C12 45%, #053B06 100%);
+
+  /* Szkło deep — czerń 28–40%, dostrojona do zieleni */
+  --glass-bg:     rgba(8, 40, 16, 0.34);
+  --glass-border: rgba(255, 255, 255, 0.12);
+
+  /* Gradient czytelności pod nagłówkiem hero (7.1). Był wpisany na sztywno
+     w nf-home.css, przez co Kamino dostawało zielony welon na błękicie. */
+  --scrim: rgba(5, 59, 6, 0.72);
+
+  /* Mosiądz w NF: subtelny, 1–2 detale na stronę */
+  --instrument: var(--brass);
+  --instrument-dim: var(--brass-dim);
+  --instrument-glow: var(--brass-glow);
+  /* Kolor na jasnej tarczy przyrządu — jasny mosiądz na bieli daje 1.9:1,
+     więc wskazówka, podziałka i oś biorą ciemniejszy wariant. */
+  --instrument-strong: var(--brass-dim);
+
+  /* 6.5 — pierścień focusu. Zieleń marki zamiast różu: na ciemnym jasny
+     wariant (6.6:1), na jasnej wyspie ciemny (7.7:1). */
+  --focus:        var(--brand-300);
+  --focus-strong: var(--brand-700);
+}
+
+
+/* -------------------------------------------------------------------------
+   2.3 Kamino BioLabs — technologia, bank roślin, sektor kosmiczny
+   Futurystycznie, sterylnie, dużo powietrza, cieńsze linie niż w NF.
+   -------------------------------------------------------------------------- */
+
+[data-brand="kamino"] {
+  --brand-900: #004E64;
+  --brand-800: #007A9A;
+  --brand-700: #00A5CF;
+  --brand-600: #00A5CF;
+  --brand-500: #5BC3D9;
+  --brand-300: #B5E1E3;
+  --brand-100: #F4F7F3;
+  --paper:     #FFFBFC;
+
+  --grad-light: radial-gradient(120% 90% at 88% 0%, #B5E1E3 0%, #F4F7F3 60%, #FFFBFC 100%);
+  --grad-deep:  linear-gradient(150deg, #007A9A 0%, #004E64 60%, #00303E 100%);
+
+  --glass-bg:     rgba(0, 40, 52, 0.36);
+  --glass-border: rgba(255, 255, 255, 0.14);
+
+  --scrim: rgba(0, 48, 62, 0.72);
+
+  /* 3A.4 — w Kamino mosiądz ZAMIENIAMY na --brand-300.
+     Ten sam gauge, ale jako sterylny przyrząd pomiarowy, nie mechanizm zegarowy. */
+  --instrument: #B5E1E3;
+  --instrument-dim: rgba(181, 225, 227, 0.45);
+  --instrument-glow: rgba(181, 225, 227, 0.24);
+  --instrument-strong: #007A9A;
+
+  /* Błękit przyrządowy: --brand-300 na ciemnym (7:1), --brand-800 na
+     jasnej wyspie (4.4:1). */
+  --focus:        var(--brand-300);
+  --focus-strong: var(--brand-800);
+}
+
+
+/* --------------------------------------------------------------------------
+   2.4 PomonaLab — stare odmiany, sad, archiwum
+   Tu steampunk jest widoczny: tarcze, ramki z narożnikami, antykwa
+   w kapitalikach, podziałki.
+   -------------------------------------------------------------------------- */
+
+[data-brand="pomona"] {
+  --brand-900: #373D20;
+  --brand-800: #717744;
+  --brand-700: #B89B50;
+  --brand-600: #B89B50;
+  --brand-500: #FFBE5C;
+  --brand-300: #F1D398;
+  --brand-100: #F7F8F2;
+
+  --grad-light: radial-gradient(120% 90% at 50% 0%, #F1D398 0%, #F7F8F2 58%, #F7F8F2 100%);
+  --grad-deep:  linear-gradient(150deg, #717744 0%, #373D20 65%, #232813 100%);
+
+  --glass-bg:     rgba(28, 32, 14, 0.38);
+  --glass-border: rgba(255, 255, 255, 0.14);
+
+  --scrim: rgba(35, 40, 19, 0.74);
+
+  --instrument: var(--brass);
+  --instrument-dim: var(--brass-dim);
+  --instrument-glow: var(--brass-glow);
+  --instrument-strong: var(--brass-dim);
+
+  /* Miód na ciemnym (6.8:1), oliwka na jasnej wyspie (4.3:1). */
+  --focus:        var(--brand-300);
+  --focus-strong: var(--brand-800);
+}
+
+
+/* --------------------------------------------------------------------------
+   Przefarbowanie palety przy zmianie data-brand (rozdz. 6.3).
+   Na stronie głównej nie ma przełącznika sub-marek, ale kafle Kamino
+   i Pomony korzystają z tych samych zmiennych, więc przejście zostaje
+   zdefiniowane raz, tutaj.
+   -------------------------------------------------------------------------- */
+
+[data-brand] {
+  transition:
+    background-color var(--dur-brand-swap) var(--ease),
+    color            var(--dur-brand-swap) var(--ease),
+    border-color     var(--dur-brand-swap) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-brand] { transition: none; }
+}

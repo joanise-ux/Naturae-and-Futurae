@@ -5,3 +5,13 @@
 uploads/
 screens/
 .vercel/
+
+# Build podglądu Netlify (składany przez netlify/build.sh)
+_site/
+
+# Duże pliki wideo nieużywane przez żadną stronę.
+# 44 MB .MOV w historii gita zostaje w niej na zawsze, a Netlify deployuje
+# z repozytorium — jeśli któryś z nich wejdzie do layoutu, najpierw
+# skompresuj i skonwertuj do .mp4/.webm.
+assets/wodospad.MOV
+assets/sekcja hero.mp4

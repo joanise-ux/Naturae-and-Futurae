@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nature & Future — rośliny hodowane od pojedynczej komórki</title>
+<meta name="description" content="Laboratorium in vitro. Rośliny akwariowe z kultury sterylnej — bez glonów, ślimaków i pasożytów. Wysyłka w 48 h.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-home.css">
+</head>
+
+<body data-brand="nf">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+<!-- ===== 1. Nawigacja (6.3) ==============================================
+     Nad hero przezroczysta, bez tła i obramowania. Po przescrollowaniu
+     wysokości hero: .glass--nav, zwężona do wyśrodkowanej pigułki,
+     margines 16px od góry, przejście 250ms.
+     „Zamów rośliny" celowo nie jest różowy — różowy zostaje dla akcji
+     na konkretnym produkcie.
+====================================================================== -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html">Sklep</a></li>
+        <li><a href="technologia-nf.html">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html">Pomona</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="nav__icon" type="button" aria-label="Szukaj roślin">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      </button>
+
+      <a class="nav__icon" href="#koszyk" aria-label="Koszyk, 2 pozycje">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="nav__count" aria-hidden="true">2</span>
+      </a>
+
+      <a class="btn btn--ghost btn--small" href="konto.html">Zaloguj</a>
+      <a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto.html">Zaloguj</a></li>
+      <li><a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main">
+
+  <!-- ===== 2. Hero (7.1) ================================================
+       MATERIAŁ: animacja z pionowej farmy — sadzonka unoszona nad regałami.
+       Jedno przejście (ok. 2,6 s), potem obraz zastyga na ostatnim ujęciu, żeby
+       ruch nie konkurował z nagłówkiem przez cały czas wizyty.
+  ==================================================================== -->
+  <section class="hero">
+    <!-- GIF nie ma bloku pętli, więc odtwarza się raz; przeglądarki różnie
+         traktują koniec animacji, dlatego o zatrzymaniu decyduje podmiana na
+         ostatnią klatkę w JS. Przy prefers-reduced-motion wchodzi od razu. -->
+    <img
+      class="hero__media"
+      id="heroAnim"
+      src="assets/plant_smooth_transitions.gif"
+      data-still="assets/plant_smooth_transitions-still.gif"
+      data-loop-ms="2630"
+      data-loops="1"
+      alt="Sadzonka o pstrokatych liściach z odsłoniętym systemem korzeniowym, unoszona nad stołem w pionowej farmie pełnej regałów z sadzonkami pod lampami uprawowymi.">
+
+    <div class="hero__scrim"></div>
+
+    <div class="hero__content container">
+      <h1 class="display-xl hero__title">Z natury<br>ku przyszłości.</h1>
+    </div>
+  </section>
+
+
+  <!-- ===== 3. Blok bestsellera (7.2) — sekcja deep ====================== -->
+  <section class="section" aria-labelledby="bestsellerTitle">
+    <div class="container">
+      <h2 class="visually-hidden" id="bestsellerTitle">Bestseller</h2>
+
+      <div class="bestseller">
+
+        <article class="feature glass">
+          <span class="badge">Bestseller</span>
+
+          <div class="feature__photo">
+            <img src="assets/anubias.jpg" loading="lazy" decoding="async"
+                 alt="Dłoń trzymająca słoik z etykietą „Anubias barteri var. nana — In Vitro”; w środku kępa ciemnozielonych liści na pożywce.">
+          </div>
+
+          <div class="feature__body">
+            <p>
+              <i class="latin" lang="la">Anubias barteri var. nana</i>
+              <span class="specimen-name">Anubias nana</span>
+            </p>
+            <p class="muted">
+              Rośnie wolno i wybacza błędy — nie wymaga CO₂ ani mocnego światła.
+              Kłącze przywiązujesz do korzenia lub kamienia, nigdy nie zakopujesz w podłożu.
+            </p>
+            <p class="price">22 PLN</p>
+            <p class="small muted">kubek 5×5 cm · ok. 15 sadzonek · wysyłka w 48 h</p>
+            <div class="btn-pair">
+              <a class="btn btn--secondary btn--small" href="produkt.html">Zobacz</a>
+              <a class="btn btn--primary btn--small" href="produkt.html">Do koszyka</a>
+            </div>
+          </div>
+        </article>
+
+        <aside class="aside-photo">
+          <!-- ZDJĘCIE: blat w laboratorium, dłonie w rękawiczkach przenoszą
+               eksplantat pęsetą pod komorą laminarną, kadr pionowy. -->
+          <img src="assets/kamino/Elegant%20Terrariums%20%26%20Creative%20Plant%20Crafts_%20Inspiring%20Projects%20for%20Modern%20Indoor%20Gardens.jpg" loading="lazy" decoding="async"
+               alt="Przezroczysta komora hodowlana z rośliną o odsłoniętym systemie korzeniowym, obok panel sterowania z odczytami.">
+          <div class="aside-photo__card glass">
+            <p class="lead">Nie wiesz, od czego zacząć?</p>
+            <a href="sklep-nf.html">Sprawdź poziomy trudności <span aria-hidden="true">→</span></a>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 4. Rząd dwóch kart — JASNA WYSPA 1 ==========================
+       Kontrast ciemny → jasny jest sam w sobie sygnałem „to inna
+       kategoria produktów". Przyciski odwracają kontrast: ciemny wypełniony.
+  ==================================================================== -->
+  <section class="section section--light" aria-labelledby="nowosciTitle">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="nowosciTitle">Nowe w tym miesiącu</h2>
+      </div>
+
+      <div class="card-row">
+
+        <article class="card card--split glass--light">
+          <span class="badge">Nowość</span>
+          <div class="card__photo">
+            <img src="assets/Kryptokoryna%20wendta.jpg" loading="lazy" decoding="async"
+                 alt="Słoik z etykietą „Kryptokoryna wendta — kultura in vitro, seria IV/09” na drewnianym blacie laboratorium.">
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Cryptocoryne wendtii</i>
+              <span class="specimen-name">Kryptokoryna wendta</span>
+            </p>
+            <p class="muted small">
+              Brązowo-zielona, średnie tempo wzrostu. Po przesadzeniu zrzuca liście
+              i odbija w trzecim tygodniu — to normalny przebieg, nie choroba.
+            </p>
+            <p class="price">18 PLN</p>
+            <p class="price-note muted">kubek 5×5 cm · 12 dostępnych</p>
+            <div class="btn-pair">
+              <a class="btn btn--secondary btn--small" href="produkt.html">Zobacz</a>
+              <a class="btn btn--primary btn--small" href="produkt.html">Do koszyka</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--split glass--light">
+          <span class="badge">Zestaw</span>
+          <div class="card__photo">
+            <img src="assets/zestaw%20startowy.jpg" loading="lazy" decoding="async"
+                 alt="Opakowanie „Zestaw startowy na pierwsze akwarium” z trzema gatunkami roślin i instrukcją aklimatyzacji na siedem dni.">
+          </div>
+          <div class="card__body">
+            <p><span class="specimen-name">Zestaw startowy</span></p>
+            <p class="muted small">
+              Trzy gatunki na pierwsze akwarium: anubias, mikrozorium i kryptokoryna.
+              Żaden nie wymaga CO₂. W środku instrukcja aklimatyzacji na siedem dni.
+            </p>
+            <p class="price">48 PLN <span class="price-note muted">zamiast 60 PLN</span></p>
+            <p class="price-note muted">3 kubki 5×5 cm · 8 zestawów dostępnych</p>
+            <div class="btn-pair">
+              <a class="btn btn--secondary btn--small" href="produkt.html">Zobacz</a>
+              <a class="btn btn--primary btn--small" href="produkt.html">Do koszyka</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Pasek faktów (3A.2) — wewnątrz jasnej wyspy, na szkle --light.
+           Stał wcześniej jako osobna sekcja na płaskiej zieleni, a szkło
+           bez materiału pod spodem jest zwykłym prostokątem (rozdz. 3).
+           Tu ma pod sobą papier jasnej wyspy.
+
+           Tarcze wracają zgodnie ze schematem z rozdz. 7 („◔ 48h wysyłka
+           │ ◔ 100% klonów │ ◔ 14 dni zwrotu"). Każda ma skalę wpisaną
+           w komentarz — bez skali wskazówka byłaby ozdobą (3A.2).
+           Wskazówka odchyla się raz, przy wejściu bloku w widok. -->
+        <div class="facts glass--light">
+
+          <div class="fact">
+            <!-- 48 h w skali 0–72 h → 40deg -->
+            <div class="gauge" data-angle="40deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+            <p class="fact__value">48 h
+              <span class="fact__label">wysyłka zamówień</span>
+            </p>
+          </div>
+
+          <div class="fact">
+            <!-- 100 % to koniec skali → 120deg -->
+            <div class="gauge" data-angle="120deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+            <p class="fact__value">100 %
+              <span class="fact__label">klonów in vitro</span>
+            </p>
+          </div>
+
+          <div class="fact">
+            <!-- 14 dni w skali 0–30 dni → -8deg -->
+            <div class="gauge" data-angle="-8deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+            <p class="fact__value">14
+              <span class="fact__label">dni na zwrot</span>
+            </p>
+          </div>
+
+        </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===== 6. Kafle sub-marek — sekcja deep ============================
+       Jedyne miejsce na stronie, gdzie Kamino i Pomona występują jako
+       osobne byty. Reszta strony mówi głosem NF.
+       data-brand na kaflu przefarbowuje tylko ten fragment.
+  ==================================================================== -->
+  <section class="section" aria-labelledby="markiTitle">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="markiTitle">Dwa laboratoria pod jednym dachem</h2>
+      </div>
+
+      <div class="tiles">
+
+        <article class="tile tile--kamino" data-brand="kamino">
+          <img class="tile__photo" src="assets/kamino_poznajkamino.jpg" loading="lazy" decoding="async"
+               alt="Widok przez szybę do sterylnego laboratorium: pracownica przy komorze laminarnej, regały ze słoikami kultur in vitro, napis „Bank nasion i kultur in vitro”.">
+          <p class="tile__name">Kamino BioLabs</p>
+          <p class="tile__role">Technologia hodowli, bank roślin, próby dla sektora kosmicznego.</p>
+          <p class="tile__readout">
+            <span>bank: 214 genotypów</span>
+            <span>temp. 24,0 °C</span>
+            <span>światło 16 h/d</span>
+          </p>
+          <p><a class="btn btn--outline btn--small" href="technologia-nf.html">Poznaj Kamino</a></p>
+        </article>
+
+        <article class="tile tile--pomona" data-brand="pomona">
+          <img class="tile__photo" src="assets/pomona.jpg" loading="lazy" decoding="async"
+               alt="Dwoje badaczy w fartuchach pobiera próbki z kwitnących jabłoni w sadzie doświadczalnym, w tle budynek laboratorium.">
+
+          <!-- Mosiądz #2 z dwóch: cztery narożniki ramki kafla, po 1px. -->
+          <div class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+          <p class="tile__name">PomonaLab</p>
+          <p class="tile__role">Odtwarzamy stare odmiany drzew owocowych z pojedynczych pąków.</p>
+          <p class="tile__readout">
+            <i lang="la">Malus domestica &#39;Kosztela&#39;</i>
+            <span>Kosztela · odmiana z XVIII w. · 6 drzew matecznych</span>
+          </p>
+          <p><a class="btn btn--outline btn--small" href="historia.html">Poznaj PomonaLab</a></p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 7. Pasmo edukacyjne — JASNA WYSPA 2 =========================
+       Przekrój słoika na trzy warstwy, sześć adnotacji z konkretem.
+       Rysunek ciemny i cienki, bo pasmo jest jasne.
+  ==================================================================== -->
+  <section class="section section--light" aria-labelledby="eduTitle">
+    <div class="container">
+      <div class="edu__head">
+        <h2 class="h2" id="eduTitle">Jak rośnie w słoiku</h2>
+        <p class="lead">
+          Roślina siedzi na żelu z pożywką, w zamkniętym słoiku, bez kontaktu
+          z powietrzem z zewnątrz. Stąd bierze się brak glonów i pasożytów.
+        </p>
+      </div>
+
+      <div class="edu">
+
+        <div class="edu__col edu__col--left">
+          <p class="anno glass--light">Sterylna atmosfera: słoik otwieramy dopiero u&nbsp;Ciebie.</p>
+          <p class="anno glass--light">Eksplantat startowy ma <b>3–5&nbsp;mm</b> — sam wierzchołek wzrostu.</p>
+          <p class="anno glass--light">Światło LED przez <b>16 godzin</b> na dobę.</p>
+        </div>
+
+        <!-- ILUSTRACJA: przekrój słoika, rysunek liniowy 1px.
+             Docelowo do zastąpienia rysunkiem technicznym z laboratorium. -->
+        <svg class="jar" viewBox="0 0 260 320" role="img" aria-labelledby="jarTitle jarDesc">
+          <title id="jarTitle">Przekrój słoika hodowlanego</title>
+          <desc id="jarDesc">Trzy warstwy od dołu: żel z pożywką, sadzonka zwana eksplantatem, sterylna atmosfera pod zakręconą pokrywką.</desc>
+          <g fill="none" stroke="#1A1D18" stroke-width="1.25">
+            <path d="M70 46h120v18H70z"/>
+            <path d="M78 64v8c0 4 4 6 4 10v202c0 8 6 14 14 14h68c8 0 14-6 14-14V82c0-4 4-6 4-10v-8"/>
+            <path d="M82 236h96" stroke-dasharray="4 4"/>
+            <path d="M96 296h68" opacity=".5"/>
+            <path d="M130 236c0-22-12-30-22-38m22 38c0-18 10-26 20-32" stroke-width="1"/>
+            <path d="M130 236v-58" stroke-width="1"/>
+            <ellipse cx="104" cy="192" rx="12" ry="7" stroke-width="1"/>
+            <ellipse cx="156" cy="200" rx="12" ry="7" stroke-width="1"/>
+          </g>
+          <g fill="#5A6157" opacity=".35">
+            <rect x="82" y="236" width="96" height="60" rx="4"/>
+          </g>
+          <g class="jar__layer-label">
+            <text x="8" y="120">sterylna atmosfera</text>
+            <text x="8" y="200">eksplantat</text>
+            <text x="8" y="272">pożywka</text>
+          </g>
+          <g stroke="#5A6157" stroke-width="1" opacity=".5">
+            <path d="M112 116h-8M100 196h-4M90 268h-4"/>
+          </g>
+        </svg>
+
+        <div class="edu__col edu__col--right">
+          <p class="anno glass--light">Pożywka: agar <b>7&nbsp;g/l</b>, sacharoza <b>30&nbsp;g/l</b>.</p>
+          <p class="anno glass--light">pH ustawiane na <b>5,7</b> przed sterylizacją.</p>
+          <p class="anno glass--light">Autoklaw: <b>121&nbsp;°C</b> przez <b>20&nbsp;minut</b>.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 8. Blog — sekcja deep ======================================= -->
+  <section class="section" id="blog" aria-labelledby="blogTitle">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="blogTitle">Z naszego laboratorium</h2>
+      </div>
+
+      <div class="posts">
+
+        <article class="post glass">
+          <!-- ZDJĘCIE: dłonie wyjmujące sadzonkę ze słoika nad miską z wodą. -->
+          <div class="post__photo">
+            <img src="assets/inspiracje/moss-laptop.jpg" alt="Sadzonka wyjmowana ze słoika i płukana w wodzie.">
+          </div>
+          <p class="post__date">12 sierpnia 2026</p>
+          <h3 class="h3"><a href="#wpis-1">Jak przenieść roślinę ze słoika do akwarium</a></h3>
+          <p class="muted small">Siedem dni aklimatyzacji, krok po kroku. Najczęstszy błąd to wsadzenie kłącza pod żwir.</p>
+        </article>
+
+        <article class="post glass">
+          <!-- ZDJĘCIE: kolby z pożywką w komorze laminarnej. -->
+          <div class="post__photo">
+            <img src="assets/inspiracje/leaf-wall.jpg" alt="Kolby z zieloną pożywką ustawione pod komorą laminarną.">
+          </div>
+          <p class="post__date">29 lipca 2026</p>
+          <h3 class="h3"><a href="#wpis-2">Co jest w żelu — skład pożywki MS</a></h3>
+          <p class="muted small">Sole mineralne, cukier, witaminy i agar. Rozpisujemy, co robi każdy składnik.</p>
+        </article>
+
+        <article class="post glass">
+          <!-- ZDJĘCIE: akwarium obsadzone roślinami z in vitro, dwa miesiące po. -->
+          <div class="post__photo">
+            <img src="assets/inspiracje/hero-hand-fern-data.jpg" alt="Akwarium obsadzone roślinami dwa miesiące po zakupie.">
+          </div>
+          <p class="post__date">3 lipca 2026</p>
+          <h3 class="h3"><a href="#wpis-3">Trzy gatunki, które wybaczają błędy</a></h3>
+          <p class="muted small">Anubias, mikrozorium i mech jawajski przeżyją pierwszy miesiąc bez CO₂ i bez nawozu.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 9. Opinie — JASNA WYSPA 3 ===================================
+       Cytat na ciemnym zlewał się z gradientem strony i z blogiem tuż nad
+       nim. Jasne pasmo odcina go od obu, a reguła „dwa jasne pasma nigdy
+       obok siebie" zostaje zachowana: nad opiniami stoi deep (blog),
+       pod nimi stopka --brand-900.
+  ==================================================================== -->
+  <section class="section section--light" aria-labelledby="opinieTitle">
+    <div class="container">
+      <h2 class="visually-hidden" id="opinieTitle">Opinie klientów</h2>
+
+      <figure class="opinion">
+        <!-- ZDJĘCIE: klientka ze słoikiem, kadr kwadratowy, naturalne światło.
+             Oryginał jest poziomy 2816×1536 — .opinion__photo przycina go do
+             kwadratu przez object-fit: cover, twarz i słoik zostają w kadrze. -->
+        <img class="opinion__photo" src="assets/zdjecieopinia.jpg"
+             loading="lazy" decoding="async"
+             alt="Uśmiechnięta klientka trzyma słoik z mchem z kultury in vitro; w tle jej obsadzone akwarium i rośliny doniczkowe w jasnym pokoju.">
+        <div>
+          <blockquote>
+            „Zamówiłam sześć słoików w kwietniu. Wszystkie sadzonki przyjęły się
+            w ciągu trzech tygodni, żadna nie przyniosła glonów ani ślimaków."
+          </blockquote>
+          <figcaption>Marta, akwarium 120 l, Poznań · zamówienie z 14 kwietnia 2026</figcaption>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ===== 10. Stopka (--brand-900) ====================================== -->
+<footer class="footer" id="kontakt">
+  <div class="container">
+
+    <div class="footer__top">
+      <div class="newsletter">
+        <h2 class="h3">Nowe odmiany raz w miesiącu</h2>
+        <p class="muted small">Jeden e-mail miesięcznie: co weszło do sprzedaży i co wychodzi z hodowli. Wypisujesz się jednym kliknięciem.</p>
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="visually-hidden" for="mail">Adres e-mail</label>
+          <input class="input" id="mail" name="mail" type="email" placeholder="imie@example.com" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Zapisz mnie</button>
+        </form>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Sklep</h3>
+          <ul>
+            <li><a href="sklep-nf.html">Rośliny akwariowe</a></li>
+            <li><a href="sklep-nf.html">Zestawy startowe</a></li>
+            <li><a href="sklep-nf.html">Poziomy trudności</a></li>
+            <li><a href="sklep-nf.html">Wysyłka i zwroty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Laboratorium</h3>
+          <ul>
+            <li><a href="technologia-nf.html">Technologia in vitro</a></li>
+            <li><a href="kamino-nf.html">Kamino BioLabs</a></li>
+            <li><a href="pomona-nf.html">PomonaLab</a></li>
+            <li><a href="#blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a></li>
+            <li><a href="tel:+48000000000">+48 000 000 000</a></li>
+            <li><a href="konto.html">Twoje konto</a></li>
+            <li><a href="panel-klienta.html">Status zamówienia</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      <span>© 2026 Nature &amp; Future. Laboratorium kultur in vitro.</span>
+      <span>Regulamin · Polityka prywatności</span>
+    </p>
+
+  </div>
+</footer>
+
+
+<script src="assets/nf-components.js"></script>
+<script src="assets/nf-home.js"></script>
+
+</body>
+</html>
