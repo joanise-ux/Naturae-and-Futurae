@@ -1,0 +1,15 @@
+# Podgląd nowego frontu dla zespołu — NIE jest to konfiguracja produkcji.
+# Produkcja idzie na OVH przez FTP (.github/workflows/deploy.yml).
+#
+# Publikowany jest katalog _site/ składany przez netlify/build.sh wyłącznie
+# ze stron nowego frontu (-nf). Stary front, Supabase i panel klienta nie
+# trafiają na podgląd — chodzi o to, żeby przeglądarka recenzenta nie miała
+# jak dotknąć produkcyjnej bazy.
+
+[build]
+  command = "bash netlify/build.sh"
+  publish = "_site"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

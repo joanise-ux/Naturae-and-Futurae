@@ -1,0 +1,4 @@
+# Podgląd roboczy redesignu — nie jest to serwis produkcyjny.
+# Produkcja: https://nfplantbiotech.com
+User-agent: *
+Disallow: /

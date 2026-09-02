@@ -1,0 +1,17 @@
+# Strony, które nie mają jeszcze odpowiednika w redesignie. Nawigacja stron -nf
+# wciąż do nich linkuje (konto 15x, produkt 6x, panel-klienta 5x, historia 1x).
+# Zamiast 404 pokazujemy zaślepkę wyjaśniającą zakres podglądu.
+#
+# Kod 200 = przepisanie, nie przekierowanie: adres w pasku zostaje, więc
+# recenzent widzi, dokąd link prowadził.
+/konto.html            /poza-podgladem.html   200
+/konto-en.html         /poza-podgladem.html   200
+/panel-klienta.html    /poza-podgladem.html   200
+/panel-klienta-en.html /poza-podgladem.html   200
+/produkt.html          /poza-podgladem.html   200
+/historia.html         /poza-podgladem.html   200
+/historia-en.html      /poza-podgladem.html   200
+
+# Wszystko inne, czego nie ma w buildzie, też ląduje na zaślepce zamiast
+# na domyślnym 404 Netlify.
+/*                     /poza-podgladem.html   404
