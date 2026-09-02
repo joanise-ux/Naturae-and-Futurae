@@ -1807,37 +1807,35 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 }
 
 /* --- Panel na wąskim ekranie ---------------------------------------------
-   Kolumna chowa się pod przycisk i wysuwa jako panel ze szkła. */
+   Kolumna chowa się pod przycisk i wysuwa jako karta. Karta zostaje jasna
+   także tutaj: linki biorą --ink z .section--light, więc zdjęcie jej tła
+   dawało ciemny tekst na ciemnej zieleni — menu było na miejscu, tylko
+   nie dało się go odczytać. */
 @media (max-width: 900px) {
   .panel { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
+
+  .panel-nav {
+    position: static;
+    padding: var(--space-xs);
+  }
 
   .panel-nav__toggle {
     display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
+    justify-self: start;
   }
 
-  .panel-nav {
-    position: static;
-    padding: 0;
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border: 0;
-    box-shadow: none;
-  }
+  /* Lista i skróty personelu chowają się razem — inaczej „Personel”
+     zostawał na ekranie po zwinięciu menu, bo stoi za listą, a nie w niej.
+     Stąd ~ zamiast +. */
+  .panel-nav__list,
+  .panel-nav__staff { display: none; }
 
-  .panel-nav__list {
-    display: none;
-    margin-top: var(--space-xs);
-    padding: var(--space-xs);
-    border-radius: var(--radius-m);
-    background: var(--glass-bg);
-    backdrop-filter: blur(18px) saturate(130%);
-    -webkit-backdrop-filter: blur(18px) saturate(130%);
-    border: 1px solid var(--glass-border);
-  }
-  .panel-nav__toggle[aria-expanded="true"] + .panel-nav__list { display: grid; }
+  .panel-nav__toggle[aria-expanded="true"] ~ .panel-nav__list,
+  .panel-nav__toggle[aria-expanded="true"] ~ .panel-nav__staff { display: grid; }
+
+  .panel-nav__list { margin-top: var(--space-xs); }
 }
 
 
