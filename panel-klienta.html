@@ -515,6 +515,41 @@
 </div>
 </x-dc>
 <script>
+/* Powrót pod właściwy adres po zalogowaniu (rozdz. 8A / panel klienta).
+   Nowy panel (konto-*-nf.html) odsyła tu niezalogowanego z ?powrot=<plik>.
+   Po zalogowaniu wracamy tam, skąd przyszedł.
+
+   Whitelista, nie walidacja adresu: przyjmujemy wyłącznie nazwę pliku
+   panelu z opcjonalnym query. Dzięki temu parametr nie może posłużyć do
+   przekierowania na obcy serwis, nawet gdyby ktoś podrzucił użytkownikowi
+   spreparowany link. */
+(function () {
+  var DOZWOLONE = /^konto(-[a-z]+)?-nf\.html(\?[A-Za-z0-9_=&%.\-]*)?$/;
+
+  function cel() {
+    var p = new URLSearchParams(location.search).get('powrot');
+    return p && DOZWOLONE.test(p) ? p : null;
+  }
+
+  if (!cel()) return;
+
+  function start() {
+    var sb = window.supabaseClient;
+    if (!sb) { setTimeout(start, 80); return; }
+
+    sb.auth.getSession().then(function (r) {
+      if (r && r.data && r.data.session) location.replace(cel());
+    });
+
+    sb.auth.onAuthStateChange(function (_e, session) {
+      if (session) location.replace(cel());
+    });
+  }
+
+  start();
+})();
+</script>
+<script>
 /* Nature & Future — menu mobilne (hamburger). Faza capture, bo x-dc renderuje się dynamicznie. */
 (function(){
   document.addEventListener('click', function(e){

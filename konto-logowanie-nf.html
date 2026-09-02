@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logowanie — Nature &amp; Future</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Standardowy zestaw (rozdz. 0.1): tokeny + fundament + komponenty +
+     arkusz tej strony. nf-auth.css dokłada wyłącznie układ ekranu. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-auth.css">
+</head>
+
+<body data-brand="nf">
+
+<main class="auth" id="main">
+
+  <!-- Zdjęcie jest tłem, nie treścią: puste alt, żeby czytnik ekranu
+       nie czytał dekoracji przed formularzem.
+
+       akwarium-sklep.jpg to zmniejszona wersja „akwarium sklep.jpg”
+       (1920px, 323 kB zamiast 4 MB). Oryginał zostaje w assets jako
+       materiał źródłowy, ale nie jest już nigdzie wczytywany. -->
+  <img class="auth__media" src="assets/akwarium-sklep.jpg" alt=""
+       fetchpriority="high" decoding="async">
+  <div class="auth__scrim"></div>
+
+  <div class="auth__card glass">
+
+    <div class="auth__head">
+      <img class="auth__logo" src="assets/logo-icon.png" alt="" width="48" height="48">
+      <h1 class="h2 auth__title">Witaj z powrotem</h1>
+      <p class="auth__lede">Zaloguj się, żeby zobaczyć swoje zamówienia, adresy i zapisane rośliny.</p>
+    </div>
+
+    <!-- novalidate: komunikaty przeglądarki są nieprzetłumaczone i giną
+         przy pierwszym kliknięciu. Walidację prowadzi nf-auth.js, przez
+         .field__error powiązane z polem (rozdz. 10). -->
+    <form class="auth__form" id="formLogowanie" novalidate>
+
+      <p class="auth__error" id="bladLogowania" role="alert" hidden></p>
+
+      <div class="field">
+        <label class="field__label" for="email">Adres e-mail</label>
+        <input class="input" id="email" name="email" type="email"
+               autocomplete="email" placeholder="imie@example.com"
+               required aria-describedby="emailErr">
+        <p class="field__error" id="emailErr" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="haslo">Hasło</label>
+        <div class="input-wrap">
+          <input class="input" id="haslo" name="haslo" type="password"
+                 autocomplete="current-password" required aria-describedby="hasloErr">
+          <button class="input-action" type="button" id="pokazHaslo"
+                  aria-label="Pokaż hasło" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <p class="field__error" id="hasloErr" hidden></p>
+      </div>
+
+      <div class="auth__row">
+        <label class="checkbox" for="zapamietaj">
+          <input type="checkbox" id="zapamietaj" name="zapamietaj" checked>
+          <span>Zapamiętaj mnie</span>
+        </label>
+        <!-- Reset hasła ma już działający mechanizm w konto.html; ekran
+             logowania tylko do niego kieruje, zamiast budować drugi. -->
+        <a class="btn btn--underline" href="konto.html">Nie pamiętasz hasła?</a>
+      </div>
+
+      <button class="btn btn--primary auth__btn-wide" type="submit" id="zaloguj">Zaloguj się</button>
+    </form>
+
+    <p class="divider"><span>lub</span></p>
+
+    <button class="btn btn--secondary auth__btn-wide" type="button" id="zalogujGoogle">
+      <svg class="auth__provider-logo" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2.5 24 .5 14.6.5 6.5 5.8 2.6 13.6l7.8 6c1.9-5.7 7.2-10.1 13.6-10.1Z"/>
+        <path fill="#4285F4" d="M46.6 24.5c0-1.6-.15-3.2-.43-4.7H24v9h12.7c-.55 3-2.2 5.5-4.7 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.4Z"/>
+        <path fill="#FBBC05" d="M10.4 28.4a14.4 14.4 0 0 1 0-8.8l-7.8-6a23.5 23.5 0 0 0 0 20.8l7.8-6Z"/>
+        <path fill="#34A853" d="M24 47.5c6.2 0 11.5-2 15.3-5.6l-7.6-5.9c-2.1 1.4-4.8 2.3-7.7 2.3-6.4 0-11.7-4.4-13.6-10.1l-7.8 6C6.5 42.2 14.6 47.5 24 47.5Z"/>
+      </svg>
+      <span>Zaloguj przez Google</span>
+    </button>
+
+    <p class="auth__foot muted">
+      Nie masz jeszcze konta? <a class="btn btn--underline" href="konto.html">Załóż konto</a>
+    </p>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="assets/nf-auth.js"></script>
+
+</body>
+</html>
