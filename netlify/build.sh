@@ -25,6 +25,17 @@ PAGES=(
   pomona-nf.html
   technologia-nf.html
   styleguide.html
+
+  # Panel klienta i logowanie (rozdz. 8A). Na podglądzie działają na
+  # danych przykładowych — supabase-config.js jest tu podmieniony na
+  # zaślepkę (sekcja 2b), więc panel otwiera się bez logowania i nie
+  # ma jak sięgnąć do produkcyjnej bazy.
+  konto-logowanie-nf.html
+  konto-nf.html
+  konto-zamowienia-nf.html
+  konto-zamowienie-nf.html
+  konto-dane-nf.html
+  konto-ulubione-nf.html
 )
 
 for page in "${PAGES[@]}"; do
@@ -41,6 +52,13 @@ cp index-nf.html "$OUT/index.html"
 mkdir -p "$OUT/assets"
 cp -R assets/. "$OUT/assets/"
 rm -f "$OUT/assets/wodospad.MOV" "$OUT/assets/sekcja hero.mp4"
+
+# --- 2b. Supabase: ZAŚLEPKA, nie produkcja ---------------------------------
+# Strony panelu wczytują supabase-config.js z katalogu głównego. Do _site
+# trafia pod tą nazwą plik z danymi przykładowymi, więc podgląd nie dostaje
+# ani adresu, ani klucza produkcyjnej bazy i nie ma jak jej dotknąć.
+# Efekt uboczny, o który chodziło: panel otwiera się bez logowania.
+cp netlify/supabase-config-demo.js "$OUT/supabase-config.js"
 
 # --- 3. Pliki specyficzne dla podglądu ---------------------------------------
 cp netlify/poza-podgladem.html "$OUT/poza-podgladem.html"

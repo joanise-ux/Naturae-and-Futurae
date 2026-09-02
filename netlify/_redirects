@@ -12,6 +12,22 @@
 /historia.html         /poza-podgladem.html   200
 /historia-en.html      /poza-podgladem.html   200
 
+# --- Panel klienta (rozdz. 8A) — ładne adresy -----------------------------
+#
+# Serwis jest statyczny i nie ma routera, więc pięć widoków panelu to pięć
+# plików. Ładny adres robi przepisanie 200: pasek adresu pokazuje /konto,
+# przeglądarka dostaje konto-nf.html.
+#
+# Panel jest w whiteliście netlify/build.sh i działa na podglądzie na
+# danych przykładowych (zaślepka supabase-config.js), więc otwiera się
+# bez logowania i nie sięga do produkcyjnej bazy.
+/konto/logowanie          /konto-logowanie-nf.html   200
+/konto                    /konto-nf.html             200
+/konto/zamowienia         /konto-zamowienia-nf.html  200
+/konto/zamowienia/:nr     /konto-zamowienie-nf.html?nr=:nr  200
+/konto/dane               /konto-dane-nf.html        200
+/konto/ulubione           /konto-ulubione-nf.html    200
+
 # Wszystko inne, czego nie ma w buildzie, też ląduje na zaślepce zamiast
 # na domyślnym 404 Netlify.
 /*                     /poza-podgladem.html   404
