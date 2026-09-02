@@ -24,6 +24,7 @@
      8A   .empty .skeleton     stan pusty i stan ładowania
      8A   .modal .num          potwierdzenie i dane liczbowe
      8A   .progress            postęp realizacji zamówienia
+     ---  .drawer              wysuwka boczna (koszyk)
 
    Zależy od: assets/tokens.css, assets/nf-base.css.
    ========================================================================== */
@@ -1950,3 +1951,120 @@ select.input option { color: var(--ink); background-color: var(--paper); }
   color: #FFFFFF;
 }
 .section--light .card__photo .stock { color: #FFFFFF; }
+
+
+/* --- .drawer — wysuwka boczna (koszyk) ------------------------------------
+   Zbudowana na <dialog>, tak jak .modal: pułapka focusu, zamknięcie Esc
+   i tło blokujące klikanie w treść pod spodem są wtedy zachowaniem
+   przeglądarki, a nie kodem, który można zapomnieć napisać.
+
+   Różnica wobec .modal to pozycja i kształt: wysuwka trzyma się prawej
+   krawędzi na pełną wysokość okna, bo zawiera listę, która rośnie.
+   -------------------------------------------------------------------------- */
+
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  max-width: 420px;
+  width: 100%;
+  max-height: 100dvh;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--glass-border);
+  border-radius: 0;
+  background: var(--brand-900);
+  color: var(--brand-100);
+  overflow: hidden;
+}
+.drawer::backdrop { background: rgba(0, 0, 0, 0.55); }
+
+/* Trzy pasy: nagłówek i stopka stoją, środek się przewija. Dzięki temu
+   suma i przycisk kasy są widoczne niezależnie od długości listy. */
+.drawer__inner {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+}
+
+.drawer__head,
+.drawer__foot {
+  padding: var(--space-m);
+  display: grid;
+  gap: var(--space-s);
+}
+
+.drawer__head {
+  grid-auto-flow: column;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.drawer__title { margin: 0; }
+
+.drawer__close {
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.drawer__close:hover { background: rgba(255, 255, 255, 0.12); }
+
+.drawer__body {
+  overflow-y: auto;
+  padding: var(--space-s) var(--space-m);
+}
+
+.drawer__foot { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+
+/* Wiersz pozycji: miniatura, opis, kwota i usunięcie. Ten sam raster
+   co .item w szczegółach zamówienia — koszyk i zamówienie pokazują to
+   samo, więc nie ma powodu, żeby wyglądały inaczej. */
+.drawer__item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-s);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.drawer__item:last-child { border-bottom: 0; }
+
+.drawer__thumb {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  background: var(--brand-800);
+}
+
+.drawer__money { text-align: right; white-space: nowrap; display: grid; gap: var(--space-2xs); justify-items: end; }
+
+.drawer__sum {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+/* Otwarcie 200ms (rozdz. 9) — wysuwka wjeżdża z prawej, nic poza tym
+   się nie rusza. */
+@media (prefers-reduced-motion: no-preference) {
+  .drawer[open] { animation: drawer-in var(--dur-open) var(--ease); }
+}
+@keyframes drawer-in {
+  from { transform: translateX(24px); opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .drawer { max-width: 100%; border-left: 0; }
+}

@@ -199,20 +199,138 @@
      sadzonki tego samego gatunku to dwie rzeczy w koszyku, nie jedna.
      Przy pustym koszyku licznik zostaje schowany: zero nic nie wnosi. */
 
-  function licznikKoszyka() {
+  function pozycjeKoszyka() {
+    return sb.from('cart_items')
+      .select('id, product_id, qty, products(id, name, latin, image, price, unit)')
+      .eq('user_id', user.id);
+  }
+
+  function licznikKoszyka(pozycje) {
     var bak = document.getElementById('koszykLicznik');
+    var ikona = document.getElementById('koszyk');
     if (!bak) return;
 
-    sb.from('cart_items').select('qty').eq('user_id', user.id).then(function (r) {
-      if (r.error) return;
-      var sztuk = (r.data || []).reduce(function (s, i) { return s + (Number(i.qty) || 0); }, 0);
-      if (!sztuk) return;
+    var sztuk = (pozycje || []).reduce(function (s, i) { return s + (Number(i.qty) || 0); }, 0);
 
-      bak.textContent = sztuk;
-      bak.hidden = false;
+    bak.textContent = sztuk;
+    bak.hidden = !sztuk;
+    if (ikona) {
+      ikona.setAttribute('aria-label', sztuk ? 'Koszyk, ' + sztuk + ' szt.' : 'Koszyk, pusty');
+    }
+  }
 
-      var ikona = document.getElementById('koszyk');
-      if (ikona) ikona.setAttribute('aria-label', 'Koszyk, ' + sztuk + ' szt.');
+  /* --- Wysuwka koszyka -----------------------------------------------------
+     Kliknięcie ikony pokazuje, co jest w koszyku, zamiast przerzucać do
+     sklepu. Dane idą z cart_items z dołączonym produktem — nazwa, cena
+     i zdjęcie mieszkają w products, w koszyku jest tylko ilość. */
+
+  function koszyk() {
+    var ikona = document.getElementById('koszyk');
+    var dlg = document.getElementById('koszykWysuwka');
+    if (!ikona || !dlg) return;
+
+    ikona.addEventListener('click', function () {
+      dlg.showModal();
+      wczytajKoszyk();
+    });
+
+    var zamknij = dlg.querySelector('[data-koszyk-zamknij]');
+    if (zamknij) zamknij.addEventListener('click', function () { dlg.close(); });
+
+    /* Pierwsze wczytanie w tle: licznik przy ikonie ma być aktualny,
+       zanim ktokolwiek otworzy wysuwkę. */
+    wczytajKoszyk(true);
+  }
+
+  function wczytajKoszyk(tylkoLicznik) {
+    pozycjeKoszyka().then(function (r) {
+      var poz = (r.error ? [] : r.data || []).filter(function (i) { return i.products; });
+      licznikKoszyka(poz);
+      if (!tylkoLicznik) rysujKoszyk(poz, r.error);
+    }).catch(function () {
+      if (!tylkoLicznik) rysujKoszyk([], true);
+    });
+  }
+
+  function rysujKoszyk(poz, blad) {
+    var stopka = document.getElementById('koszykStopka');
+
+    if (blad) {
+      bladWczytania('koszykTresc');
+      if (stopka) stopka.hidden = true;
+      return;
+    }
+
+    if (!poz.length) {
+      podmien('koszykTresc', el('div', { cls: 'empty' }, [
+        el('p', { text: 'Koszyk jest pusty.' }),
+        el('a', { cls: 'btn btn--secondary', text: 'Zobacz rośliny', attr: { href: 'sklep-nf.html' } })
+      ]));
+      if (stopka) { stopka.hidden = true; stopka.textContent = ''; }
+      return;
+    }
+
+    var lista = el('ul', { cls: 'mini-list' });
+    var suma = 0;
+
+    poz.forEach(function (i) {
+      var p = i.products;
+      var ile = Number(i.qty) || 0;
+      var cena = (Number(p.price) || 0) * ile;
+      suma += cena;
+
+      var nazwa = el('div', { cls: 'mini-item__name' });
+      if (p.latin) nazwa.appendChild(el('i', { cls: 'latin', text: p.latin, attr: { lang: 'la' } }));
+      nazwa.appendChild(el('span', { text: p.name }));
+      nazwa.appendChild(el('span', { cls: 'muted small num', text: ' × ' + ile }));
+
+      var usun = el('button', {
+        cls: 'btn btn--underline btn--small',
+        text: 'Usuń',
+        attr: { type: 'button' }
+      });
+      usun.addEventListener('click', function () { usunZKoszyka(i, p); });
+
+      lista.appendChild(el('li', { cls: 'drawer__item' }, [
+        p.image
+          ? el('img', { cls: 'drawer__thumb', attr: { src: p.image, alt: '', loading: 'lazy', decoding: 'async', width: 56, height: 56 } })
+          : el('span', { cls: 'drawer__thumb', attr: { 'aria-hidden': 'true' } }),
+        nazwa,
+        el('div', { cls: 'drawer__money' }, [
+          el('span', { cls: 'num', text: zl(cena) }),
+          usun
+        ])
+      ]));
+    });
+
+    podmien('koszykTresc', lista);
+
+    if (!stopka) return;
+    stopka.textContent = '';
+    stopka.hidden = false;
+
+    stopka.appendChild(el('p', { cls: 'drawer__sum' }, [
+      el('span', { text: 'Razem' }),
+      el('strong', { cls: 'num', text: zl(suma) })
+    ]));
+
+    /* Kasa jest na starym froncie — nowy nie ma jeszcze checkoutu. */
+    stopka.appendChild(el('a', {
+      cls: 'btn btn--primary',
+      text: 'Przejdź do kasy',
+      attr: { href: 'konto.html' }
+    }));
+  }
+
+  function usunZKoszyka(pozycja, produkt) {
+    potwierdz({
+      tytul: 'Usunąć „' + produkt.name + '” z koszyka?',
+      opis: 'Pozycja zniknie z koszyka. Zawsze możesz dodać ją ponownie.',
+      czasownik: 'Usuń z koszyka',
+      onPotwierdz: function () {
+        sb.from('cart_items').delete().eq('id', pozycja.id).eq('user_id', user.id)
+          .then(function () { wczytajKoszyk(); });
+      }
     });
   }
 
@@ -1164,7 +1282,7 @@
       user = session.user;
 
       narzedziaPersonelu();
-      licznikKoszyka();
+      koszyk();
 
       var widok = WIDOKI[document.body.getAttribute("data-view")];
       if (widok) widok();

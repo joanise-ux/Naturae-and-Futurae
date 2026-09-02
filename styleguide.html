@@ -1016,6 +1016,63 @@
     </div>
 
 
+
+    <!-- --- Wysuwka boczna --- -->
+    <p class="sg-states__label">.drawer — wysuwka boczna na &lt;dialog&gt;, uzyta jako koszyk</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <button class="btn btn--secondary" type="button" data-sg-modal-open="sgDrawer">Pokaż wysuwkę</button>
+
+        <dialog class="drawer" id="sgDrawer" aria-labelledby="sgDrawerTytul">
+          <div class="drawer__inner">
+            <div class="drawer__head">
+              <h3 class="h3 drawer__title" id="sgDrawerTytul">Koszyk</h3>
+              <button class="drawer__close" type="button" data-sg-modal-close="sgDrawer" aria-label="Zamknij koszyk">×</button>
+            </div>
+
+            <div class="drawer__body">
+              <ul class="mini-list">
+                <li class="drawer__item">
+                  <img class="drawer__thumb" src="assets/anubias.jpg" alt="" width="56" height="56">
+                  <div class="mini-item__name">
+                    <i class="latin" lang="la">Anubias barteri var. nana</i>
+                    <span>Anubias nana</span>
+                    <span class="muted small num"> × 2</span>
+                  </div>
+                  <div class="drawer__money">
+                    <span class="num">44,00 zł</span>
+                    <button class="btn btn--underline btn--small" type="button">Usuń</button>
+                  </div>
+                </li>
+                <li class="drawer__item">
+                  <span class="drawer__thumb" aria-hidden="true"></span>
+                  <div class="mini-item__name">
+                    <i class="latin" lang="la">Cryptocoryne wendtii</i>
+                    <span>Kryptokoryna Wendta</span>
+                    <span class="muted small num"> × 1</span>
+                  </div>
+                  <div class="drawer__money">
+                    <span class="num">28,00 zł</span>
+                    <button class="btn btn--underline btn--small" type="button">Usuń</button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="drawer__foot">
+              <p class="drawer__sum"><span>Razem</span><strong class="num">72,00 zł</strong></p>
+              <a class="btn btn--primary" href="#sgPanel">Przejdź do kasy</a>
+            </div>
+          </div>
+        </dialog>
+
+        <p class="sg-ref"><b>.drawer</b> na <code>&lt;dialog&gt;</code> — trzy pasy:
+           nagłówek i stopka stoją, środek się przewija, więc suma i przycisk kasy
+           są widoczne niezależnie od długości listy. Poniżej 480px zajmuje pełną
+           szerokość ekranu.</p>
+      </div>
+    </div>
+
     <!-- --- Układ i nawigacja --- -->
     <p class="sg-states__label">.panel + .panel-nav — lewa kolumna 240px, .glass, przyklejona</p>
     <div class="sg-frame">

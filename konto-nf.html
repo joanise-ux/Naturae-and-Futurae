@@ -49,10 +49,11 @@
       <!-- Koszyk jak w sklepie (6.3). Licznik uzupełnia nf-panel.js
            z tabeli cart_items; do czasu odpowiedzi jest schowany, żeby
            nie mignąć zerem przy każdym wejściu. -->
-      <a class="nav__icon" href="sklep-nf.html" id="koszyk" aria-label="Koszyk">
+      <button class="nav__icon" type="button" id="koszyk" aria-label="Koszyk"
+              aria-haspopup="dialog" aria-controls="koszykWysuwka">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
         <span class="nav__count" id="koszykLicznik" hidden></span>
-      </a>
+      </button>
 
       <a class="btn btn--ghost btn--small" href="konto-nf.html">Twoje konto</a>
       <button class="btn btn--primary btn--small" type="button" id="wyloguj">Wyloguj</button>
@@ -196,6 +197,28 @@
 </main>
 
 
+<!-- ===== Koszyk (wysuwka) ===========================================
+     Zawartość wpisuje nf-panel.js z tabeli cart_items. <dialog> daje
+     pułapkę focusu i zamknięcie Esc bez pisania tego drugi raz. -->
+<dialog class="drawer" id="koszykWysuwka" aria-labelledby="koszykTytul">
+  <div class="drawer__inner">
+    <div class="drawer__head">
+      <h2 class="h3 drawer__title" id="koszykTytul">Koszyk</h2>
+      <button class="drawer__close" type="button" data-koszyk-zamknij aria-label="Zamknij koszyk">×</button>
+    </div>
+
+    <div class="drawer__body" id="koszykTresc" aria-busy="true">
+      <div class="skeleton-stack" aria-hidden="true">
+        <div class="skeleton skeleton--row"></div>
+        <div class="skeleton skeleton--row"></div>
+      </div>
+    </div>
+
+    <div class="drawer__foot" id="koszykStopka" hidden></div>
+  </div>
+</dialog>
+
+<!-- ===== Modal potwierdzenia (8A, zasada 4) ===========================
 <!-- ===== Modal potwierdzenia (8A, zasada 4) ===========================
      Jeden na stronę, treść wpisuje nf-panel.js. <dialog> daje pułapkę
      focusu i zamknięcie Esc bez pisania tego drugi raz. -->
