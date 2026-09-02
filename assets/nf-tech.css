@@ -485,3 +485,36 @@
   }
   .tech-cta { padding: var(--space-m); }
 }
+
+/* --- Warianty na jasnej wyspie -------------------------------------------
+   § 02 i § 04 stoją na .section--light. Wszystko, co na ciemnym paśmie
+   bierze --brand-300 albo mosiądz, na papierze schodzi poniżej progu:
+   --brand-300 na --paper daje 1.7:1, --brass 2.2:1. Zamiana jest ta sama,
+   co w komponentach (3A.2, 6.6): tekst na --ink / --ink-muted, mosiądz na
+   --instrument-strong (4.2:1 na papierze), zieleń na --brand-700.
+   -------------------------------------------------------------------------- */
+
+.section--light .tech-head__no,
+.section--light .tech-head__label,
+.section--light .tech-step-card__time,
+.section--light .vs__tag,
+.section--light .vs__no,
+.section--light .vs__who { color: var(--ink-muted); }
+
+.section--light .tech-head__title em,
+.section--light .tech-head__title i { color: var(--brand-700); }
+
+.section--light .tech-step-card__no { color: var(--instrument-strong); }
+
+.section--light .tech-card__text em,
+.section--light .vs__title { color: var(--ink); }
+
+.section--light .vs__row + .vs__row { border-top-color: rgba(11, 93, 30, 0.16); }
+
+/* Kropka statusu na papierze: mosiądz schodzi na --instrument-strong
+   (4.2:1), zieleń zostaje na --brand-500 (3.4:1) — oba nad progiem 3:1
+   dla elementu nietekstowego. */
+.section--light .vs__dot { background: var(--instrument-strong); }
+.section--light .vs__col--ivt .vs__dot { background: var(--brand-500); }
+.section--light .vs__name { color: var(--instrument-strong); }
+.section--light .vs__col--ivt .vs__name { color: var(--brand-700); }
