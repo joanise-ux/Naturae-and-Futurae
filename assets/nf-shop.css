@@ -67,6 +67,12 @@
    przykleja. */
 .shop-page--hero { padding-top: 0; }
 
+/* ...ale hero nie daje odstępu pod sobą, a sekcje w sklepie mają padding
+   tylko u dołu — pierwsza sekcja po hero zaczynała się dokładnie na dolnej
+   krawędzi zdjęcia i nazwa kolekcji zlewała się z kadrem. Ten jeden styk
+   dostaje własny odstęp z góry. */
+.shop-page > .hero + .section { padding-top: var(--space-xl); }
+
 /* Pasek stoi między hero kategorii a listingiem. Odstęp nad nim daje
    sekcja wyżej (.shop-page .section ma padding tylko u dołu), więc bierze
    tylko własny margines pod spodem, do nagłówka listingu. */
