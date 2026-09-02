@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zamówienia — Nature &amp; Future</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Standardowy zestaw (rozdz. 0.1): tokeny + fundament + komponenty +
+     arkusz tej strony. nf-panel.css dokłada wyłącznie kompozycję panelu. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-panel.css">
+</head>
+
+<!-- Ciemna baza i zero mosiądzu (rozdz. 8A), ale bloki treści stoją na
+     jasnych kartach .section--light — decyzja z 2026-09-02. Na jednolitej
+     zieleni ciemne karty zlewały się z tłem i nie było widać granic bloku. -->
+<body data-brand="nf" data-view="zamowienia">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+<!-- ===== Nawigacja (6.3) — ta sama co na stronach, żeby powrót do sklepu
+           był jednym kliknięciem (8A) ==================================== -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html">Sklep</a></li>
+        <li><a href="technologia-nf.html">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html">Pomona</a></li>
+      </ul>
+
+    </nav>
+
+    <div class="nav__actions">
+      <!-- Koszyk jak w sklepie (6.3). Licznik uzupełnia nf-panel.js
+           z tabeli cart_items; do czasu odpowiedzi jest schowany, żeby
+           nie mignąć zerem przy każdym wejściu. -->
+      <a class="nav__icon" href="sklep-nf.html" id="koszyk" aria-label="Koszyk">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="nav__count" id="koszykLicznik" hidden></span>
+      </a>
+
+      <a class="btn btn--ghost btn--small" href="konto-nf.html">Twoje konto</a>
+      <button class="btn btn--primary btn--small" type="button" id="wyloguj">Wyloguj</button>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto-nf.html">Twoje konto</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main" class="panel-page">
+  <div class="panel">
+
+    <!-- ===== Kolumna panelu (8A) — 240px, .glass, przyklejona ========== -->
+    <nav class="panel-nav section--light" aria-label="Panel klienta">
+      <button class="btn btn--secondary btn--small panel-nav__toggle" type="button"
+              aria-expanded="false" aria-controls="panelNavList">Menu konta</button>
+      <ul class="panel-nav__list" id="panelNavList">
+        <li><a class="panel-nav__link" href="konto-nf.html">Przegląd</a></li>
+        <li><a class="panel-nav__link" href="konto-zamowienia-nf.html" aria-current="page">Zamówienia</a></li>
+        <li><a class="panel-nav__link" href="konto-dane-nf.html">Dane i adresy</a></li>
+        <li><a class="panel-nav__link" href="konto-ulubione-nf.html">Zapisane rośliny</a></li>
+      </ul>
+
+      <!-- Narzędzia personelu. Puste dla klienta; nf-panel.js wypełnia je
+           tylko przy randze >= 10. To wyłącznie skrót w interfejsie —
+           o dostępie decydują polityki RLS i sam dashboard, nie ukrycie
+           linku w menu. -->
+      <div class="panel-nav__staff" id="panelNavStaff" hidden></div>
+    </nav>
+
+    <div class="panel__main">
+
+      <div class="panel__head">
+        <h1 class="h2">Zamówienia</h1>
+      </div>
+
+      <section class="panel__block" aria-labelledby="hLista">
+        <h2 class="visually-hidden" id="hLista">Lista zamówień</h2>
+
+        <div class="filterbar">
+          <div class="field">
+            <label class="field__label" for="filtrStatus">Status</label>
+            <!-- Opcje dopisuje nf-panel.js z tego samego słownika, z którego
+                 bierze się etykieta w tabeli — inaczej łatwo o pozycję,
+                 która niczego nie filtruje. -->
+            <select class="input" id="filtrStatus">
+              <option value="">Wszystkie</option>
+            </select>
+          </div>
+          <p class="filterbar__count num" id="licznikZamowien" aria-live="polite"></p>
+        </div>
+
+        <div id="slotTabela" aria-busy="true">
+          <div class="skeleton-stack" aria-hidden="true">
+            <div class="skeleton skeleton--row"></div>
+            <div class="skeleton skeleton--row"></div>
+            <div class="skeleton skeleton--row"></div>
+            <div class="skeleton skeleton--row"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+</main>
+
+
+<!-- ===== Modal potwierdzenia (8A, zasada 4) ===========================
+     Jeden na stronę, treść wpisuje nf-panel.js. <dialog> daje pułapkę
+     focusu i zamknięcie Esc bez pisania tego drugi raz. -->
+<dialog class="modal" id="panelModal" aria-labelledby="panelModalTitle">
+  <h2 class="h3 modal__title" id="panelModalTitle" data-modal-title></h2>
+  <div class="modal__body">
+    <p data-modal-body></p>
+  </div>
+  <div class="modal__actions">
+    <button class="btn btn--primary" type="button" data-modal-confirm>Potwierdź</button>
+    <button class="btn btn--secondary" type="button" data-modal-cancel>Zachowaj</button>
+  </div>
+</dialog>
+
+
+<footer class="footer" id="kontakt">
+  <div class="container">
+
+    <div class="footer__top">
+      <div class="newsletter">
+        <h2 class="h3">Nowe odmiany raz w miesiącu</h2>
+        <p class="muted small">Jeden e-mail miesięcznie: co weszło do sprzedaży i co wychodzi z hodowli. Wypisujesz się jednym kliknięciem.</p>
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="visually-hidden" for="mail">Adres e-mail</label>
+          <input class="input" id="mail" name="mail" type="email" placeholder="imie@example.com" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Zapisz mnie</button>
+        </form>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Sklep</h3>
+          <ul>
+            <li><a href="sklep-nf.html">Rośliny akwariowe</a></li>
+            <li><a href="sklep-nf.html">Zestawy startowe</a></li>
+            <li><a href="sklep-nf.html">Poziomy trudności</a></li>
+            <li><a href="sklep-nf.html">Wysyłka i zwroty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Laboratorium</h3>
+          <ul>
+            <li><a href="technologia-nf.html">Technologia in vitro</a></li>
+            <li><a href="kamino-nf.html">Kamino BioLabs</a></li>
+            <li><a href="pomona-nf.html">PomonaLab</a></li>
+            <li><a href="#blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a></li>
+            <li><a href="tel:+48000000000">+48 000 000 000</a></li>
+            <li><a href="konto-nf.html">Twoje konto</a></li>
+            <li><a href="konto-zamowienia-nf.html">Status zamówienia</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      <span>© 2026 Nature &amp; Future. Laboratorium kultur in vitro.</span>
+      <span>Regulamin · Polityka prywatności</span>
+    </p>
+
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="assets/nf-components.js"></script>
+<script src="assets/nf-panel.js"></script>
+
+</body>
+</html>
