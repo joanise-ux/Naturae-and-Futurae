@@ -518,3 +518,30 @@
 .section--light .vs__col--ivt .vs__dot { background: var(--brand-500); }
 .section--light .vs__name { color: var(--instrument-strong); }
 .section--light .vs__col--ivt .vs__name { color: var(--brand-700); }
+
+/* FAQ na jasnej wyspie */
+.section--light .faq__icon { color: var(--instrument-strong); }
+.section--light .faq__title { color: var(--ink); }
+.section--light .faq__title em { color: var(--brand-700); }
+.section--light .faq__q:hover .faq__title { color: var(--brand-900); }
+.section--light .faq__q::after {
+  border-right-color: var(--ink-muted);
+  border-bottom-color: var(--ink-muted);
+}
+
+
+/* --- Krawędzie pasm ------------------------------------------------------
+   Jasna wyspa i Deep+ mają domyślnie rogi --radius-l. Wycięcie pod takim
+   rogiem nie jest niczym wypełnione — widać przez nie tło strony, czyli
+   gradient. Na stronie głównej to działa, bo wyspa sąsiaduje z pasmem
+   w dokładnie tym gradiencie. Tutaj pasma jasne i ciemne idą na przemian
+   trzy razy, a § 03 to płaskie --brand-900: w wycięciach rogów wychodził
+   jaśniejszy zielony niż pasmo obok i rogi odcinały się kolorem.
+
+   Pasma na tej stronie idą więc ostrą krawędzią od lewej do prawej.
+   Rozdz. 1, reguła 3 tego wymaga wprost („pełna szerokość i własne,
+   wyraźne krawędzie"); zaokrąglenie było dodatkiem, nie warunkiem.
+   -------------------------------------------------------------------------- */
+
+main > .section--light,
+main > .section--deeper { border-radius: 0; }

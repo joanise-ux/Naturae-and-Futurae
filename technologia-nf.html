@@ -18,11 +18,16 @@
 <link rel="stylesheet" href="assets/nf-tech.css">
 </head>
 
-<!-- Skórka Nature & Future (2.2). Cała strona ciemna: pasma § 02, § 03 i § 05
-     stoją na --grad-deep, a § 04 i § 06 na --brand-900 (.section--deeper),
-     żeby rytm dało się czytać bez ani jednej jasnej wyspy. Wcześniej sekcje
-     02–05 miały jasny, żółtozielony gradient — ciemne karty wyglądały na nim
-     jak wycięte dziury, a przygaszone etykiety znikały.
+<!-- Skórka Nature & Future (2.2). Rytm pasm: § 01 i § 05 na --grad-deep,
+     § 03 na --brand-900 (.section--deeper), a § 02, § 04 i § 06 jako jasne
+     wyspy (.section--light). Poprzednie tło sekcji 02–05 było jednym jasnym,
+     żółtozielonym gradientem — ciemne karty wyglądały na nim jak wycięte
+     dziury, a przygaszone etykiety znikały. Teraz jasne pasma są wyborem
+     rytmicznym i mają własne, wyraźne krawędzie (rozdz. 1).
+
+     UWAGA do rozdz. 1, reguła 1: między dwiema jasnymi wyspami mają stać
+     minimum dwie ciemne sekcje, a tu stoi po jednej. Decyzja właścicielki
+     strony, świadoma — nie poprawiać bez pytania.
 
      Ruch: rozdz. 9 bez wyjątków. Bez sceny sterowanej scrollem (9.1),
      bez fade-in-up, bez parallaxu. Dozwolone: hover 150ms, FAQ 200ms. -->
@@ -506,7 +511,7 @@
        Pytania rozwijane na <details>/<summary>: obsługa klawiaturą wchodzi
        z przeglądarki, bez ani jednej linii JS. Otwarcie 200ms (rozdz. 9).
   ==================================================================== -->
-  <section class="section section--deeper" id="faq" aria-labelledby="faqTitle">
+  <section class="section section--light" id="faq" aria-labelledby="faqTitle">
     <div class="container">
 
       <div class="tech-head">
@@ -519,7 +524,7 @@
 
       <div class="faq-grid">
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Czy roślina <em lang="la">in vitro</em> to GMO?</span>
@@ -527,7 +532,7 @@
           <p class="faq__a muted">Nie. Mikropropagacja to kopia wegetatywna — żadnej ingerencji w geny. To samo, co sadzonkowanie, tylko sterylne i w skali laboratoryjnej.</p>
         </details>
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Jak długo trwa cały proces?</span>
@@ -535,7 +540,7 @@
           <p class="faq__a muted">Od eksplantatu do gotowej, zaaklimatyzowanej rośliny — 3 do 6 miesięcy, zależnie od gatunku. Multiplikacja jest cykliczna — z każdej tury więcej materiału.</p>
         </details>
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Czy rośliny akwariowe in vitro są bezpieczne?</span>
@@ -543,7 +548,7 @@
           <p class="faq__a muted">Tak — to ich największa zaleta. Żadnych ślimaków, glonów, hydry, planarii. Roślina trafia do akwarium z gwarancją czystości, bez kwarantanny.</p>
         </details>
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Jak roślina przeżywa wyjście ze szkła?</span>
@@ -551,7 +556,7 @@
           <p class="faq__a muted">Powoli. Aklimatyzacja w szklarni z wysoką wilgotnością, stopniowo obniżaną. To najdelikatniejszy etap — wymaga uwagi, ale skuteczność u nas to ponad 95 %.</p>
         </details>
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Skąd biorą się stare odmiany jabłoni?</span>
@@ -559,7 +564,7 @@
           <p class="faq__a muted">Z sadu w Walimiu, gdzie drzewa rosną od XIX wieku. Pobieramy maleńki fragment, oczyszczamy z wirusów i zakładamy kulturę. Stary sad — w nowych roślinach.</p>
         </details>
 
-        <details class="faq card glass">
+        <details class="faq card glass--light">
           <summary class="faq__q">
             <span class="faq__icon" aria-hidden="true">Q.</span>
             <span class="faq__title">Współpracujecie ze szkółkami i hurtem?</span>
