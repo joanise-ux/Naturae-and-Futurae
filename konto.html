@@ -1302,7 +1302,7 @@ class Component extends DCLogic {
     const sb = window.supabaseClient;
     await sb.from('orders').insert({
       id: orderId, user_id: user?.id || null, total,
-      status: 'Pakowanie', delivery_method: selectedDeliveryId,
+      status: 'Nowe', delivery_method: selectedDeliveryId,
       payment_method: selectedPaymentId, address_snapshot: addrSnapshot,
       guest_email: guestMode ? guestData.email : null,
       guest_name: guestMode ? guestData.name : null,
