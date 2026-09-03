@@ -4,21 +4,14 @@
    pięciu widoków: konto-nf, konto-zamowienia-nf, konto-zamowienie-nf,
    konto-dane-nf, konto-ulubione-nf.
 
-   Komponenty panelu (.panel, .panel-nav, .table, .status, .empty,
-   .skeleton, .modal, .num) mieszkają w nf-components.css — używa ich
-   każdy z pięciu widoków, więc z definicji nie jest to kompozycja
-   jednej strony (rozdz. 0.1, reguła porządku).
+   Komponenty panelu (.panel, .panel-nav, .panel-page, .panel-card,
+   .stat-tiles, .tile-stat, .filterbar, .table, .status, .empty, .skeleton,
+   .modal, .num) mieszkają w nf-components.css — używa ich także panel
+   administratora, więc z definicji nie jest to kompozycja jednej strony
+   (rozdz. 0.1, reguła porządku).
 
    Zależy od: tokens.css, nf-base.css, nf-components.css.
    ========================================================================== */
-
-/* Nagłówek serwisu jest ten sam co na stronach (8A), ale bez hero pod
-   spodem .nav stoi od razu jako pigułka — panel musi sam odsunąć treść
-   spod niej. */
-.panel-page {
-  --nav-clear: calc(var(--space-s) + 72px + var(--space-l));
-  padding-top: var(--nav-clear);
-}
 
 
 /* --- Przegląd: trzy bloki (8A) ------------------------------------------- */
@@ -33,18 +26,6 @@
 /* Ostatnie zamówienie zajmuje pełną szerokość: niesie najwięcej treści
    i to po nie klient tu przychodzi. */
 .overview__wide { grid-column: 1 / -1; }
-
-.panel-card {
-  padding: var(--space-m);
-  display: grid;
-  gap: var(--space-s);
-  align-content: start;
-}
-
-/* display z reguły wyżej wygrywa z display:none, które atrybut hidden
-   dostaje z arkusza przeglądarki — formularz adresu potrafił przez to
-   stać otwarty od wejścia na stronę. Ta reguła przywraca hidden. */
-.panel-card[hidden] { display: none; }
 
 
 /* --- Miniatury pozycji (8A: zdjęcia to miniatury 64px) ------------------- */
@@ -115,23 +96,6 @@
 .totals dt.totals__sum { font-weight: 600; color: var(--brand-100); }
 
 
-/* --- Filtr statusu nad tabelą -------------------------------------------- */
-
-.filterbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: var(--space-s);
-  margin-bottom: var(--space-s);
-}
-.filterbar .field { min-width: 220px; }
-.filterbar__count { margin-left: auto; color: rgba(217, 252, 240, 0.72); }
-
-@media (max-width: 560px) {
-  .filterbar__count { margin-left: 0; }
-}
-
-
 /* --- Dane i adresy -------------------------------------------------------- */
 
 .addr-list {
@@ -160,19 +124,6 @@
 
 .addr__lines { margin: 0; color: rgba(217, 252, 240, 0.82); }
 
-/* Potwierdzenie zapisu stoi przy formularzu, nie jako znikający toast
-   w rogu (8A, zasada 7). */
-.form-note { color: var(--brand-300); }
-.form-note--error { color: var(--accent-soft); }
-
-.form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-s);
-  margin-top: var(--space-s);
-}
-
 
 /* --- Opieka po dostawie --------------------------------------------------- */
 
@@ -195,48 +146,6 @@
 
 .panel-hello { align-items: start; }
 .panel-hello__id { margin: 0; }
-
-/* Numer sekcji. Prowadzi wzrok po kolejności bloków, tak jak w starym
-   panelu — dlatego jest cichy i nie wchodzi w drogę nagłówkowi. */
-.panel__no {
-  color: rgba(217, 252, 240, 0.45);
-  font-size: var(--type-small);
-  margin-right: var(--space-2xs);
-}
-
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-s);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tile-stat {
-  padding: var(--space-s) var(--space-m);
-  display: grid;
-  gap: var(--space-2xs);
-  align-content: center;
-  min-height: 92px;
-}
-
-.tile-stat__value {
-  margin: 0;
-  font-size: var(--type-h3);
-  line-height: 1.2;
-  color: var(--brand-100);
-}
-
-/* Szkielet wartości musi mieć wysokość wiersza, inaczej kafel skacze
-   po wczytaniu danych. */
-.tile-stat__value.skeleton { min-height: 1.2em; max-width: 6ch; }
-
-.tile-stat__label {
-  margin: 0;
-  font-size: var(--type-small);
-  color: rgba(217, 252, 240, 0.72);
-}
 
 /* Dwie kolumny: treść główna i pas skrótów. Proporcja 1.6 : 1 — historia
    zamówień jest tym, po co klient tu wchodzi. */
@@ -294,52 +203,21 @@
 .mini-item__name { min-width: 0; }
 .mini-item__name .latin { font-size: var(--type-small); }
 
-/* Przycisk jako bezpośrednie dziecko karty rozciągał się na całą jej
-   szerokość — .panel-card jest gridem, a grid domyślnie rozciąga dzieci.
-   Akcja ma mieć szerokość swojej treści. */
-.panel-card > .btn,
-.panel__block > .btn { justify-self: start; }
 
+/* --- Jasne karty: dopełnienie dla komponentów tylko klienckich ------------
+   Wspólne reguły jasnej karty stoją w nf-components.css. Tutaj zostaje to,
+   czego panel administratora nie używa. Dlaczego jasno: panel stał na
+   jednolitym ciemnozielonym gradiencie, a szkło różniło się od niego
+   o kilka procent jasności — bloki zlewały się w jedną płaszczyznę.
+   -------------------------------------------------------------------------- */
 
-
-
-/* --- Róż w panelu ---------------------------------------------------------
-   Rozdz. 8A ograniczał róż do jednej akcji na ekran. Decyzją z 2026-09-02
-   panel klienta z tego wyjątku korzysta szerzej: różowe są wszystkie akcje
-   zapisujące i dodające, bo w narzędziu to one prowadzą użytkownika, a na
-   ciemnej zieleni przycisk obrysowany ginie. Dokument odnotowuje to w 8A. */
-.panel-card > .btn--primary,
-.panel__head .btn--primary { justify-self: start; }
-
-
-/* --- Jasne karty panelu ---------------------------------------------------
-   Bloki panelu używają .section--light, żeby włączyć jasne warianty
-   wszystkich komponentów naraz (przyciski, pola, tabela, status, postęp).
-   Klasa jest jednak pisana pod pasmo pełnej szerokości, więc karta
-   nadpisuje trzy rzeczy: promień, obrys i odstęp.
-
-   Dlaczego jasno: panel stał na jednolitym ciemnozielonym gradiencie,
-   a szkło różniło się od niego o kilka procent jasności — bloki zlewały
-   się w jedną płaszczyznę. Jasna karta daje granicę, której ciemna nie
-   dawała. Ciemna zostaje bazą strony, tak jak chce rozdz. 8A. */
-.panel-card,
-.panel-nav,
-.order-brief,
-.tile-stat {
+.order-brief {
   border-radius: var(--radius-m);
   border: 1px solid rgba(11, 93, 30, 0.14);
   box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18);
 }
 
-/* Nagłówki na jasnej karcie: grotesk i --ink, bez dziedziczenia
-   --brand-100 z ciemnej bazy. */
-.panel-card .h3,
-.order-brief .h3,
-.tile-stat__value { color: var(--ink); }
-
-.tile-stat__label,
-.panel__no,
-.panel-nav__label { color: var(--ink-muted); }
+.order-brief .h3 { color: var(--ink); }
 
 /* Adres to karta w karcie — musi odciąć się od jasnego tła bloku,
    więc idzie w biel, a nie w kolejny stopień zieleni. */
@@ -363,17 +241,5 @@
 .thumb,
 .mini-item__thumb { background: rgba(11, 93, 30, 0.10); }
 
-.order-brief__head,
-.panel-card .muted { color: var(--ink-muted); }
+.order-brief__head { color: var(--ink-muted); }
 
-/* Nagłówki widoków i etykieta filtra zostają na ciemnym tle strony,
-   więc nie mogą przejąć --ink z kart. */
-.panel__main > .panel__head .h2,
-.panel__block > .panel__head .h3,
-.filterbar .field__label,
-.filterbar__count { color: var(--brand-100); }
-.panel__main > .panel__head .num { color: rgba(217, 252, 240, 0.72); }
-
-/* Tabela wypełnia kartę do krawędzi — własny padding komórek wystarcza,
-   a podwójny odstęp odsuwałby wiersze od obrysu bez powodu. */
-.table-wrap.panel-card { padding: var(--space-xs) var(--space-s); }

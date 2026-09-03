@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analiza sklepu — panel Nature &amp; Future</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Standardowy zestaw (rozdz. 0.1): tokeny + fundament + komponenty +
+     arkusz tej strony. nf-admin.css dokłada wyłącznie kompozycję panelu
+     administratora — komponenty wspólne z panelem klienta stoją
+     w nf-components.css. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-admin.css">
+</head>
+
+<!-- Ciemna baza, jasne karty treści, zero mosiądzu (rozdz. 8A).
+     data-view wybiera widok w nf-admin.js. -->
+<body data-brand="nf" data-view="analiza">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+<!-- ===== Nawigacja (6.3) — ta sama co wszędzie, żeby powrót do sklepu
+           był jednym kliknięciem (8A). Bez koszyka: panel staffa jest
+           narzędziem, nie miejscem, w którym się kupuje. ================= -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html">Sklep</a></li>
+        <li><a href="technologia-nf.html">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html">Pomona</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="btn btn--ghost btn--small" href="konto-nf.html">Twoje konto</a>
+      <button class="btn btn--primary btn--small" type="button" id="wyloguj">Wyloguj</button>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto-nf.html">Twoje konto</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main" class="panel-page">
+  <div class="panel">
+
+    <!-- ===== Kolumna panelu (8A) — 240px, przyklejona ==================
+         Pozycje zastrzeżone dla administratora (ranga 11) startują
+         schowane i odsłania je nf-admin.js. Ukrycie linku to wyłącznie
+         porządek w interfejsie — o dostępie decydują polityki RLS
+         w bazie, nie widoczność pozycji w menu. -->
+    <nav class="panel-nav section--light" aria-label="Panel personelu">
+      <button class="btn btn--secondary btn--small panel-nav__toggle" type="button"
+              aria-expanded="false" aria-controls="panelNavList">Menu panelu</button>
+
+      <p class="admin-rank" id="rangaPersonelu">Personel</p>
+
+      <ul class="panel-nav__list" id="panelNavList">
+        <li><a class="panel-nav__link" href="admin-nf.html">Przegląd</a></li>
+        <li><a class="panel-nav__link" href="admin-produkty-nf.html">Produkty</a></li>
+        <li><a class="panel-nav__link" href="admin-zamowienia-nf.html">Zamówienia</a></li>
+        <li><a class="panel-nav__link" href="admin-uzytkownicy-nf.html">Użytkownicy</a></li>
+        <li data-ranga="11" hidden><a class="panel-nav__link" href="admin-analiza-nf.html" aria-current="page">Analiza sklepu</a></li>
+        <li data-ranga="11" hidden><a class="panel-nav__link" href="admin-kopie-nf.html">Kopie zapasowe</a></li>
+        <li data-ranga="11" hidden><a class="panel-nav__link" href="admin-poczta-nf.html">Poczta</a></li>
+      </ul>
+
+      <div class="panel-nav__staff">
+        <p class="panel-nav__label">Twoje konto</p>
+        <a class="panel-nav__link" href="konto-nf.html">Panel klienta</a>
+        <div class="admin-who">
+          <span class="avatar" id="ktoInicjaly" aria-hidden="true"></span>
+          <div>
+            <p class="admin-who__name" id="ktoNazwa"></p>
+            <p class="admin-who__mail num" id="ktoMail"></p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="panel__main">
+
+      <div class="panel__head">
+        <h1 class="h2">Analiza sklepu</h1>
+      </div>
+
+      <div class="admin-bar">
+        <div class="segmented" role="group" aria-label="Zakres analizy" id="zakres">
+          <button class="segmented__btn" type="button" data-okres="month" aria-pressed="false">Miesiąc</button>
+          <button class="segmented__btn" type="button" data-okres="quarter" aria-pressed="false">Kwartał</button>
+          <button class="segmented__btn" type="button" data-okres="year" aria-pressed="true">Rok</button>
+        </div>
+        <button class="btn btn--secondary btn--small" type="button" id="pobierzWszystko">Pobierz wszystko (CSV)</button>
+      </div>
+
+      <ul class="stat-tiles" id="kafle" aria-busy="true">
+        <li class="tile-stat section--light">
+          <p class="tile-stat__value num skeleton skeleton--line" id="statProdukty"></p>
+          <p class="tile-stat__label">Produkty aktywne</p>
+        </li>
+        <li class="tile-stat section--light">
+          <p class="tile-stat__value num skeleton skeleton--line" id="statPrzychod"></p>
+          <p class="tile-stat__label">Przychód w okresie</p>
+        </li>
+        <li class="tile-stat section--light">
+          <p class="tile-stat__value num skeleton skeleton--line" id="statZamowienia"></p>
+          <p class="tile-stat__label">Zamówienia w okresie</p>
+        </li>
+        <li class="tile-stat section--light">
+          <p class="tile-stat__value num skeleton skeleton--line" id="statMarza"></p>
+          <p class="tile-stat__label">Marża brutto</p>
+        </li>
+      </ul>
+
+      <!-- Każda karta ma własny eksport: dane z panelu wychodzą do arkusza
+           tym samym przyciskiem, którym się je ogląda. -->
+      <div class="admin-grid">
+
+        <section class="panel-card section--light admin-grid__wide" aria-labelledby="hTrend">
+          <div class="panel__head">
+            <h2 class="h3" id="hTrend">Trend przychodu</h2>
+            <button class="btn btn--underline" type="button" data-csv="trend">CSV</button>
+          </div>
+          <div id="slotTrend" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hRentownosc">
+          <div class="panel__head">
+            <h2 class="h3" id="hRentownosc">Rentowność</h2>
+            <button class="btn btn--underline" type="button" data-csv="rentownosc">CSV</button>
+          </div>
+          <div id="slotRentownosc" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hStatusy">
+          <div class="panel__head">
+            <h2 class="h3" id="hStatusy">Zamówienia wg statusu</h2>
+            <button class="btn btn--underline" type="button" data-csv="statusy">CSV</button>
+          </div>
+          <div id="slotStatusy" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hPlatnosci">
+          <div class="panel__head">
+            <h2 class="h3" id="hPlatnosci">Płatności</h2>
+            <button class="btn btn--underline" type="button" data-csv="platnosci">CSV</button>
+          </div>
+          <div id="slotPlatnosci" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hKategorie">
+          <div class="panel__head">
+            <h2 class="h3" id="hKategorie">Sprzedaż wg kategorii</h2>
+            <button class="btn btn--underline" type="button" data-csv="kategorie">CSV</button>
+          </div>
+          <div id="slotKategorie" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hKanaly">
+          <div class="panel__head">
+            <h2 class="h3" id="hKanaly">Sprzedaż wg kanałów</h2>
+            <button class="btn btn--underline" type="button" data-csv="kanaly">CSV</button>
+          </div>
+          <div id="slotKanaly" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hGap">
+          <div class="panel__head">
+            <h2 class="h3" id="hGap">Plan i wykonanie</h2>
+            <button class="btn btn--underline" type="button" data-csv="gap">CSV</button>
+          </div>
+          <div id="slotGap" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+
+          <form class="field" id="formCelu">
+            <label class="field__label" for="poleCel">Cel sprzedaży w tym okresie (zł)</label>
+            <input class="input num" type="number" id="poleCel" min="0" step="1" inputmode="decimal">
+            <div class="form-actions">
+              <button class="btn btn--primary btn--small" type="submit" id="zapiszCel">Zapisz cel</button>
+              <p class="form-note" id="notatkaCelu" role="status"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel-card section--light" aria-labelledby="hPunkty">
+          <div class="panel__head">
+            <h2 class="h3" id="hPunkty">Sprzedaż wg punktów</h2>
+            <button class="btn btn--underline" type="button" data-csv="punkty">CSV</button>
+          </div>
+          <div id="slotPunkty" aria-busy="true"><div class="skeleton skeleton--block" aria-hidden="true"></div></div>
+        </section>
+
+        <section class="panel-card section--light admin-grid__wide" aria-labelledby="hTop">
+          <div class="panel__head">
+            <h2 class="h3" id="hTop">Najlepiej sprzedające się rośliny</h2>
+            <button class="btn btn--underline" type="button" data-csv="top">CSV</button>
+          </div>
+          <div id="slotTop" aria-busy="true">
+            <div class="skeleton-stack" aria-hidden="true">
+              <div class="skeleton skeleton--row"></div>
+              <div class="skeleton skeleton--row"></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+<!-- ===== Modal potwierdzenia (8A, zasada 4) ===========================
+     Jeden na stronę, treść wpisuje nf-admin.js. <dialog> daje pułapkę
+     focusu i zamknięcie Esc bez pisania tego drugi raz. -->
+<dialog class="modal" id="panelModal" aria-labelledby="panelModalTitle">
+  <h2 class="h3 modal__title" id="panelModalTitle" data-modal-title></h2>
+  <div class="modal__body">
+    <p data-modal-body></p>
+  </div>
+  <div class="modal__actions">
+    <button class="btn btn--primary" type="button" data-modal-confirm>Potwierdź</button>
+    <button class="btn btn--secondary" type="button" data-modal-cancel>Zachowaj</button>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="assets/nf-components.js"></script>
+<script src="assets/nf-admin.js"></script>
+
+</body>
+</html>

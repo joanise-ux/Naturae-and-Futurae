@@ -54,6 +54,13 @@
   --brass-dim:  #8A7538;
   --brass-glow: rgba(184, 155, 80, 0.28);
 
+  /* Błękit rangi moderatora (8A.1). Wartość jest ta sama, co --brand-800
+     w skórce Kamina, ale tamta zmienna istnieje wyłącznie pod
+     [data-brand="kamino"] — na stronie NF rozwinęłaby się w zieleń.
+     Stąd własny token, a nie liczba wpisana w arkuszu panelu.
+     Na --paper daje 4.6:1, więc wystarcza także na tekst. */
+  --rank-blue:  #007A9A;
+
 
   /* ------------------------------------------------------------------------
      4. Typografia

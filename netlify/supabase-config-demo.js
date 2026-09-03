@@ -21,6 +21,13 @@
 
   var UID = 'demo-0000-0000-0000-000000000001';
 
+  /* Daty liczone względem dnia otwarcia podglądu. Gdyby były wpisane
+     na sztywno, analiza sklepu po kilku tygodniach pokazywałaby pusty
+     wykres — a to wyglądałoby jak błąd, nie jak zmyślone dane. */
+  function nDniTemu(n) {
+    return new Date(Date.now() - n * 86400000).toISOString();
+  }
+
   var DANE = {
     profiles: [{
       id: UID,
@@ -97,8 +104,119 @@
         created_at: '2026-09-01T11:00:00Z',
         products: { id: 'krypto', name: 'Kryptokoryna Wendta', latin: 'Cryptocoryne wendtii',
           image: 'assets/sp-flasks.jpg', price: 28, unit: 'szt. · kubek 5×5' } }
+    ],
+
+    /* --- Poniżej: zestaw dla panelu personelu (admin-*-nf.html) ----------
+       Panel klienta czyta tylko wiersze konta demo, więc te dane go nie
+       dotyczą. Panel personelu czyta wszystko i bez nich pokazywałby same
+       stany puste — a to akurat nie jest to, co zespół ma ocenić.
+
+       Wszystkie osoby, zamówienia i wiadomości poniżej są zmyślone. */
+
+    products: [
+      { id: 'anubias', name: 'Anubias nana', latin: 'Anubias barteri var. nana',
+        category: 'akwariowe', price: 22, cost: 8, stock: 20, unit: 'szt. · kubek 5×5',
+        image: 'assets/anubias.jpg', tag: 'łatwa',
+        description: 'Wolno rosnąca, wybacza błędy. Kłącze zostaje nad podłożem.' },
+      { id: 'krypto', name: 'Kryptokoryna Wendta', latin: 'Cryptocoryne wendtii',
+        category: 'akwariowe', price: 28, cost: 11, stock: 6, unit: 'szt. · kubek 5×5',
+        image: 'assets/Kryptokoryna wendta.jpg', tag: 'średnia',
+        description: 'Po przesadzeniu zrzuca liście i odbija — to normalne.' },
+      { id: 'mech-jaw', name: 'Mech jawajski', latin: 'Vesicularia montagnei',
+        category: 'akwariowe', price: 26, cost: 9, stock: 0, unit: 'porcja · kubek 5×5',
+        image: 'assets/sp-desk-bottles.jpg', tag: 'łatwa',
+        description: 'Do przywiązania na korzeniu albo kamieniu.' },
+      { id: 'eleocharis', name: 'Eleocharis mini', latin: 'Eleocharis pusilla',
+        category: 'akwariowe', price: 24, cost: 10, stock: 14, unit: 'porcja · kubek 5×5',
+        image: 'assets/sp-flasks.jpg', tag: 'średnia',
+        description: 'Trawnik. Potrzebuje światła i cierpliwości.' },
+      { id: 'jablon-glog', name: 'Jabłoń Charłamówka', latin: 'Malus domestica',
+        category: 'sadownicze', price: 84, cost: 38, stock: 5, unit: 'szt. · sadzonka',
+        image: 'assets/pomona.jpg', tag: 'stara odmiana',
+        description: 'Odmiana z archiwum PomonaLab, owocuje we wrześniu.' },
+      { id: 'grusza-bera', name: 'Grusza Bera Hardy', latin: 'Pyrus communis',
+        category: 'sadownicze', price: 92, cost: 41, stock: 0, unit: 'szt. · sadzonka',
+        image: 'assets/capsule-forest.jpg', tag: 'stara odmiana',
+        description: 'Wymaga zapylacza. Wysyłka jesienią.' }
+    ],
+
+    guests: [
+      { id: 'demo-gosc-1', full_name: 'Marek Bez Konta', email: 'marek@przyklad.test',
+        phone: '600 300 400' }
+    ],
+
+    sales_targets: [
+      { period: String(new Date().getFullYear()), amount: 4000, updated_by: UID }
+    ],
+
+    staff_audit: [],
+
+    emails: [
+      { id: 'demo-mail-1', folder: 'inbox', read: false,
+        from_name: 'Marek Bez Konta', from_address: 'marek@przyklad.test',
+        to_addresses: [{ email: 'kontakt@nfplantbiotech.com' }],
+        subject: 'Pytanie o wysyłkę mchu',
+        received_at: '2026-09-01T08:20:00Z',
+        body_text: 'Dzień dobry,\n\nczy mech jawajski wróci do sprzedaży przed końcem miesiąca? Chciałbym zamówić razem z anubiasem.\n\nPozdrawiam\nMarek' },
+      { id: 'demo-mail-2', folder: 'inbox', read: true,
+        from_name: 'Anna Przykładowa', from_address: 'anna@przyklad.test',
+        to_addresses: [{ email: 'kontakt@nfplantbiotech.com' }],
+        subject: 'Kryptokoryna zrzuciła liście',
+        received_at: '2026-08-24T16:05:00Z',
+        body_text: 'Dzień dobry, roślina po tygodniu zrzuciła wszystkie liście. Czy to normalne?' },
+      { id: 'demo-mail-3', folder: 'sent', read: true,
+        from_name: 'Nature & Future', from_address: 'kontakt@nfplantbiotech.com',
+        to_addresses: [{ email: 'anna@przyklad.test' }],
+        subject: 'Re: Kryptokoryna zrzuciła liście',
+        received_at: '2026-08-24T17:40:00Z',
+        body_text: 'To normalne — kryptokoryna przechodzi z kultury in vitro na warunki akwariowe i odbija po dwóch tygodniach.' }
     ]
   };
+
+  /* Zamówienia innych osób. Doklejone po deklaracji, bo część korzysta
+     z identyfikatorów produktów zdefiniowanych wyżej. */
+  DANE.orders = DANE.orders.concat([
+    { id: 'NF-0160', user_id: null, total: 84, status: 'Nowe',
+      created_at: nDniTemu(3), payment: 'Nieopłacone',
+      channel: 'online', location: 'online',
+      guest_name: 'Marek Bez Konta', guest_email: 'marek@przyklad.test',
+      address_snapshot: { full_name: 'Marek Bez Konta', street: 'Polna 3', postal: '58-300', city: 'Wałbrzych' } },
+
+    { id: 'NF-0159', user_id: UID, total: 176, status: 'W realizacji',
+      created_at: nDniTemu(9), payment: 'Opłacone',
+      channel: 'hurtownia', location: 'walim',
+      address_snapshot: { full_name: 'Anna Przykładowa', street: 'Świdnicka 12', postal: '50-068', city: 'Wrocław' } },
+
+    { id: 'NF-0158', user_id: UID, total: 268, status: 'Dostarczone',
+      created_at: nDniTemu(26), payment: 'Opłacone',
+      channel: 'online', location: 'wroclaw',
+      address_snapshot: { full_name: 'Anna Przykładowa', street: 'Świdnicka 12', postal: '50-068', city: 'Wrocław' } },
+
+    { id: 'NF-0157', user_id: null, total: 92, status: 'Anulowane',
+      created_at: nDniTemu(48), payment: 'Nieopłacone',
+      channel: 'marketplace', location: '',
+      guest_name: 'Marek Bez Konta', guest_email: 'marek@przyklad.test',
+      address_snapshot: null }
+  ]);
+
+  DANE.order_items = DANE.order_items.concat([
+    { order_id: 'NF-0160', product_id: 'jablon-glog', name: 'Jabłoń Charłamówka', qty: 1, price: 84, image: 'assets/pomona.jpg' },
+    { order_id: 'NF-0159', product_id: 'anubias', name: 'Anubias nana', qty: 4, price: 22, image: 'assets/anubias.jpg' },
+    { order_id: 'NF-0159', product_id: 'eleocharis', name: 'Eleocharis mini', qty: 2, price: 24, image: 'assets/sp-flasks.jpg' },
+    { order_id: 'NF-0158', product_id: 'krypto', name: 'Kryptokoryna Wendta', qty: 5, price: 28, image: 'assets/Kryptokoryna wendta.jpg' },
+    { order_id: 'NF-0158', product_id: 'grusza-bera', name: 'Grusza Bera Hardy', qty: 1, price: 92, image: 'assets/capsule-forest.jpg' },
+    { order_id: 'NF-0157', product_id: 'grusza-bera', name: 'Grusza Bera Hardy', qty: 1, price: 92, image: 'assets/capsule-forest.jpg' }
+  ]);
+
+  /* Więcej kont, żeby lista użytkowników i skala rang miały co pokazać. */
+  DANE.profiles = DANE.profiles.concat([
+    { id: 'demo-0000-0000-0000-000000000002', full_name: 'Piotr Moderator',
+      email: 'piotr@przyklad.test', phone: '600 200 300', rank: 10 },
+    { id: 'demo-0000-0000-0000-000000000003', full_name: 'Kasia Klientka',
+      email: 'kasia@przyklad.test', phone: '600 400 500', rank: 9 },
+    { id: 'demo-0000-0000-0000-000000000004', full_name: 'Tomasz Klient',
+      email: 'tomasz@przyklad.test', phone: '', rank: 9 }
+  ]);
 
   /* Zmiany trzymamy tylko w pamięci karty: recenzent może dodać adres albo
      usunąć obserwowaną roślinę i zobaczyć, co się dzieje, a odświeżenie
@@ -154,6 +272,25 @@
         return Promise.resolve({ data: out[0] || null, error: null });
       },
       single: function () { return api.maybeSingle(); },
+
+      limit: function () { return api; },
+
+      /* upsert wystarczy w wersji „po kluczu głównym albo po polu z opcji”.
+         Panel personelu używa go do celów sprzedaży i do przywracania kopii;
+         w obu przypadkach klucz jest jeden. */
+      upsert: function (wiersze, opcje) {
+        var klucz = (opcje && opcje.onConflict) || 'id';
+        var lista = Array.isArray(wiersze) ? wiersze : [wiersze];
+        DANE[tabela] = DANE[tabela] || [];
+        lista.forEach(function (w) {
+          var istnieje = DANE[tabela].filter(function (r) {
+            return String(r[klucz]) === String(w[klucz]);
+          })[0];
+          if (istnieje) Object.assign(istnieje, w);
+          else DANE[tabela].push(Object.assign({ id: nowyId() }, w));
+        });
+        return Promise.resolve({ data: lista, error: null });
+      },
 
       insert: function (wiersz) {
         var r = Object.assign({ id: nowyId(), created_at: new Date().toISOString() }, wiersz);
@@ -211,8 +348,25 @@
     access_token: 'demo'
   };
 
+  /* Wgrywanie zdjęć produktu. Na podglądzie plik zostaje w pamięci karty
+     jako blob: — recenzent widzi efekt, a nic nie leci na żaden serwer. */
+  var PLIKI = {};
+
+  function magazyn() {
+    return {
+      upload: function (sciezka, plik) {
+        PLIKI[sciezka] = URL.createObjectURL(plik);
+        return Promise.resolve({ data: { path: sciezka }, error: null });
+      },
+      getPublicUrl: function (sciezka) {
+        return { data: { publicUrl: PLIKI[sciezka] || '' } };
+      }
+    };
+  }
+
   window.supabaseClient = {
     from: zapytanie,
+    storage: { from: magazyn },
 
     auth: {
       getSession: function () {

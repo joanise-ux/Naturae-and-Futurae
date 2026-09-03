@@ -2068,3 +2068,165 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 @media (max-width: 480px) {
   .drawer { max-width: 100%; border-left: 0; }
 }
+
+
+/* --- 8A: komponenty wspólne obu panelom -----------------------------------
+   Do 2026-09-02 te bloki siedziały w nf-panel.css, czyli w arkuszu jednej
+   strony. Panel administratora (admin-*-nf.html) używa ich tak samo jak
+   panel klienta, więc reguła porządku z rozdz. 0.1 każe im zamieszkać tutaj:
+   komponent użyty na drugiej stronie przenosi się do nf-components.css.
+
+   Nie przeniosło się to, co zostaje kompozycją jednego panelu: układ dwóch
+   kolumn przeglądu klienta, lista adresów, pozycje zamówienia, opieka po
+   dostawie (nf-panel.css) oraz wykresy i poczta (nf-admin.css).
+   -------------------------------------------------------------------------- */
+
+/* Nagłówek serwisu jest ten sam co na stronach (8A), ale bez hero pod
+   spodem .nav stoi od razu jako pigułka — panel musi sam odsunąć treść
+   spod niej. */
+.panel-page {
+  --nav-clear: calc(var(--space-s) + 72px + var(--space-l));
+  padding-top: var(--nav-clear);
+}
+
+.panel-card {
+  padding: var(--space-m);
+  display: grid;
+  gap: var(--space-s);
+  align-content: start;
+}
+
+/* display z reguły wyżej wygrywa z display:none, które atrybut hidden
+   dostaje z arkusza przeglądarki — formularz potrafił przez to stać
+   otwarty od wejścia na stronę. Ta reguła przywraca hidden. */
+.panel-card[hidden] { display: none; }
+
+/* Numer sekcji. Prowadzi wzrok po kolejności bloków, tak jak w starym
+   panelu — dlatego jest cichy i nie wchodzi w drogę nagłówkowi. */
+.panel__no {
+  color: rgba(217, 252, 240, 0.45);
+  font-size: var(--type-small);
+  margin-right: var(--space-2xs);
+}
+
+/* Rząd kafli liczbowych. Nazwa własna, a nie .tiles — .tiles to kafle
+   sub-marek z rozdz. 6 i mają w tym pliku inną siatkę. Dwie różne rzeczy
+   pod jedną nazwą kończyły się tym, że o wyniku decydowała kolejność
+   wczytania arkuszy. */
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-s);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile-stat {
+  padding: var(--space-s) var(--space-m);
+  display: grid;
+  gap: var(--space-2xs);
+  align-content: center;
+  min-height: 92px;
+}
+
+.tile-stat__value {
+  margin: 0;
+  font-size: var(--type-h3);
+  line-height: 1.2;
+  color: var(--brand-100);
+}
+
+/* Szkielet wartości musi mieć wysokość wiersza, inaczej kafel skacze
+   po wczytaniu danych. */
+.tile-stat__value.skeleton { min-height: 1.2em; max-width: 6ch; }
+
+.tile-stat__label {
+  margin: 0;
+  font-size: var(--type-small);
+  color: rgba(217, 252, 240, 0.72);
+}
+
+/* --- Filtr nad tabelą ----------------------------------------------------- */
+
+.filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-s);
+  margin-bottom: var(--space-s);
+}
+.filterbar .field { min-width: 220px; }
+.filterbar__count { margin-left: auto; color: rgba(217, 252, 240, 0.72); }
+
+@media (max-width: 560px) {
+  .filterbar__count { margin-left: 0; }
+}
+
+/* --- Zapis formularza (8A, zasada 7) --------------------------------------
+   Potwierdzenie stoi przy formularzu, nie jako znikający toast w rogu. */
+
+.form-note { color: var(--brand-300); }
+.form-note--error { color: var(--accent-soft); }
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s);
+  margin-top: var(--space-s);
+}
+
+/* Przycisk jako bezpośrednie dziecko karty rozciągał się na całą jej
+   szerokość — .panel-card jest gridem, a grid domyślnie rozciąga dzieci.
+   Akcja ma mieć szerokość swojej treści. */
+.panel-card > .btn,
+.panel__block > .btn,
+.panel-card > .btn--primary,
+.panel__head .btn--primary { justify-self: start; }
+
+
+/* --- Jasne karty panelu ---------------------------------------------------
+   Bloki panelu używają .section--light, żeby włączyć jasne warianty
+   wszystkich komponentów naraz (przyciski, pola, tabela, status, postęp).
+   Klasa jest jednak pisana pod pasmo pełnej szerokości, więc karta
+   nadpisuje trzy rzeczy: promień, obrys i odstęp. -------------------------- */
+
+.panel-card,
+.panel-nav,
+.tile-stat {
+  border-radius: var(--radius-m);
+  border: 1px solid rgba(11, 93, 30, 0.14);
+  box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18);
+}
+
+/* Nagłówki na jasnej karcie: grotesk i --ink, bez dziedziczenia
+   --brand-100 z ciemnej bazy. */
+.panel-card .h3,
+.tile-stat__value { color: var(--ink); }
+
+.tile-stat__label,
+.panel__no,
+.panel-nav__label { color: var(--ink-muted); }
+
+.panel-card .muted { color: var(--ink-muted); }
+
+/* Nagłówki widoków i etykieta filtra zostają na ciemnym tle strony,
+   więc nie mogą przejąć --ink z kart. */
+.panel__main > .panel__head .h2,
+.panel__block > .panel__head .h3,
+.filterbar .field__label,
+.filterbar__count { color: var(--brand-100); }
+.panel__main > .panel__head .num { color: rgba(217, 252, 240, 0.72); }
+
+/* Tabela wypełnia kartę do krawędzi — własny padding komórek wystarcza,
+   a podwójny odstęp odsuwałby wiersze od obrysu bez powodu. */
+.table-wrap.panel-card { padding: var(--space-xs) var(--space-s); }
+
+/* Piąty status widzi tylko personel. Klient dostaje „Nowe” i „W realizacji”
+   jako jeden etap (8A), w panelu staffa to dwa różne kroki, więc „Nowe”
+   ma własną kropkę. */
+.status--new { --status-dot: var(--brand-100); }
+.section--light .status--new { --status-dot: var(--brand-900); }
+
+

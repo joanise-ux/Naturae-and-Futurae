@@ -162,11 +162,12 @@
      żeby nie rozjechał się przy zmianie.
 
      To wyłącznie skrót w interfejsie. Ukrycie linku niczego nie chroni:
-     dostęp do danych rozstrzygają polityki RLS (is_staff), a dashboard
+     dostęp do danych rozstrzygają polityki RLS (is_staff), a panel personelu
      i edytor sprawdzają rangę same, po swojej stronie.
 
-     Oba adresy prowadzą na STARY front — nowy nie ma jeszcze ani dashboardu,
-     ani edytora treści. Po migracji wystarczy podmienić dwa href-y. */
+     Dashboard ma już swoją wersję w nowym froncie (admin-*-nf.html), więc
+     pierwszy skrót prowadzi tam. Edytor treści został na starym froncie
+     i czeka na przepisanie — po nim zostaje do podmiany jeden href. */
   var RANGA_PERSONELU = 10;
 
   function narzedziaPersonelu() {
@@ -182,8 +183,8 @@
 
       slot.appendChild(el('a', {
         cls: 'panel-nav__link',
-        text: 'Dashboard',
-        attr: { href: 'sklep.html#dashboard' }
+        text: 'Panel personelu',
+        attr: { href: 'admin-nf.html' }
       }));
 
       slot.appendChild(el('a', {

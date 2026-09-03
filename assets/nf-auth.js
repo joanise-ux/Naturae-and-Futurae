@@ -19,9 +19,9 @@
   var sb = null;
 
   /* Adres powrotu — ta sama whitelista co w panel-klienta.html. Przyjmujemy
-     wyłącznie nazwę pliku panelu, więc parametrem nie da się przekierować
-     użytkownika na obcy serwis. */
-  var DOZWOLONE = /^konto(-[a-z]+)?-nf\.html(\?[A-Za-z0-9_=&%.\-]*)?$/;
+     wyłącznie nazwę pliku panelu klienta albo panelu personelu, więc
+     parametrem nie da się przekierować użytkownika na obcy serwis. */
+  var DOZWOLONE = /^(konto|admin)(-[a-z]+)?-nf\.html(\?[A-Za-z0-9_=&%.\-]*)?$/;
 
   function cel() {
     var p = new URLSearchParams(location.search).get('powrot');

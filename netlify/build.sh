@@ -36,6 +36,17 @@ PAGES=(
   konto-zamowienie-nf.html
   konto-dane-nf.html
   konto-ulubione-nf.html
+
+  # Panel personelu (rozdz. 8A). Na podglądzie stoi na tej samej zaślepce
+  # co panel klienta, a demo nadaje rangę 11 — recenzent widzi wszystkie
+  # siedem widoków bez dotykania produkcyjnej bazy.
+  admin-nf.html
+  admin-produkty-nf.html
+  admin-zamowienia-nf.html
+  admin-uzytkownicy-nf.html
+  admin-analiza-nf.html
+  admin-kopie-nf.html
+  admin-poczta-nf.html
 )
 
 for page in "${PAGES[@]}"; do

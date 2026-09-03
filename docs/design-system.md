@@ -759,7 +759,7 @@ Panel to narzędzie, nie opowieść. Ta sama paleta, te same tokeny i to samo sz
 | Odstęp między sekcjami | `clamp(--space-xl, 5.5vw, --space-2xl)` | `--space-l` |
 | Nagłówki | antykwa, Display XL | grotesk, maks. H2 |
 | Wysokość wiersza tabeli | — | 52px, `--space-s` w pionie |
-| Mosiądz | 2 elementy na ekran | **0 — panel jest bez mosiądzu** |
+| Mosiądz | 2 elementy na ekran | **0 — panel jest bez mosiądzu**, poza kropką rangi administratora (8A.1) |
 | Zdjęcia | duże, kadrowane | miniatury 64px |
 | Róż | 1 na ekran | akcje zapisujące, dodające i nieodwracalne |
 | Tło bloku treści | jasna wyspa co drugie pasmo | **jasna karta `.section--light`** na ciemnej bazie |
@@ -788,6 +788,8 @@ Lewa kolumna 240px, `.glass`, przyklejona. Na mobile chowa się pod przycisk i w
 
 Wszystkie osiem komponentów stoi w `nf-components.css` i jest pokazane w `styleguide.html` (sekcja „Panel klienta"). Panel klienta korzysta z nich w pięciu widokach: `konto-nf.html`, `konto-zamowienia-nf.html`, `konto-zamowienie-nf.html`, `konto-dane-nf.html`, `konto-ulubione-nf.html` — kompozycja tych stron mieszka w `nf-panel.css`, wspólna logika w `nf-panel.js`.
 
+Panel personelu (dawny „dashboard") ma siedem widoków: `admin-nf.html` (przegląd), `admin-produkty-nf.html`, `admin-zamowienia-nf.html`, `admin-uzytkownicy-nf.html`, `admin-analiza-nf.html`, `admin-kopie-nf.html`, `admin-poczta-nf.html`. Kompozycja siedzi w `nf-admin.css`, logika w `nf-admin.js`.
+
 | Komponent | Odpowiada zasadzie |
 |---|---|
 | `.panel` — układ z lewą kolumną 240px | Nawigacja panelu |
@@ -799,6 +801,9 @@ Wszystkie osiem komponentów stoi w `nf-components.css` i jest pokazane w `style
 | `.modal` — potwierdzenie z nazwą i czasownikiem skutku | 4 |
 | `.num` — `--font-mono` + `lining-nums tabular-nums` | 5 |
 | `.progress` — postęp realizacji zamówienia, ptaszek/kropka/pusto | 3, 10 |
+| `.panel-page`, `.panel-card`, `.stat-tiles` + `.tile-stat`, `.filterbar`, `.form-note` | wspólne dla obu paneli |
+
+Ostatni wiersz przyszedł tu z `nf-panel.css` 2026-09-02, przy okazji panelu personelu: komponent użyty na drugiej stronie przenosi się do `nf-components.css` (rozdz. 0.1). Rząd kafli liczbowych zmienił przy tym nazwę z `.tiles` na `.stat-tiles` — `.tiles` to kafle sub-marek z rozdz. 6 i mają w tym samym pliku inną siatkę, więc o wyniku decydowałaby kolejność wczytania arkuszy.
 
 **Zmiana z 2026-09-02.** Pierwsza wersja rozdziału mówiła „ciemna baza, bez jasnych wysp”. W praktyce panel stanął na jednym ciemnozielonym gradiencie, a szkło różniło się od niego o kilka procent jasności — bloki zlewały się w jedną płaszczyznę i nie było widać, gdzie kończy się jeden, a zaczyna drugi. Bloki treści dostały więc `.section--light`: ciemna baza zostaje tłem strony i nawigacji, jasna karta niesie treść. Karta produktu idzie tak samo — jasna, z różowym „Do koszyka” jak w sklepie; ciemne zostają tylko tag i wskaźnik stanu leżące na zdjęciu.
 
@@ -815,6 +820,44 @@ Odstęp sekcji nadpisuje się raz, na kontenerze panelu, a nie na każdej sekcji
 ```css
 .panel .section { padding-block: var(--space-l); }
 ```
+
+### 8A.1 Panel personelu
+
+**Zmiana z 2026-09-02.** Dashboard administratora przestał być trybem strony sklepu. Do tej pory mieszkał w `sklep.html` jako `dashboardMode`: jeden adres na siedem widoków, stan w polach komponentu, a wygląd w atrybutach `style` przy każdym elemencie. Skutki były trzy — widoku nie dało się otworzyć w nowej karcie ani wysłać komuś linkiem, przycisk „wstecz" wracał do sklepu zamiast do poprzedniej zakładki, a każda zmiana w systemie wymagała ręcznego przepisania kolorów w kilkuset miejscach.
+
+Teraz każdy widok ma własny adres i te same komponenty co reszta serwisu. Reguły 1–7 z tego rozdziału obowiązują tu bez wyjątku; poniżej to, co dochodzi.
+
+**Dwa progi rangi.** Ranga ≥ 10 (moderator) wchodzi do panelu i widzi produkty, zamówienia i konta. Ranga 11 (administrator) widzi dodatkowo analizę sklepu, kopie zapasowe i pocztę. Pozycje menu zastrzeżone dla administratora startują z atrybutem `hidden` i odsłania je `nf-admin.js` dopiero po odczytaniu rangi — dzięki temu moderator nie zobaczy ich nawet przez ułamek sekundy. **To jest porządek w interfejsie, nie zabezpieczenie.** O tym, kto co przeczyta i zapisze, rozstrzygają polityki RLS w bazie; panel sprawdza rangę drugi raz, po swojej stronie, i odsyła za niską do panelu klienta.
+
+**Piąty status.** Baza trzyma pięć wartości (`orders_status_check`), klient widzi cztery. Personel widzi wszystkie pięć, więc „Nowe" dostaje własną kropkę: `.status--new`.
+
+**Kolor rangi — wyjątek od „panel bez mosiądzu".** Cztery stopnie mają cztery barwy, tak jak w starym dashboardzie:
+
+| Stopień | Kolor | Token |
+|---|---|---|
+| 11 Administrator | mosiądz | `--brass` |
+| 10 Moderator | błękit | `--rank-blue` |
+| 9 Klient | zieleń marki | `--brand-500` |
+| 8 Gość | szarość | `--ink-muted` |
+| 1–7 wolne | bez koloru, obrys kreskowany | — |
+
+Pierwsze podejście trzymało się litery rozdziału i robiło z rang drabinę samych zieleni. Było spójne z resztą panelu i nieczytelne w praktyce: w tabeli dwa sąsiednie stopnie różniły się o odcień i nie dało się ich rozpoznać kątem oka. Rangi nie są zresztą skalą natężenia, tylko czterema różnymi rolami — a cztery role potrzebują czterech barw.
+
+Mosiądz przy administratorze to więc **świadomy wyjątek, jedyny w panelu**. Poza kropką rangi nie ma go tu nigdzie: żadnych tarcz, wskazówek, ramek z narożnikami ani separatorów z nitem. Kropka rangi pojawia się w trzech miejscach (chip skali, kolumna „Ranga", własna ranga w kolumnie panelu) i nigdzie indziej.
+
+`--rank-blue` to nowy token w `tokens.css`, o wartości `--brand-800` ze skórki Kamina. Osobny token, bo tamta zmienna istnieje wyłącznie pod `[data-brand="kamino"]` — na stronie NF rozwinęłaby się w zieleń i moderator wyszedłby zielony. Wartości nie wpisujemy do arkusza panelu: kolory rang nadaje `KOLOR_RANGI` w `nf-admin.js`, jedna mapa na trzy miejsca.
+
+Nazwa stopnia stoi wszędzie słowem, więc nic tu nie zależy od rozróżniania barw (rozdz. 10).
+
+**Wykresy mają szerszą paletę niż statusy.** Cztery kropki statusów wystarczają na etykietę, ale donut, którego wycinki mają ten sam kolor, nie niesie żadnej informacji. Wykresy sięgają więc po pełny zakres tokenów marki plus `--warn` i `--ink-muted`. Zasada z rozdz. 10 zostaje spełniona inaczej: **każdy wykres ma legendę ze słowem i liczbą**, a pojedynczy pierścień ma wartość wpisaną w środku. Kolor niczego nie niesie sam.
+
+W wykresach mosiądzu nie ma ani grama. Stary dashboard rysował na nim tarcze i wskazówki, co wprost łamało wiersz „Mosiądz: 0" z tabeli wyżej — a wyjątek wyżej dotyczy wyłącznie kropki rangi, nie wykresów.
+
+**Poczta nie ufa własnej treści.** Wiadomość przychodzi z zewnątrz, więc trafia do DOM wyłącznie jako tekst: `body_text` wprost, a `body_html` po zdjęciu znaczników i rozwinięciu encji w `<textarea>`. Stary dashboard wstawiał ją przez `innerHTML`.
+
+Panel personelu **nie** używa: `.gauge`, `.rule-rivet`, `.anno`, `.hero`, `.card--split`, `.drawer` (koszyk), stopki marketingowej. Nagłówek serwisu zostaje ten sam, ale bez koszyka: to narzędzie, a nie miejsce, w którym się kupuje.
+
+Komponenty własne panelu personelu (`.segmented`, `.donut`, `.bars`, `.legend`, `.rank-chip`, `.chips`, `.mail-row`, `.backup`) siedzą w `nf-admin.css` i **nie** wchodzą do `styleguide.html` — tak samo jak `.item`, `.totals` czy `.addr` z `nf-panel.css`. Styleguide pokazuje komponenty systemu, nie kompozycję konkretnego widoku.
 
 ---
 

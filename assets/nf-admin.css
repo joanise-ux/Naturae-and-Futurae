@@ -1,0 +1,508 @@
+/* ==========================================================================
+   Nature & Future — nf-admin.css
+   Czwarty arkusz stron panelu administratora (rozdz. 0.1). Wyłącznie
+   kompozycja siedmiu widoków: admin-nf, admin-produkty-nf,
+   admin-zamowienia-nf, admin-uzytkownicy-nf, admin-analiza-nf,
+   admin-kopie-nf, admin-poczta-nf.
+
+   Wszystko, co panel administratora dzieli z panelem klienta (.panel,
+   .panel-nav, .panel-page, .panel-card, .stat-tiles, .tile-stat, .table,
+   .status, .empty, .skeleton, .modal, .filterbar, .num), stoi
+   w nf-components.css — reguła porządku z rozdz. 0.1.
+
+   Rozdz. 8A obowiązuje tu w całości: zero mosiądzu, nagłówki groteskiem
+   maks. H2, wiersz tabeli 52px, dane liczbowe w .num, stan pusty i szkielet
+   zaprojektowane, nic nieodwracalnego bez potwierdzenia.
+
+   Zależy od: tokens.css, nf-base.css, nf-components.css.
+   ========================================================================== */
+
+
+/* --- Tożsamość zalogowanego w kolumnie panelu -----------------------------
+   Ze starego dashboardu: ranga na górze kolumny, osoba na dole. Ranga jest
+   słowem, nie samą kropką — ta sama zasada, co przy statusach (8A, 3).
+   -------------------------------------------------------------------------- */
+
+.admin-rank {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-s);
+  font-size: var(--type-small);
+  color: var(--ink-muted);
+}
+
+.admin-rank::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--rank-color, var(--brand-600));
+}
+
+.admin-who {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: var(--space-xs);
+  align-items: center;
+  margin-top: var(--space-xs);
+  padding-top: var(--space-s);
+  border-top: 1px solid rgba(11, 93, 30, 0.16);
+}
+
+.admin-who__name,
+.admin-who__mail { margin: 0; overflow-wrap: anywhere; }
+.admin-who__name { font-size: var(--type-small); font-weight: 600; color: var(--ink); }
+.admin-who__mail { font-size: 12px; color: var(--ink-muted); }
+
+/* Inicjały zamiast zdjęcia: panel nie ma awatarów, a dwie litery
+   wystarczą, żeby odróżnić konto od konta na liście użytkowników. */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: var(--radius-s);
+  background: rgba(11, 93, 30, 0.12);
+  color: var(--brand-900);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* --- Przełącznik zakresu (okres analizy, zakładki poczty) -----------------
+   Grupa przycisków ze stanem w aria-pressed — stan siedzi w atrybucie,
+   nie tylko w kolorze (rozdz. 10). -------------------------------------- */
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  border: 1px solid rgba(11, 93, 30, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.segmented__btn {
+  padding: 8px 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--brand-900);
+  font: inherit;
+  font-size: var(--type-small);
+  cursor: pointer;
+}
+.segmented__btn:hover { background: rgba(11, 93, 30, 0.08); }
+
+.segmented__btn[aria-pressed="true"] {
+  background: var(--brand-700);
+  color: var(--brand-100);
+  font-weight: 600;
+}
+
+/* Pasek nad widokiem: zakres po lewej, eksport po prawej. */
+.admin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+
+/* --- Siatka kart analizy --------------------------------------------------
+   Karty układają się same: tyle kolumn, ile zmieści się przy 380px.
+   Karta pełnej szerokości dostaje modyfikator.
+   -------------------------------------------------------------------------- */
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: var(--space-s);
+  align-items: start;
+}
+
+.admin-grid__wide { grid-column: 1 / -1; }
+
+@media (max-width: 560px) {
+  .admin-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* --- Wykresy --------------------------------------------------------------
+   Paleta wykresów jest szersza niż cztery kropki statusów: donut, którego
+   wycinki mają ten sam kolor, nie niesie żadnej informacji. Kolory idą
+   z tokenów marki plus --warn i --ink-muted, a legenda zawsze podaje słowo
+   i liczbę — kolor jest dodatkiem, nie nośnikiem treści (rozdz. 10).
+   Mosiądzu tu nie ma ani grama (8A).
+   -------------------------------------------------------------------------- */
+
+.chart { width: 100%; height: auto; }
+
+/* Trend: linia i wypełnienie pod nią. Proporcja stała, żeby karta nie
+   skakała między okresami o różnej liczbie kubełków. */
+.chart--trend { aspect-ratio: 620 / 220; }
+
+.chart__line { fill: none; stroke: var(--brand-700); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart__area { fill: rgba(19, 154, 67, 0.16); stroke: none; }
+.chart__dot  { fill: var(--paper); stroke: var(--brand-700); stroke-width: 2; }
+.chart__tick { fill: var(--ink-muted); font-family: var(--font-mono); font-size: 10px; }
+
+/* Pierścień: jedna wartość w środku. */
+.donut {
+  position: relative;
+  width: 148px;
+  flex: 0 0 auto;
+  margin-inline: auto;
+}
+
+.donut__ring { fill: none; stroke-width: 13; }
+.donut__track { stroke: rgba(11, 93, 30, 0.12); }
+
+.donut__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.donut__value { margin: 0; font-size: var(--type-h3); font-weight: 600; color: var(--ink); }
+.donut__label { margin: 0; font-size: var(--type-small); color: var(--ink-muted); }
+
+.chart-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-m);
+}
+.chart-row > .legend { flex: 1 1 180px; }
+
+/* Legenda: kropka, słowo, liczba. */
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xs); }
+
+.legend li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-size: var(--type-small);
+}
+
+.legend__dot {
+  flex: 0 0 auto;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--legend-dot, var(--ink-muted));
+  transform: translateY(-1px);
+}
+
+.legend__count { margin-left: auto; }
+
+/* Słupki: wartość nad słupkiem, etykieta pod nim. */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-s);
+  min-height: 180px;
+  padding-top: var(--space-s);
+}
+
+.bar { flex: 1 1 0; display: grid; justify-items: center; gap: var(--space-2xs); }
+
+.bar__fill {
+  width: 100%;
+  max-width: 72px;
+  height: var(--bar-h, 2px);
+  border-radius: var(--radius-s) var(--radius-s) 0 0;
+  background: var(--brand-600);
+}
+
+.bar__value { font-size: var(--type-small); color: var(--ink); }
+.bar__label { font-size: var(--type-small); color: var(--ink-muted); text-align: center; }
+
+/* Ranking: pozycja, nazwa z paskiem udziału, liczby po prawej. */
+.rank-list { list-style: none; margin: 0; padding: 0; display: grid; }
+
+.rank-item {
+  display: grid;
+  grid-template-columns: 2.5ch minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid rgba(11, 93, 30, 0.12);
+}
+.rank-item:last-child { border-bottom: 0; }
+
+.rank-item__bar {
+  height: 4px;
+  margin-top: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(11, 93, 30, 0.12);
+}
+.rank-item__bar span {
+  display: block;
+  height: 100%;
+  width: var(--share, 3%);
+  border-radius: inherit;
+  background: var(--brand-600);
+}
+
+.rank-item__money { text-align: right; white-space: nowrap; }
+
+
+/* --- Skala rang (widok użytkowników) --------------------------------------
+   Jedenaście stopni, z których 1–7 są wolne. Chip niesie liczbę i słowo;
+   rangi wolne są wyciszone, ale zostają na liście — kto nadaje rangę,
+   ma widzieć całą skalę, nie jej fragment.
+   -------------------------------------------------------------------------- */
+
+.rank-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+.rank-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  padding: 5px 12px;
+  border: 1px solid var(--rank-color, rgba(11, 93, 30, 0.18));
+  border-radius: var(--radius-s);
+  font-size: var(--type-small);
+  color: var(--ink);
+}
+
+/* Stopnie wolne nie dostają koloru: nie ma czego oznaczać, a kreskowany
+   obrys mówi to samo co słowo „Wolna”. */
+.rank-chip--free { color: var(--ink-muted); border-style: dashed; }
+
+.rank-chip b { font-weight: 600; }
+
+/* --- Kolor rangi ----------------------------------------------------------
+   Cztery odrębne barwy, jak w starym dashboardzie: mosiądz dla
+   administratora, błękit dla moderatora, zieleń marki dla klienta,
+   szarość dla gościa. Wartości siedzą w KOLOR_RANGI w nf-admin.js, bo
+   to samo cztery pary nadaje kropkom w trzech miejscach naraz.
+
+   Mosiądz w panelu jest wyjątkiem zapisanym w rozdz. 8A.1 — i jedynym.
+   Poza kropką rangi nie ma go tu nigdzie.
+
+   Kolor zostaje dodatkiem: każdy chip i każda komórka niosą nazwę stopnia
+   słowem, więc nic nie zależy tu od rozróżniania barw (rozdz. 10).
+   -------------------------------------------------------------------------- */
+
+.rank-chip::before,
+.rank-dot {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rank-color, var(--ink-muted));
+  align-self: center;
+}
+
+.rank-chip--free::before { background: none; border: 1px solid var(--ink-muted); }
+
+/* Ranga w tabeli: kropka przed wartością, żeby wiersz został przy 52px.
+   Pole wyboru nie umie mieć własnej kropki, więc stoi ona obok. */
+.cell-rank { display: flex; align-items: center; gap: var(--space-xs); }
+.cell-rank .cell-select { flex: 1 1 auto; }
+
+
+/* --- Komórki tabeli z polem wyboru ----------------------------------------
+   Zamówienie zmienia status, płatność, kanał i punkt wprost w wierszu.
+   Pole jest niższe niż standardowe .input — wiersz ma zostać przy 52px.
+   -------------------------------------------------------------------------- */
+
+.cell-select { min-width: 150px; padding: 8px var(--space-xs); font-size: var(--type-small); }
+
+.table td .cell-select { width: 100%; }
+
+/* Dwa pola w jednej komórce (kanał + punkt) stoją pod sobą. */
+.cell-stack { display: grid; gap: var(--space-2xs); }
+
+/* Klient w wierszu: nazwisko, kontakt, adres — trzy wiersze jednej komórki. */
+.cell-lines { display: grid; gap: 2px; min-width: 0; }
+.cell-lines__sub { font-size: var(--type-small); color: var(--ink-muted); overflow-wrap: anywhere; }
+
+
+/* --- Karta produktu w panelu ----------------------------------------------
+   Karta z rozdz. 6.2 bez zmian; panel dokłada tylko rząd akcji pod spodem
+   i .btn--secondary zamiast różu (8A: kilka kart na ekranie dałoby kilka
+   różów, a róż jest zarezerwowany dla akcji nieodwracalnej).
+   -------------------------------------------------------------------------- */
+
+.card__actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.card__actions .btn { flex: 1 1 auto; justify-content: center; }
+
+/* Miniatura w formularzu produktu. */
+.form-thumb {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-s);
+  background: rgba(11, 93, 30, 0.10);
+}
+
+
+/* --- Kopie zapasowe -------------------------------------------------------- */
+
+.backup-list { list-style: none; margin: 0; padding: 0; display: grid; }
+
+.backup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-s);
+  border-bottom: 1px solid rgba(11, 93, 30, 0.12);
+}
+.backup:last-child { border-bottom: 0; }
+
+.backup__name { margin: 0; overflow-wrap: anywhere; }
+.backup__meta { margin: 0; font-size: var(--type-small); color: var(--ink-muted); }
+
+/* Ostrzeżenie przed nadpisaniem danych. Ramka, nie kolorowe tło —
+   panel nie ma pasków alarmowych, ma zdania. */
+.notice {
+  padding: var(--space-s);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-s);
+  color: var(--ink);
+}
+.notice p { margin: 0; }
+
+
+/* --- Poczta ---------------------------------------------------------------
+   Trzy widoki pod jednym adresem: lista, wiadomość, nowa wiadomość.
+   Przełącza je JS, bo to jeden proces, a nie trzy miejsca w serwisie.
+   -------------------------------------------------------------------------- */
+
+.mail-list { list-style: none; margin: 0; padding: 0; display: grid; }
+
+.mail-row {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--space-s) 0;
+  border: 0;
+  border-bottom: 1px solid rgba(11, 93, 30, 0.12);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mail-row:last-child { border-bottom: 0; }
+.mail-row:hover { background: rgba(11, 93, 30, 0.05); }
+
+/* Nieprzeczytana niesie słowo dla czytnika ekranu i pogrubienie dla oka —
+   sama grubość pisma byłaby informacją przekazaną wyłącznie wyglądem. */
+.mail-row--unread .mail-row__from,
+.mail-row--unread .mail-row__subject { font-weight: 600; }
+
+.mail-row__from,
+.mail-row__subject { min-width: 0; overflow-wrap: anywhere; }
+.mail-row__when { color: var(--ink-muted); font-size: var(--type-small); white-space: nowrap; }
+
+@media (max-width: 700px) {
+  .mail-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xs); }
+  .mail-row__when { text-align: left; }
+}
+
+/* Odbiorcy jako lista usuwalnych pozycji. */
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 5px 6px 5px 12px;
+  border: 1px solid rgba(11, 93, 30, 0.18);
+  border-radius: var(--radius-pill);
+  font-size: var(--type-small);
+}
+
+.chip__remove {
+  display: grid;
+  place-items: center;
+  width: 22px; height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+.chip__remove:hover { background: rgba(11, 93, 30, 0.10); }
+
+/* Podpowiedzi odbiorców pod polem wyszukiwania. */
+.suggest {
+  list-style: none;
+  margin: var(--space-2xs) 0 0;
+  padding: var(--space-2xs);
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid rgba(11, 93, 30, 0.18);
+  border-radius: var(--radius-s);
+  background: rgba(255, 255, 255, 0.92);
+  display: grid;
+  gap: 2px;
+}
+.suggest[hidden] { display: none; }
+
+.suggest button {
+  width: 100%;
+  padding: 8px var(--space-xs);
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--type-small);
+  text-align: left;
+  cursor: pointer;
+}
+.suggest button:hover { background: rgba(11, 93, 30, 0.08); }
+.suggest .suggest__mail { color: var(--ink-muted); }
+
+/* Edytor treści. Pasek narzędzi robi to samo, co skróty klawiaturowe
+   przeglądarki — dlatego są to zwykłe przyciski z etykietą, a nie ikony. */
+.mail-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+
+.mail-editor {
+  min-height: 220px;
+  padding: var(--space-s);
+  border: 1px solid rgba(11, 93, 30, 0.22);
+  border-radius: var(--radius-s);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.mail-editor:focus-visible { border-color: var(--focus-strong); }
+
+.mail-meta { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2xs) var(--space-s); }
+.mail-meta dt { color: var(--ink-muted); font-size: var(--type-small); }
+.mail-meta dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Treść odebranej wiadomości. Wstawiana jako tekst, nigdy jako HTML —
+   wiadomość przychodzi z zewnątrz i nie ma prawa nic wykonać. */
+.mail-body { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+
+/* --- Formularz w modalu ---------------------------------------------------
+   Edycja produktu to jedyne miejsce panelu, gdzie formularz nie mieści się
+   w karcie — modal potwierdzenia (8A, zasada 4) dostaje więc szerszy
+   wariant i przewijaną treść, żeby akcje zostały widoczne.
+   -------------------------------------------------------------------------- */
+
+.modal--form { max-width: 44rem; }
+.modal--form .modal__body { max-height: 60vh; overflow-y: auto; display: grid; gap: var(--space-s); }
+
+/* Kwoty i daty w tabeli nie łamią się w połowie: kolumna z liczbami ma
+   stać w pionie, a „84,00” nad „zł” to dwie linie zamiast jednej wartości
+   (8A, zasada 5). */
+.table td.num { white-space: nowrap; }
