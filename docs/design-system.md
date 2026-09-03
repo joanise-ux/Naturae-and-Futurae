@@ -247,7 +247,9 @@ Mosiądz jest świadomie wzięty z palety PomonaLab (`#B89B50`) — dzięki temu
 
 **Mosiądz nigdy nie jest wypełnieniem.** Występuje wyłącznie jako linia, pierścień, wskazówka, narożnik ramki albo cienki separator. Zero mosiężnych przycisków, zero mosiężnych tł. Różowy zostaje jedynym kolorem akcji — mosiądz nie może z nim konkurować, bo od razu zrobi się z tego jarmark.
 
-Limit: **maksymalnie dwa mosiężne elementy w jednym widoku ekranu.**
+Limit: **maksymalnie dwa mosiężne akcenty w jednym widoku ekranu** — tarcze, wskazówki, narożniki, separatory sekcji.
+
+Obwódka płyty (3A.7) do tego limitu **się nie liczy**. Nie jest akcentem, tylko materiałem krawędzi, i z definicji powtarza się tyle razy, ile na ekranie stoi kart. Limit pilnuje tego, żeby mosiądz nie zrobił jarmarku z ozdób — a nie tego, żeby karty nie miały krawędzi.
 
 ### 3A.2 Wskaźnik liczbowy (gauge)
 
@@ -283,6 +285,34 @@ Podpis pod liczbą: kapitaliki antykwy, `--brand-300` na ciemnej sekcji i `--ink
 | Skala kreskowa (podziałka) na osi wykresu | dashboard, dane laboratoryjne | tylko przy realnych danych |
 
 Czego **nie** robimy: zębatek, nitów jako tekstury tła, brązowych papierów, czcionek „western", mosiężnych ikon, obracających się kół w tle.
+
+### 3A.7 Obwódka płyty
+
+**Zmiana z 2026-09-03.** Każda płyta w serwisie ma włos obwódki w kolorze przyrządu: karta produktu, kafel liczbowy, karta panelu, pigułka nawigacji, menu mobilne, modal i wysuwka koszyka.
+
+Powód widać od razu po wyłączeniu tej reguły: płyty stały na tłach, których jasność różniła się od nich o kilka procent, więc granica bloku istniała właściwie tylko w cieniu. Strona czytała się płasko — karty wyglądały jak plamy, a nie jak coś osadzonego. Włos mosiądzu daje krawędź, której cień sam nie dawał.
+
+Obwódka bierze `--instrument`, nie `--brass`. To ten sam token, którym rządzi się cała warstwa przyrządowa: w NF i Pomonie rozwija się w mosiądz, w Kaminie w `--brand-300` (3A.4). Dzięki temu ramki przefarbowują się razem ze skórką i nikt nie musi o tym pamiętać przy nowej podstronie. `--brass` wpisany na sztywno dałby Kaminowi mosiężne ramki na błękicie.
+
+Na jasnym tle obwódka schodzi na `--instrument-strong`: jasny mosiądz na papierze daje 2.4:1, poniżej progu 3:1 dla elementu nietekstowego (rozdz. 10). To ta sama poprawka, którą wcześniej dostała tarcza wskaźnika (3A.2) i kropka kroków (6.6).
+
+Kreski **wewnątrz** płyt idą za obwódką (`--instrument-glow`, `--instrument-dim`). Blok z mosiężną ramką i neutralnymi przegrodami to dwa różne materiały w jednym pudełku.
+
+Płyty panelu dostają dodatkowo drugi, słabszy włos do środka (`inset 0 0 0 1px`). `.glass` ma wewnętrzne rozjaśnienie z gruntu, jasna karta panelu nie — bez tego czytała się jak prostokąt odbity cieniem, a nie jak płytka wpuszczona w ramkę.
+
+Reguła stoi na końcu `nf-components.css`, bo nadpisuje `border-color` ustawiony wcześniej przy `.glass`, `.modal` i `.drawer`, nie ruszając reszty ich stylu.
+
+Czego **nie** obejmuje:
+
+| Element | Dlaczego zostaje bez obwódki |
+|---|---|
+| `.addr` | Karta w karcie. Ramka w ramce robi z bloku szufladę na przegrody. |
+| `.empty` | Kreskowany obrys mówi „tu nic nie ma". Mosiądz podniósłby pustkę do rangi treści. |
+| `.facts` | Ma własną krawędź szkła i mosiężne separatory z 3A.2 — trzecia linia byłaby powtórzeniem. |
+
+Mosiądz zostaje przy tym linią, nigdy wypełnieniem — czyli dokładnie tym, na co pozwala 3A.1. Zmienia się wyłącznie liczba wystąpień, i to jest ta jedna rzecz, którą ta decyzja kosztuje.
+
+---
 
 ### 3A.4 Natężenie wg marki
 
@@ -759,7 +789,7 @@ Panel to narzędzie, nie opowieść. Ta sama paleta, te same tokeny i to samo sz
 | Odstęp między sekcjami | `clamp(--space-xl, 5.5vw, --space-2xl)` | `--space-l` |
 | Nagłówki | antykwa, Display XL | grotesk, maks. H2 |
 | Wysokość wiersza tabeli | — | 52px, `--space-s` w pionie |
-| Mosiądz | 2 elementy na ekran | **0 — panel jest bez mosiądzu**, poza kropką rangi administratora (8A.1) |
+| Mosiądz | 2 akcenty na ekran | **0 akcentów** — bez tarcz, wskazówek i nitów. Obwódki płyt (3A.7) i kropka rangi administratora (8A.1) obowiązują tak samo jak wszędzie |
 | Zdjęcia | duże, kadrowane | miniatury 64px |
 | Róż | 1 na ekran | akcje zapisujące, dodające i nieodwracalne |
 | Tło bloku treści | jasna wyspa co drugie pasmo | **jasna karta `.section--light`** na ciemnej bazie |
@@ -851,7 +881,7 @@ Nazwa stopnia stoi wszędzie słowem, więc nic tu nie zależy od rozróżniania
 
 **Wykresy mają szerszą paletę niż statusy.** Cztery kropki statusów wystarczają na etykietę, ale donut, którego wycinki mają ten sam kolor, nie niesie żadnej informacji. Wykresy sięgają więc po pełny zakres tokenów marki plus `--warn` i `--ink-muted`. Zasada z rozdz. 10 zostaje spełniona inaczej: **każdy wykres ma legendę ze słowem i liczbą**, a pojedynczy pierścień ma wartość wpisaną w środku. Kolor niczego nie niesie sam.
 
-W wykresach mosiądzu nie ma ani grama. Stary dashboard rysował na nim tarcze i wskazówki, co wprost łamało wiersz „Mosiądz: 0" z tabeli wyżej — a wyjątek wyżej dotyczy wyłącznie kropki rangi, nie wykresów.
+W wykresach mosiądzu nie ma ani grama. Stary dashboard rysował na nim tarcze i wskazówki, co wprost łamało wiersz z tabeli wyżej. Obwódka płyty (3A.7) to co innego — jest krawędzią karty, nie elementem rysunku — i karty z wykresami mają ją tak samo jak reszta serwisu.
 
 **Poczta nie ufa własnej treści.** Wiadomość przychodzi z zewnątrz, więc trafia do DOM wyłącznie jako tekst: `body_text` wprost, a `body_html` po zdjęciu znaczników i rozwinięciu encji w `<textarea>`. Stary dashboard wstawiał ją przez `innerHTML`.
 

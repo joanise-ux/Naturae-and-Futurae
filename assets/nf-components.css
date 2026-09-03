@@ -2230,3 +2230,74 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 .section--light .status--new { --status-dot: var(--brand-900); }
 
 
+
+/* --- 3A.7 Mosiężna obwódka płyt -------------------------------------------
+   Każda płyta w serwisie — karta produktu, kafel liczbowy, karta panelu,
+   pigułka nawigacji, modal, wysuwka koszyka — ma włos obwódki w kolorze
+   przyrządu zamiast ledwie widocznej krechy neutralnej.
+
+   Skąd to się wzięło: płyty stały na tłach, których jasność różniła się od
+   nich o kilka procent, więc granica bloku istniała właściwie tylko w cieniu.
+   Strona czytała się płasko — karty wyglądały jak plamy, a nie jak coś
+   osadzonego. Włos mosiądzu daje krawędź, której cień sam nie dawał.
+
+   Dlaczego --instrument, a nie --brass: to ten sam token, którym rządzi się
+   cała warstwa przyrządowa (3A.1). W NF i Pomonie rozwija się w mosiądz,
+   w Kaminie w --brand-300 (3A.4) — obwódka przefarbowuje się razem ze skórką
+   i nikt nie musi o tym pamiętać. Wpisany na sztywno --brass dałby Kaminowi
+   mosiężne ramki na błękicie.
+
+   Mosiądz zostaje linią, nigdy wypełnieniem — czyli dokładnie tym, na co
+   pozwala 3A.1. Zmienia się wyłącznie liczba wystąpień; zapis o tym stoi
+   w 3A.1 i 8A.
+
+   Blok jest ostatni w pliku celowo: nadpisuje border-color ustawiony wcześniej
+   przy .glass, .modal i .drawer, nie ruszając reszty ich stylu.
+   -------------------------------------------------------------------------- */
+
+.glass,
+.glass--light,
+.card,
+.modal { border-color: var(--instrument); }
+
+.drawer { border-left-color: var(--instrument); }
+
+/* Na papierze jasny mosiądz daje 2.4:1 — poniżej progu 3:1 dla elementu
+   nietekstowego (rozdz. 10). Jasne płyty biorą więc ciemniejszy wariant,
+   z tego samego powodu, dla którego zrobiła to tarcza wskaźnika (3A.2)
+   i kropka kroków (6.6).
+
+   Płyty panelu są jednocześnie .section--light, więc reguła z potomkiem
+   ich nie łapie — stoją tu z nazwy. */
+.section--light .card,
+.section--light .glass,
+.section--light .glass--light,
+.tile-stat,
+.panel-nav,
+.panel-card,
+.order-brief { border-color: var(--instrument-strong); }
+
+/* Płytom panelu brakuje wewnętrznego rozjaśnienia, które .glass ma z gruntu.
+   Drugi, słabszy włos do środka robi to samo: karta czyta się jak wpuszczona
+   w ramkę, a nie jak prostokąt odbity cieniem. */
+.tile-stat,
+.panel-nav,
+.panel-card,
+.order-brief {
+  box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18),
+              inset 0 0 0 1px var(--instrument-glow);
+}
+
+/* Kreski wewnątrz płyt idą za obwódką. Inaczej blok ma mosiężną ramkę
+   i neutralne przegrody — dwa różne materiały w jednym pudełku. */
+.card__foot,
+.section--light .card__foot,
+.item,
+.mini-item { border-color: var(--instrument-glow); }
+
+.totals__sum { border-top-color: var(--instrument-dim); }
+
+/* Pigułka nawigacji nie jest .glass — ma własny zestaw stylów i własną,
+   wyższą specyficzność (.nav__inner.is-pinned). Stoi więc tu z nazwy,
+   inaczej zostałaby jedyną płytą w serwisie z krawędzią neutralną. */
+.nav__inner.is-pinned { border-color: var(--instrument); }
