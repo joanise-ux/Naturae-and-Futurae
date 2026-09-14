@@ -1025,8 +1025,8 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 
 .hero {
   position: relative;
-  height: 72vh;
-  min-height: 520px;
+  height: 48vh;
+  min-height: 350px;
   border-bottom-left-radius: var(--radius-l);
   border-bottom-right-radius: var(--radius-l);
   overflow: hidden;
@@ -1044,7 +1044,11 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 .hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--scrim) 0%, transparent 55%);
+  /* Niskie hero: tekst zajmuje większą część kadru, więc gradient idzie
+     wyżej, a druga warstwa od lewej przyciemnia pas, w którym stoi tytuł. */
+  background:
+    linear-gradient(to right, var(--scrim) 0%, rgba(0, 0, 0, 0) 65%),
+    linear-gradient(to top, var(--scrim) 0%, var(--scrim) 25%, rgba(0, 0, 0, 0) 90%);
 }
 
 .hero__content {
@@ -1072,7 +1076,10 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 .hero__still { display: none; }
 
 /* Wariant podstrony sub-marki (7A, pkt 1) */
-.hero--sub { height: 52vh; min-height: 420px; }
+/* Niskie hero: wysokość jest minimalna, a górny margines trzyma stos
+   eyebrow + tytuł + lede z dala od nawigacji, gdy tekst się nie mieści. */
+.hero--sub { height: auto; min-height: max(35vh, 280px); }
+.hero--sub .hero__content { padding-top: calc(72px + var(--space-l)); }
 
 /* align-items z .hero__content dosuwa treść do dołu w układzie wierszowym;
    po obróceniu osi na kolumnę ta sama wartość dosuwałaby tekst do prawej,
@@ -1087,7 +1094,16 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 /* Hero podstrony jest niższe, a pod nagłówkiem stoi jeszcze zdanie wprowadzające
    — gradient musi sięgać wyżej, żeby lede nie leżało na jasnym oknie zdjęcia. */
 .hero--sub .hero__scrim {
-  background: linear-gradient(to top, var(--scrim) 0%, rgba(0, 0, 0, 0) 78%);
+  background:
+    linear-gradient(to right, var(--scrim) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(to top, var(--scrim) 0%, var(--scrim) 40%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Cień pod tekstem ratuje pojedyncze jasne plamy zdjęcia, których gradient nie kryje */
+.hero__title,
+.hero__lede,
+.hero__eyebrow {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 2px 18px rgba(0, 0, 0, .35);
 }
 
 /* Nagłówek podstrony nie wjeżdża: orkiestrowany moment na stronie sub-marki
@@ -1127,8 +1143,8 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 }
 
 @media (max-width: 760px) {
-  .hero { min-height: 460px; }
-  .hero--sub { min-height: 380px; }
+  .hero { min-height: 310px; }
+  .hero--sub { min-height: max(35vh, 255px); }
   .hero__title { max-width: 100%; }
 
   /* Na wąskim ekranie zdjęcie jest przycięte do pionowego wycinka i tekst
@@ -1136,8 +1152,8 @@ select.input option { color: var(--ink); background-color: var(--paper); }
      wystarczać. Druga warstwa dokłada krycie tam, gdzie leży tekst. */
   .hero--sub .hero__scrim {
     background:
-      linear-gradient(to top, var(--scrim) 0%, var(--scrim) 42%, rgba(0, 0, 0, 0) 72%),
-      linear-gradient(to top, var(--scrim) 0%, rgba(0, 0, 0, 0) 78%);
+      linear-gradient(to top, var(--scrim) 0%, var(--scrim) 50%, rgba(0, 0, 0, 0) 92%),
+      linear-gradient(to top, var(--scrim) 0%, rgba(0, 0, 0, 0) 100%);
   }
 }
 

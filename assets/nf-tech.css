@@ -63,10 +63,10 @@
 
 /* --- Hero ---------------------------------------------------------------- */
 
-/* Hero podstrony ma stałe 52vh, ale tutaj pod nagłówkiem stoi jeszcze lede
+/* Hero podstrony ma stałe 35vh, ale tutaj pod nagłówkiem stoi jeszcze lede
    i para przycisków — na niskim oknie stos wychodził górą pod nawigację.
    Wysokość idzie za treścią, a górny margines odsuwa ją od paska (6.3). */
-.hero--tech { height: auto; min-height: 52vh; }
+.hero--tech { height: auto; min-height: 35vh; }
 .hero--tech .hero__content { padding-top: calc(72px + var(--space-l)); }
 
 .tech-hero__actions {
