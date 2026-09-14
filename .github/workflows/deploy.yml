@@ -10,6 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # UWAGA: ponizsze `exclude` to blok literalny YAML — kazda linia w nim jest
+      # wzorcem, a nie komentarzem. Wyjasnienia trzymamy tutaj, nad kluczem.
+      #
+      # *-nf.html, styleguide.html, assets/styleguide.*
+      #   Nowy front w budowie. Na serwer ma wyjsc przy swiadomym przelaczeniu,
+      #   a nie przy pierwszym commicie — inaczej strony robocze sa publicznie
+      #   dostepne pod zgadywalnymi adresami (nfplantbiotech.com/index-nf.html)
+      #   i moga trafic do wyszukiwarki. Przy przelaczeniu te trzy linie znikaja.
+      #
+      # docs/**
+      #   Dokumentacja wewnetrzna (design system) nie jest trescia dla odwiedzajacych.
+      #
+      # netlify.toml, netlify/**, _site/**
+      #   Pliki podgladu dla zespolu (Netlify). Produkcja ich nie uzywa.
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -24,3 +38,10 @@ jobs:
             upload-to-ovh.ps1
             .claude/**
             backups/**
+            *-nf.html
+            styleguide.html
+            assets/styleguide.*
+            docs/**
+            netlify.toml
+            netlify/**
+            _site/**

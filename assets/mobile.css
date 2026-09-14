@@ -38,16 +38,22 @@ html { scrollbar-gutter: stable; }
    admin dodatkowo przycisk panelu) → linki „przeskakują" przy zmianie strony.
    Siatka 1fr/auto/1fr trzyma środkowe linki dokładnie na środku ekranu na
    każdej podstronie; logo zawsze przy lewej, akcje zawsze przy prawej.
-   Dzieci: 1=logo, 2=PL/EN(mobile, ukryte), 3=hamburger(ukryty), 4=linki, 5=akcje. */
+   Dzieci: 1=logo, 2=PL/EN(mobile, ukryte), 3=hamburger(ukryty), 4=linki, 5=akcje.
+
+   WAŻNE: te reguły adresują dzieci nawigacji po POZYCJI, więc działają tylko
+   dla starego markupu. Strony przeniesione na nowy styl mają nav zbudowany
+   z klas (.nf-nav--deep) i własne reguły w assets/nf-ui.css — dlatego są tu
+   wyłączone przez :not(). Gdy ostatnia strona przejdzie na nowy styl, cały
+   ten blok znika razem z pozostałymi regułami pozycyjnymi poniżej. */
 @media (min-width: 861px){
-  .nf-nav{
+  .nf-nav:not(.nf-nav--deep){
     display:grid !important;
     grid-template-columns:1fr auto 1fr;
     align-items:center;
   }
-  .nf-nav > a:first-child{ justify-self:start; }   /* logo */
-  .nf-nav > :nth-child(4){ justify-self:center; }  /* linki */
-  .nf-nav > :nth-child(5){ justify-self:end; }     /* akcje */
+  .nf-nav:not(.nf-nav--deep) > a:first-child{ justify-self:start; }   /* logo */
+  .nf-nav:not(.nf-nav--deep) > :nth-child(4){ justify-self:center; }  /* linki */
+  .nf-nav:not(.nf-nav--deep) > :nth-child(5){ justify-self:end; }     /* akcje */
 }
 
 @media (max-width: 860px){
@@ -55,18 +61,18 @@ html { scrollbar-gutter: stable; }
   html, body{ overflow-x:hidden; max-width:100%; }
 
   /* ---------- NAWIGACJA → menu hamburger ---------- */
-  .nf-nav{
+  .nf-nav:not(.nf-nav--deep){
     flex-wrap:wrap !important;
     padding:14px 16px !important;
     row-gap:16px !important;
   }
-  .nf-burger{ display:inline-flex !important; }
+  .nf-nav:not(.nf-nav--deep) .nf-burger{ display:inline-flex !important; }
 
   /* Logo nieco mniejsze na mobile, by logo + PL/EN + hamburger zmieściły się
      w jednym rzędzie (zakres ograniczony do .nf-nav). */
-  .nf-nav img{ width:32px !important; height:32px !important; }
-  .nf-nav [style*="font-size:16px"],
-  .nf-nav [style*="font-size: 16px"]{ font-size:13px !important; }
+  .nf-nav:not(.nf-nav--deep) img{ width:32px !important; height:32px !important; }
+  .nf-nav:not(.nf-nav--deep) [style*="font-size:16px"],
+  .nf-nav:not(.nf-nav--deep) [style*="font-size: 16px"]{ font-size:13px !important; }
 
   /* Kolejność dzieci nav: 1=logo, 2=PL/EN, 3=hamburger, 4=linki, 5=akcje.
      Linki (4) i akcje (5) chowamy do rozwijanego menu. */
@@ -82,21 +88,21 @@ html { scrollbar-gutter: stable; }
   }
   .nf-lang b{ color:#8aba82; font-weight:700; }
 
-  .nf-nav > :nth-child(4),
-  .nf-nav > :nth-child(5){
+  .nf-nav:not(.nf-nav--deep) > :nth-child(4),
+  .nf-nav:not(.nf-nav--deep) > :nth-child(5){
     display:none !important;
     flex-basis:100% !important;
     width:100% !important;
     white-space:normal !important;
   }
-  .nf-nav.nf-open > :nth-child(4),
-  .nf-nav.nf-open > :nth-child(5){
+  .nf-nav:not(.nf-nav--deep).nf-open > :nth-child(4),
+  .nf-nav:not(.nf-nav--deep).nf-open > :nth-child(5){
     display:flex !important;
     flex-direction:column !important;
     align-items:flex-start !important;
     gap:16px !important;
   }
-  .nf-nav > :nth-child(4) a{ font-size:18px !important; }
+  .nf-nav:not(.nf-nav--deep) > :nth-child(4) a{ font-size:18px !important; }
 
   /* ---------- UKŁAD: siatki wielokolumnowe → jedna kolumna ---------- */
   [style*="grid-template-columns"]{ grid-template-columns:1fr !important; }

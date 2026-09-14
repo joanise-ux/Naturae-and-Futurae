@@ -1,0 +1,547 @@
+/* ==========================================================================
+   Nature & Future — nf-tech.css
+   Kompozycja podstrony /technologia (technologia-nf.html). Wyłącznie układ
+   tej jednej strony: wszystkie kolory, odstępy, promienie i rozmiary
+   pochodzą z tokenów (assets/tokens.css).
+
+   Karty etapów, argumentów i FAQ stoją na komponencie .card + .glass
+   (6.2, rozdz. 3). Ramka zdjęcia w § 01 bierze .tile__corners (3A.3).
+   Ten arkusz dokłada tylko to, czego w systemie nie ma: nagłówek
+   paragrafowy sekcji, zestawienie dwukolumnowe, siatkę galerii i FAQ.
+
+   Ruch: rozdz. 9 bez wyjątków. Hover 150ms, rozwinięcie FAQ 200ms.
+   Żadnych animacji sterowanych scrollem — poprzednia wersja tej strony
+   miała przyklejoną scenę (9.1) i została z niej zdjęta świadomie.
+   ========================================================================== */
+
+
+/* --- Nagłówek paragrafowy sekcji -----------------------------------------
+   § 01 po lewej, etykieta po prawej, w środku nagłówek antykwą
+   w kapitalikach z jednym słowem kursywą w --brand-300.
+
+   Numer i etykieta były wcześniej #5d8a5d i #5a5a4e na jasnym gradiencie
+   — na ciemnym tle znikały zupełnie. Oba schodzą na --brand-300: 5.3:1
+   na paśmie deep, 6.6:1 na --brand-900.
+   -------------------------------------------------------------------------- */
+
+.tech-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-l);
+}
+
+.tech-head__left {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+.tech-head__no,
+.tech-head__label {
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  color: var(--brand-300);
+  text-transform: uppercase;
+}
+.tech-head__no    { letter-spacing: 0.2em; }
+.tech-head__label { letter-spacing: 0.14em; }
+
+/* Antykwa w kapitalikach; jedno słowo kursywą wychodzi z kapitalików,
+   żeby kontrast krojów był widoczny (3A.5, rozdz. 4). */
+.tech-head__title { font-variant-caps: small-caps; letter-spacing: 0.01em; }
+.tech-head__title em,
+.tech-head__title i {
+  font-variant-caps: normal;
+  font-style: italic;
+  color: var(--brand-300);
+}
+
+
+/* --- Hero ---------------------------------------------------------------- */
+
+/* Hero podstrony ma stałe 35vh, ale tutaj pod nagłówkiem stoi jeszcze lede
+   i para przycisków — na niskim oknie stos wychodził górą pod nawigację.
+   Wysokość idzie za treścią, a górny margines odsuwa ją od paska (6.3). */
+.hero--tech { height: auto; min-height: 35vh; }
+.hero--tech .hero__content { padding-top: calc(72px + var(--space-l)); }
+
+.tech-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-top: var(--space-xs);
+}
+
+
+/* --- § 01 Czym jest in vitro --------------------------------------------- */
+
+.tech-about {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.tech-about__text > * + * { margin-top: var(--space-m); }
+
+/* Ramka zdjęcia z mosiężnymi narożnikami (3A.3) — narożniki biorą
+   komponent .tile__corners, nie własne kreski. */
+.tech-frame {
+  position: relative;
+  padding: var(--space-s);
+  border-radius: var(--radius-m);
+}
+.tech-frame__photo {
+  position: relative;
+  border-radius: var(--radius-s);
+  overflow: hidden;
+}
+.tech-frame__photo img {
+  width: 100%;
+  aspect-ratio: 4 / 4.3;
+  object-fit: cover;
+}
+/* Welon czytelności pod podpisem klatki — ten sam zabieg co scrim hero. */
+.tech-frame__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--scrim) 0%, transparent 55%);
+}
+
+/* Podpis klatki: PL. 014 - IN VITRO - KULTURA TKANKOWA */
+.plate {
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-300);
+}
+.tech-frame__plate {
+  position: absolute;
+  left: var(--space-s);
+  bottom: var(--space-s);
+  z-index: 1;
+}
+
+/* Trzy wskaźniki (3A.2) między dwiema kreskami, bez szkła: pasek stoi
+   wewnątrz kolumny tekstu, a szkło bez materiału pod spodem daje szary
+   prostokąt (rozdz. 3, pkt 2). Kreski robią to samo, co w wersji sprzed
+   przeniesienia na system. */
+.tech-about__facts {
+  padding-inline: 0;
+  border-block: 1px solid var(--instrument-dim);
+}
+
+.tech-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--brand-300);
+  max-width: var(--measure-display);
+}
+
+
+/* --- § 02 Sześć etapów --------------------------------------------------- */
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-m);
+}
+.tech-grid--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.tech-step-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-s);
+}
+
+/* Zamiast tarczy: numer etapu rzymski, antykwa, mosiądz. Tarcza w karcie
+   etapu nie miała skali, więc wskazówka była ozdobą (3A.2). Liczba jest
+   duża, więc mosiądz na paśmie deep daje 3.8:1 — próg dla tekstu 24px+
+   wynosi 3:1. */
+.tech-step-card__no {
+  font-family: var(--font-display);
+  font-size: var(--type-h2);
+  line-height: 1;
+  color: var(--brass);
+}
+
+/* Czas trwania: etykieta monospace obok numeru. Mosiądz odpada — 14px
+   mosiądzu na zieleni to 3.8:1, poniżej progu 4.5:1 dla tekstu. */
+.tech-step-card__time {
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-300);
+}
+
+.tech-step-card__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h3);
+  line-height: var(--lh-h3);
+  margin-top: var(--space-2xs);
+}
+
+.tech-card__text { font-size: var(--type-small); line-height: var(--lh-small); }
+.tech-card__text em { color: var(--brand-100); font-style: italic; }
+
+
+/* --- § 03 Cztery argumenty ----------------------------------------------- */
+
+/* Zamiast tarczy: cienka mosiężna linia nad nagłówkiem karty (3A.3 —
+   mosiądz jest linią, nigdy wypełnieniem). */
+.tech-arg__rule {
+  width: var(--space-l);
+  height: 1px;
+  border: 0;
+  margin: 0 0 var(--space-s);
+  background: var(--brass);
+}
+
+.tech-arg__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h3);
+  line-height: var(--lh-h3);
+  margin-bottom: var(--space-xs);
+}
+
+
+/* --- § 04 Zestawienie dwukolumnowe ---------------------------------------
+   Wiersz jest jednostką, nie kolumna: para pozycji 01/01 siedzi w jednym
+   .vs__row, więc po zwężeniu ekranu kolumny układają się jedna pod drugą
+   BEZ rozjeżdżania pary.
+   -------------------------------------------------------------------------- */
+
+.vs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  padding: var(--space-l);
+}
+
+.vs__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-m) var(--space-l);
+}
+
+.vs__row + .vs__row {
+  border-top: 1px solid var(--glass-border);
+  padding-top: var(--space-m);
+}
+
+.vs__col { display: flex; gap: var(--space-s); }
+
+.vs__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-s);
+}
+
+/* Kropka statusu. --brass-dim dawał na --brand-900 2.85:1, poniżej progu
+   3:1 dla elementu nietekstowego — lewa kropka bierze --brass (4.8:1).
+   Kolor nie niesie informacji sam: obok stoi nazwa metody i numer pozycji
+   (rozdz. 10). */
+.vs__dot {
+  flex: none;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+.vs__col--ivt .vs__dot { background: var(--brand-500); }
+
+.vs__name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h3);
+  font-variant-caps: small-caps;
+  color: var(--brass);
+}
+.vs__col--ivt .vs__name { color: var(--brand-300); }
+
+.vs__tag {
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-300);
+}
+
+.vs__no {
+  flex: none;
+  min-width: 32px;
+  padding-top: 3px;
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--brand-300);
+}
+
+.vs__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--brand-100);
+}
+
+/* Na desktopie metodę mówi kolumna. Po złożeniu wiersza w pion pozycje
+   stoją jedna nad drugą i sama kolejność przestaje wystarczać, więc każda
+   dostaje swoją etykietę (rozdz. 10: informacja nie może wisieć na samym
+   położeniu). Poza mobile znika z układu i z drzewa dostępności. */
+.vs__who { display: none; }
+.vs__col p {
+  font-size: var(--type-small);
+  line-height: var(--lh-small);
+  margin-top: var(--space-2xs);
+}
+
+
+/* --- § 05 Galeria -------------------------------------------------------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: 240px;
+  gap: var(--space-s);
+}
+
+.gallery__item {
+  position: relative;
+  grid-column: span 2;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+.gallery__item--tall { grid-row: span 2; }
+
+.gallery__item img,
+.gallery__item video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.gallery__item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--scrim) 0%, transparent 55%);
+}
+
+.gallery__caption {
+  position: absolute;
+  left: var(--space-s);
+  bottom: var(--space-s);
+  z-index: 1;
+}
+/* Numer klatki stoi NAD podpisem, nie obok — inline oba spany siadały
+   w jednej linii i margines nad tytułem nie działał. */
+.gallery__caption .plate,
+.gallery__title { display: block; }
+
+.gallery__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin-top: var(--space-2xs);
+  color: var(--brand-100);
+}
+
+/* Znacznik materiału. Kafel nie jest podglądem na żywo, więc nie może być
+   opisany jako REC - LIVE: to jest zapis przyspieszony. */
+.gallery__mark {
+  position: absolute;
+  left: var(--space-s);
+  top: var(--space-s);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.gallery__mark::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--brass);
+}
+
+
+/* --- § 06 FAQ ------------------------------------------------------------ */
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-m) var(--space-l);
+  align-items: start;
+}
+
+.faq { padding: var(--space-m); }
+
+.faq__q {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-s);
+  cursor: pointer;
+  list-style: none;
+}
+.faq__q::-webkit-details-marker { display: none; }
+
+.faq__icon {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--type-h3);
+  line-height: 1.1;
+  color: var(--brass);
+}
+
+.faq__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-body-l);
+  line-height: var(--lh-h3);
+  color: var(--brand-100);
+  transition: color var(--dur-hover) var(--ease);
+}
+.faq__title em { font-style: italic; color: var(--brand-300); }
+.faq__q:hover .faq__title { color: #FFFFFF; }
+
+/* Strzałka: obrót 200ms, jak każde otwarcie w systemie (rozdz. 9). */
+.faq__q::after {
+  content: "";
+  flex: none;
+  width: 8px; height: 8px;
+  margin: 6px 0 0 auto;
+  border-right: 1px solid var(--brand-300);
+  border-bottom: 1px solid var(--brand-300);
+  transform: rotate(45deg);
+  transition: transform var(--dur-open) var(--ease);
+}
+.faq[open] .faq__q::after { transform: rotate(-135deg); }
+
+.faq__a {
+  margin: var(--space-s) 0 0;
+  padding-left: calc(var(--space-s) + 1.5rem);
+  font-size: var(--type-small);
+  line-height: var(--lh-small);
+}
+.faq[open] .faq__a { animation: faqIn var(--dur-open) var(--ease); }
+
+/* Animujemy wyłącznie opacity i transform. */
+@keyframes faqIn {
+  from { opacity: 0; transform: translateY(-4px); }
+}
+
+
+/* --- Pasek do sklepu -----------------------------------------------------
+   Jedyny róż na całej stronie (2.1, 6.1). Nie jest to .backbar — ten
+   z definicji nigdy nie jest różowy (6.7), a tu róż jest na miejscu:
+   to jedyna akcja pierwszego poziomu na stronie.
+   -------------------------------------------------------------------------- */
+
+.tech-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-m);
+  padding: var(--space-l);
+}
+.tech-cta p { margin: 0; }
+
+
+/* --- Zawężanie ------------------------------------------------------------ */
+
+@media (max-width: 1040px) {
+  .tech-about { grid-template-columns: 1fr; gap: var(--space-l); }
+  .tech-grid,
+  .tech-grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gallery__item--tall { grid-row: span 1; }
+  .faq-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .tech-grid,
+  .tech-grid--four { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 200px; }
+  /* Para pozycji zostaje razem: kolumny wiersza stają jedna pod drugą,
+     a nie całe kolumny zestawienia. */
+  .vs__row { grid-template-columns: 1fr; }
+  .vs { padding: var(--space-m); }
+  .vs__who {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--type-small);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-300);
+  }
+  .tech-cta { padding: var(--space-m); }
+}
+
+/* --- Warianty na jasnej wyspie -------------------------------------------
+   § 02 i § 04 stoją na .section--light. Wszystko, co na ciemnym paśmie
+   bierze --brand-300 albo mosiądz, na papierze schodzi poniżej progu:
+   --brand-300 na --paper daje 1.7:1, --brass 2.2:1. Zamiana jest ta sama,
+   co w komponentach (3A.2, 6.6): tekst na --ink / --ink-muted, mosiądz na
+   --instrument-strong (4.2:1 na papierze), zieleń na --brand-700.
+   -------------------------------------------------------------------------- */
+
+.section--light .tech-head__no,
+.section--light .tech-head__label,
+.section--light .tech-step-card__time,
+.section--light .vs__tag,
+.section--light .vs__no,
+.section--light .vs__who { color: var(--ink-muted); }
+
+.section--light .tech-head__title em,
+.section--light .tech-head__title i { color: var(--brand-700); }
+
+.section--light .tech-step-card__no { color: var(--instrument-strong); }
+
+.section--light .tech-card__text em,
+.section--light .vs__title { color: var(--ink); }
+
+.section--light .vs__row + .vs__row { border-top-color: rgba(11, 93, 30, 0.16); }
+
+/* Kropka statusu na papierze: mosiądz schodzi na --instrument-strong
+   (4.2:1), zieleń zostaje na --brand-500 (3.4:1) — oba nad progiem 3:1
+   dla elementu nietekstowego. */
+.section--light .vs__dot { background: var(--instrument-strong); }
+.section--light .vs__col--ivt .vs__dot { background: var(--brand-500); }
+.section--light .vs__name { color: var(--instrument-strong); }
+.section--light .vs__col--ivt .vs__name { color: var(--brand-700); }
+
+/* FAQ na jasnej wyspie */
+.section--light .faq__icon { color: var(--instrument-strong); }
+.section--light .faq__title { color: var(--ink); }
+.section--light .faq__title em { color: var(--brand-700); }
+.section--light .faq__q:hover .faq__title { color: var(--brand-900); }
+.section--light .faq__q::after {
+  border-right-color: var(--ink-muted);
+  border-bottom-color: var(--ink-muted);
+}
+
+
+/* --- Krawędzie pasm ------------------------------------------------------
+   Jasna wyspa i Deep+ mają domyślnie rogi --radius-l. Wycięcie pod takim
+   rogiem nie jest niczym wypełnione — widać przez nie tło strony, czyli
+   gradient. Na stronie głównej to działa, bo wyspa sąsiaduje z pasmem
+   w dokładnie tym gradiencie. Tutaj pasma jasne i ciemne idą na przemian
+   trzy razy, a § 03 to płaskie --brand-900: w wycięciach rogów wychodził
+   jaśniejszy zielony niż pasmo obok i rogi odcinały się kolorem.
+
+   Pasma na tej stronie idą więc ostrą krawędzią od lewej do prawej.
+   Rozdz. 1, reguła 3 tego wymaga wprost („pełna szerokość i własne,
+   wyraźne krawędzie"); zaokrąglenie było dodatkiem, nie warunkiem.
+   -------------------------------------------------------------------------- */
+
+main > .section--light,
+main > .section--deeper { border-radius: 0; }

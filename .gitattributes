@@ -1,0 +1,8 @@
+# core.autocrlf=true zamienia konce linii na CRLF przy wymeldowaniu. Dla
+# skryptu powloki to wyrok: Netlify buduje na Linuksie, a bash na "\r"
+# na koncu kazdej linii wywala sie komunikatem w rodzaju
+#   netlify/build.sh: line 2: $'\r': command not found
+# Wymuszamy wiec LF dla wszystkiego, co czyta Linux.
+*.sh            text eol=lf
+netlify/_headers   text eol=lf
+netlify/_redirects text eol=lf

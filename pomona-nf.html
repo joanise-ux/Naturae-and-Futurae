@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PomonaLab — stare polskie odmiany drzew owocowych</title>
+<meta name="description" content="PomonaLab odtwarza stare polskie odmiany jabłoni, grusz i czereśni. Materiał pochodzi z zachowanych drzew, sadzonki wchodzą w przedsprzedaż.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Te same pliki co /kamino. Nic nie jest tu przepisane lokalnie.
+     nf-shop.css dochodzi wyłącznie dla siatki .listing z rozdz. 8.1 —
+     katalog odmian używa tej samej siatki co sklep, tylko bez cen. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-shop.css">
+</head>
+
+<!-- Skórka PomonaLab (2.4) — miody, oliwka, sad. Warstwa 3A wchodzi
+     w wariancie mocnym: --instrument = --brass, więc tarcze wskaźników,
+     kropki i linia kroków oraz narożniki ramek są mosiężne bez ani jednej
+     reguły napisanej tutaj (3A.4).
+
+     LIMIT MOSIĄDZU (3A.1): maksymalnie dwa mosiężne elementy na widok.
+     Liczony jest cały motyw, nie każda kreska osobno: panel wskaźników
+     to jeden element, schemat kroków jeden, ramka jednego zdjęcia jeden.
+     Dlatego na tej stronie nie ma ani jednego separatora z nitem, a hero
+     nie dostaje narożników — nie zmieściłyby się w budżecie razem
+     z sekcjami, obok których by stały. -->
+<body data-brand="pomona">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+<!-- ===== Nawigacja (6.3) — identyczna jak na stronie głównej ============
+     Sub-marka nie ma własnej nawigacji (7A).
+==================================================================== -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html">Sklep</a></li>
+        <li><a href="technologia-nf.html">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html" aria-current="page">Pomona</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="nav__icon" type="button" aria-label="Szukaj roślin">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      </button>
+
+      <a class="nav__icon" href="#koszyk" aria-label="Koszyk, 2 pozycje">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="nav__count" aria-hidden="true">2</span>
+      </a>
+
+      <a class="btn btn--ghost btn--small" href="konto-logowanie-nf.html">Zaloguj</a>
+      <a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto-logowanie-nf.html">Zaloguj</a></li>
+      <li><a class="btn btn--outline btn--small" href="sklep-nf.html">Zamów rośliny</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main">
+
+  <!-- ===== 1. Hero (7A, pkt 1) =========================================
+       .hero--sub, ~52vh, dokładnie jak na /kamino. Nagłówek zostaje
+       w antykwie (bez modyfikatora --tight, który jest kamiński)
+       i dostaje kapitaliki (7A: krój nagłówków w Pomonie).
+
+       ZDJĘCIE DO POTWIERDZENIA: docelowo stary sad w świetle późnego dnia
+       albo pojedynczy owoc na gałęzi, ciemne ujęcie, widoczna faktura kory.
+       Na razie stoi tu zdjęcie z kafla sub-marki.
+  ==================================================================== -->
+  <section class="hero hero--sub">
+    <img class="hero__media" src="assets/pomona.jpg" decoding="async"
+         alt="Sad o poranku, rzędy starych drzew owocowych z zawiązanymi owocami.">
+
+    <div class="hero__scrim"></div>
+
+    <div class="hero__content container">
+      <p class="hero__eyebrow">PomonaLab</p>
+      <!-- Kapitaliki nagłówków (7A) nie mają dziś własnej reguły w skórce
+           Pomony — system daje je tylko krokom (.step__title). Do czasu
+           dopisania reguły w tokens.css stoi to na atrybucie style. -->
+      <h1 class="h1 hero__title" style="font-variant-caps: small-caps">Odtwarzamy odmiany, których już się nie sadzi.</h1>
+      <p class="hero__lede">
+        Jabłonie, grusze i czereśnie znane z polskich sadów sprzed stu lat
+        wracają z jednego zachowanego drzewa, przez laboratorium, do gruntu.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ===== 2. Trzy liczby kolekcji (3A.2, pasek faktów) ================
+       Ten sam komponent co na /kamino. Bez tarcz: zostały zdjęte ze
+       wszystkich stron. Zostają liczba, podpis i mosiężny separator.
+       Wartości w antykwie z wersalikami cyfrowymi (.fact__value), a nie
+       w --font-mono — mono jest zarezerwowane dla realnych odczytów
+       pomiarowych w Kaminie (rozdz. 4).
+  ==================================================================== -->
+  <section class="section" aria-labelledby="registerTitle">
+    <div class="container">
+      <h2 class="visually-hidden" id="registerTitle">Kolekcja odmian w liczbach</h2>
+
+      <div class="facts glass">
+        <div class="fact">
+          <!-- TREŚĆ DO POTWIERDZENIA: 12 odmian w skali 0–24 → 0deg -->
+          <div class="gauge" data-angle="0deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+          <p class="fact__value">12<span class="fact__label">odmian w kolekcji</span></p>
+        </div>
+        <div class="fact">
+          <!-- TREŚĆ DO POTWIERDZENIA: 1780 w skali 1700–2000 → -56deg -->
+          <div class="gauge" data-angle="-56deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+          <p class="fact__value">1780<span class="fact__label">najstarszy zapis</span></p>
+        </div>
+        <div class="fact">
+          <!-- Bez tarczy: region nie ma skali, a przy wartości bez skali
+               wskazówka jest ozdobą (3A.2).
+               TREŚĆ DO POTWIERDZENIA: główny region pochodzenia materiału -->
+          <p class="fact__value">Mazowsze<span class="fact__label">region pochodzenia</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 3. Dlaczego stare odmiany — JEDYNA JASNA WYSPA ==============
+       Dwie kolumny tekstu i rysunek liniowy pośrodku (siatka .edu,
+       ta sama co na /kamino). Pierwsza z dwóch jasnych wysp — druga
+       to schemat odtwarzania odmiany (pkt 5).
+  ==================================================================== -->
+  <section class="section section--light" aria-labelledby="whyTitle">
+    <div class="container">
+
+      <div class="edu__head">
+        <h2 class="h2" id="whyTitle" style="font-variant-caps: small-caps">Dlaczego stare odmiany</h2>
+        <p class="lead">
+          Odmiany sprzed stu lat wybierano do jedzenia, przechowania i przerobu,
+          a nie do transportu i wyglądu na półce. Część z nich nie ma dziś
+          w Polsce ani jednej szkółki, która by je prowadziła.
+        </p>
+      </div>
+
+      <div class="edu">
+
+        <div class="edu__col edu__col--left">
+          <p>
+            Stara odmiana to nie sentyment, tylko inny zestaw cech. Owoc dojrzewa
+            wolniej, leży do wiosny, nadaje się na susz i na sok bez dosładzania.
+            Drzewo rośnie na silnej podkładce i żyje kilkadziesiąt lat.
+          </p>
+          <p>
+            Kłopot jest praktyczny: materiału jest mało. Odmiana zachowała się
+            zwykle w kilku drzewach na starym siedlisku, często bez opisu i bez
+            pewności, czy to na pewno ona.
+            <!-- TREŚĆ DO POTWIERDZENIA: czy odmiany są potwierdzane oznaczeniem
+                 pomologicznym, genetycznym, czy jednym i drugim. -->
+          </p>
+        </div>
+
+        <!-- ILUSTRACJA: szczepienie — zraz ze starego drzewa na podkładce,
+             rysunek liniowy 1px, bo pasmo jest jasne. Docelowo do zastąpienia
+             rysunkiem technicznym z laboratorium. -->
+        <svg class="jar" viewBox="0 0 260 320" role="img" aria-labelledby="graftTitle graftDesc">
+          <title id="graftTitle">Szczepienie zrazu na podkładce</title>
+          <desc id="graftDesc">Od góry: zraz pobrany ze starego drzewa, poniżej miejsce zrostu przewiązane taśmą, na dole podkładka z systemem korzeniowym.</desc>
+          <g fill="none" stroke="#1A1D18" stroke-width="1.25">
+            <path d="M130 40v110"/>
+            <path d="M130 74c-14-6-22-16-26-28m26 62c14-6 22-16 26-28"/>
+            <ellipse cx="98" cy="44" rx="13" ry="7" stroke-width="1"/>
+            <ellipse cx="162" cy="100" rx="13" ry="7" stroke-width="1"/>
+            <rect x="116" y="150" width="28" height="22" rx="3"/>
+            <path d="M116 156h28M116 162h28M116 168h28" stroke-width="1" opacity=".55"/>
+            <path d="M130 172v108"/>
+            <path d="M130 280c-18 6-30 16-38 30m38-30c18 6 30 16 38 30" stroke-width="1"/>
+            <path d="M130 280c-6 10-8 22-6 34m6-34c6 10 8 22 6 34" stroke-width="1"/>
+          </g>
+          <g class="jar__layer-label">
+            <text x="8" y="88">zraz</text>
+            <text x="8" y="166">miejsce zrostu</text>
+            <text x="8" y="250">podkładka</text>
+          </g>
+          <g stroke="#5A6157" stroke-width="1" opacity=".5">
+            <path d="M52 84h62M84 162h28M74 246h52"/>
+          </g>
+        </svg>
+
+        <div class="edu__col edu__col--right">
+          <p>
+            Kultura tkankowa rozwiązuje dokładnie ten problem. Z jednego pędu
+            zdrowego drzewa powstaje materiał genetycznie z nim identyczny,
+            w liczbie, której nie da się wziąć z gałęzi bez zniszczenia drzewa.
+          </p>
+          <p>
+            Odmiana wprowadzona do kultury przestaje zależeć od losu jednego
+            siedliska. Można ją trzymać w laboratorium, wznowić namnażanie po
+            latach i wyprowadzić do gruntu wtedy, kiedy jest na nią miejsce.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 4. Katalog odmian — SEDNO STRONY (7A, pkt 4; siatka 8.1) ====
+       Pięć pozycji, więc dwie kolumny (8.1: 4–6 → dwie kolumny, karty
+       wysokie). Trzy kolumny zostawiłyby w ostatnim rzędzie dziurę.
+       Liczbę kolumn niesie --listing-cols, tak jak w sklepie; tu jest
+       wpisana wprost, bo katalogu nie buduje nf-shop.js.
+
+       Bez cen, bez koszyka i bez .card__foot — te odmiany nie są jeszcze
+       w sprzedaży. Ramka zdjęcia: cztery mosiężne narożniki (3A.3),
+       .tile__corners — jedyny element narożników, jaki system ma.
+  ==================================================================== -->
+  <section class="section" aria-labelledby="catalogueTitle">
+    <div class="container">
+
+      <div class="listing__head">
+        <h2 class="h2" id="catalogueTitle" style="font-variant-caps: small-caps">Odmiany w odtwarzaniu</h2>
+        <p class="small muted">
+          <!-- TREŚĆ DO POTWIERDZENIA: stan kolekcji na dzień publikacji -->
+          Pięć odmian w pracach, kolejne siedem w oznaczaniu.
+        </p>
+      </div>
+
+      <!-- Wiek i region stoją w każdej karcie w tym samym wierszu i mają
+           wersaliki cyfrowe (3A.5), żeby daty czytały się w kolumnie jak
+           w rejestrze. Wiersz rejestru nie ma dziś własnej klasy w systemie
+           — stąd atrybut style zamiast klasy. -->
+
+      <div class="listing" style="--listing-cols: 2">
+
+        <!-- TREŚĆ DO POTWIERDZENIA: nazwa odmiany, datowanie i region.
+             ZDJĘCIE DO POTWIERDZENIA: owoc odmiany, ujęcie własne. -->
+        <article class="card glass">
+          <div class="card__photo">
+            <img src="assets/pomona.jpg" alt="" loading="lazy" decoding="async">
+            <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Malus domestica 'Kosztela'</i>
+              <span class="specimen-name">Kosztela</span>
+            </p>
+            <p class="small muted" style="font-variant-numeric: lining-nums tabular-nums">
+              ok. 1780 · Mazowsze
+            </p>
+            <p class="muted small">
+              Jabłoń zimowa o zwartym, słodkim miąższu. Owoc leżakuje do wiosny
+              i dopiero wtedy nabiera smaku.
+            </p>
+          </div>
+        </article>
+
+        <!-- TREŚĆ DO POTWIERDZENIA: nazwa odmiany, datowanie i region.
+             ZDJĘCIE DO POTWIERDZENIA: owoc odmiany, ujęcie własne. -->
+        <article class="card glass">
+          <div class="card__photo">
+            <img src="assets/pomona.jpg" alt="" loading="lazy" decoding="async">
+            <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Malus domestica 'Antonówka Zwykła'</i>
+              <span class="specimen-name">Antonówka zwykła</span>
+            </p>
+            <p class="small muted" style="font-variant-numeric: lining-nums tabular-nums">
+              ok. 1850 · Podlasie
+            </p>
+            <p class="muted small">
+              Kwaśna i aromatyczna, na przetwory. Drzewo wytrzymuje mrozy, przy
+              których młodsze odmiany tracą pąki kwiatowe.
+            </p>
+          </div>
+        </article>
+
+        <!-- TREŚĆ DO POTWIERDZENIA: nazwa odmiany, datowanie i region.
+             ZDJĘCIE DO POTWIERDZENIA: owoc odmiany, ujęcie własne. -->
+        <article class="card glass">
+          <div class="card__photo">
+            <img src="assets/pomona.jpg" alt="" loading="lazy" decoding="async">
+            <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Malus domestica 'Reneta Landsberska'</i>
+              <span class="specimen-name">Reneta landsberska</span>
+            </p>
+            <p class="small muted" style="font-variant-numeric: lining-nums tabular-nums">
+              ok. 1840 · Dolny Śląsk
+            </p>
+            <p class="muted small">
+              Duży, żółty owoc deserowy. Odmiana sadów przydomowych, wyparta
+              z uprawy przez trudny transport.
+            </p>
+          </div>
+        </article>
+
+        <!-- TREŚĆ DO POTWIERDZENIA: nazwa odmiany, datowanie i region.
+             ZDJĘCIE DO POTWIERDZENIA: owoc odmiany, ujęcie własne. -->
+        <article class="card glass">
+          <div class="card__photo">
+            <img src="assets/pomona.jpg" alt="" loading="lazy" decoding="async">
+            <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Pyrus communis 'Lipcówka Kolorowa'</i>
+              <span class="specimen-name">Lipcówka kolorowa</span>
+            </p>
+            <p class="small muted" style="font-variant-numeric: lining-nums tabular-nums">
+              ok. 1870 · Wielkopolska
+            </p>
+            <p class="muted small">
+              Grusza wczesna, dojrzewa w lipcu. Owoc miękki, nie nadaje się do
+              przechowania — je się go prosto z drzewa.
+            </p>
+          </div>
+        </article>
+
+        <!-- TREŚĆ DO POTWIERDZENIA: nazwa odmiany, datowanie i region.
+             ZDJĘCIE DO POTWIERDZENIA: owoc odmiany, ujęcie własne. -->
+        <article class="card glass">
+          <div class="card__photo">
+            <img src="assets/pomona.jpg" alt="" loading="lazy" decoding="async">
+            <span class="tile__corners" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </div>
+          <div class="card__body">
+            <p>
+              <i class="latin" lang="la">Prunus avium 'Czarna Późna'</i>
+              <span class="specimen-name">Czereśnia czarna późna</span>
+            </p>
+            <p class="small muted" style="font-variant-numeric: lining-nums tabular-nums">
+              ok. 1900 · Kujawy
+            </p>
+            <p class="muted small">
+              Ciemny, twardy owoc zbierany pod koniec sezonu, kiedy wcześniejsze
+              odmiany już zeszły.
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 5. Jak odtwarzamy odmianę (6.6) — JASNA WYSPA 2 =============
+       Ten sam komponent kroków co na /kamino. Kropka i linia biorą
+       --instrument, więc tutaj są mosiężne — bez ani jednej reguły
+       napisanej lokalnie. Na jasnej wyspie schodzą na --instrument-strong
+       (--brass-dim), bo jasny mosiądz na papierze znika. Nagłówki kroków
+       wchodzą w kapitaliki same, z reguły [data-brand="pomona"] .step__title.
+
+       ODSTĘPSTWO OD ROZDZ. 1, REGUŁA 1: między tą wyspą a poprzednią
+       („Dlaczego stare odmiany") stoi tylko jedna ciemna sekcja, a dokument
+       wymaga dwóch. Świadome, decyzja klientki — schemat ma się odznaczać
+       tak samo jak bank genotypów na /kamino, gdzie zrobiono to samo.
+  ==================================================================== -->
+  <section class="section section--light" aria-labelledby="howTitle">
+    <div class="container">
+
+      <div class="section__head">
+        <h2 class="h2" id="howTitle" style="font-variant-caps: small-caps">Jak odtwarzamy odmianę</h2>
+        <p class="lead muted">
+          Od gałęzi zachowanego drzewa do sadzonki, którą można posadzić.
+          Cztery etapy, każdy z własnym czasem i własnym ryzykiem.
+        </p>
+      </div>
+
+      <div class="steps">
+
+        <div class="step">
+          <p class="step__no">01</p>
+          <h3 class="step__title">Pozyskanie materiału</h3>
+          <p class="muted">
+            Zrazy pobieramy zimą z zachowanego drzewa, po potwierdzeniu odmiany
+            przez pomologa. Drzewo zostaje na miejscu.
+            <!-- TREŚĆ DO POTWIERDZENIA: kto potwierdza odmianę i na jakiej podstawie. -->
+          </p>
+        </div>
+
+        <div class="step">
+          <p class="step__no">02</p>
+          <h3 class="step__title">Wprowadzenie do kultury</h3>
+          <p class="muted">
+            Z pąka wyprowadzamy pęd na sterylnej pożywce. To najtrudniejszy krok:
+            część odmian nie rusza za pierwszym podejściem.
+          </p>
+        </div>
+
+        <div class="step">
+          <p class="step__no">03</p>
+          <h3 class="step__title">Namnażanie</h3>
+          <p class="muted">
+            Kolejne pasaże na świeżą pożywkę. Z jednego pędu powstaje materiał
+            na kilkaset sadzonek, wszystkie identyczne z drzewem matecznym.
+          </p>
+        </div>
+
+        <div class="step">
+          <p class="step__no">04</p>
+          <h3 class="step__title">Ukorzenienie i hartowanie</h3>
+          <p class="muted">
+            Roślina wypuszcza korzenie, wychodzi do podłoża i spędza sezon
+            w szkółce. Dopiero stamtąd jedzie do sadu.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 6. Przedsprzedaż — JEDYNY RÓŻ NA STRONIE (6.1, 6.5) ========= -->
+  <section class="section" id="przedsprzedaz" aria-labelledby="presaleTitle">
+    <div class="container">
+
+      <div class="section__head">
+        <h2 class="h2" id="presaleTitle" style="font-variant-caps: small-caps">Zapisz się na przedsprzedaż</h2>
+        <p class="lead muted">
+          Zostaw adres, a napiszemy, gdy pierwsze odmiany wejdą do przedsprzedaży
+          — z listą, ceną i terminem wysyłki.
+        </p>
+      </div>
+
+      <form class="glass" action="#" method="post" novalidate
+            style="padding: var(--space-l); max-width: 560px">
+
+        <div class="field">
+          <label class="field__label" for="pMail">Adres e-mail</label>
+          <input class="input" id="pMail" name="email" type="email" autocomplete="email"
+                 placeholder="imie@domena.pl" required>
+        </div>
+
+        <!-- Różowy dokładnie raz na całej stronie (rozdz. 2.1, 7A). -->
+        <button class="btn btn--primary" type="submit" style="margin-top: var(--space-m)">
+          Zapisz się na przedsprzedaż
+        </button>
+
+        <p class="small muted" style="margin-top: var(--space-m)">
+          <!-- TREŚĆ DO POTWIERDZENIA: sezon i rok pierwszej wysyłki sadzonek. -->
+          Pierwszych sadzonek spodziewamy się jesienią 2027 roku. Zapis nie jest
+          zamówieniem i nic nie kosztuje.
+        </p>
+      </form>
+
+    </div>
+  </section>
+
+
+  <!-- ===== 7. Pasek powrotu (6.7) ====================================== -->
+  <section class="section" aria-label="Powrót do Nature &amp; Future">
+    <div class="container">
+      <div class="backbar glass">
+        <p>PomonaLab jest częścią Nature &amp; Future.</p>
+        <a class="btn btn--secondary btn--small" href="sklep-nf.html">Zobacz rośliny w sklepie</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ===== Stopka (--brand-900) — identyczna jak na /kamino ============== -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer__top">
+      <div class="newsletter">
+        <h2 class="h3">Nowe odmiany raz w miesiącu</h2>
+        <p class="muted small">Jeden e-mail miesięcznie: co weszło do sprzedaży i co wychodzi z hodowli. Wypisujesz się jednym kliknięciem.</p>
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="visually-hidden" for="mail">Adres e-mail</label>
+          <input class="input" id="mail" name="mail" type="email" placeholder="imie@example.com" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Zapisz mnie</button>
+        </form>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Sklep</h3>
+          <ul>
+            <li><a href="sklep-nf.html">Rośliny akwariowe</a></li>
+            <li><a href="sklep-nf.html">Zestawy startowe</a></li>
+            <li><a href="sklep-nf.html">Poziomy trudności</a></li>
+            <li><a href="sklep-nf.html">Wysyłka i zwroty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Laboratorium</h3>
+          <ul>
+            <li><a href="technologia-nf.html">Technologia in vitro</a></li>
+            <li><a href="kamino-nf.html">Kamino BioLabs</a></li>
+            <li><a href="pomona-nf.html">PomonaLab</a></li>
+            <li><a href="#blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a></li>
+            <li><a href="tel:+48000000000">+48 000 000 000</a></li>
+            <li><a href="konto-nf.html">Twoje konto</a></li>
+            <li><a href="konto-zamowienia-nf.html">Status zamówienia</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      <span>© 2026 Nature &amp; Future. Laboratorium kultur in vitro.</span>
+      <span>Regulamin · Polityka prywatności</span>
+    </p>
+
+  </div>
+</footer>
+
+<script src="assets/nf-components.js"></script>
+
+</body>
+</html>

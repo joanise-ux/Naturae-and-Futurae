@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sklep — Nature &amp; Future</title>
+<meta name="description" content="Rośliny akwariowe z kultury in vitro — bez glonów, ślimaków i pasożytów. Kubek 5×5, wysyłka w 48 h.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Standardowy zestaw: tokeny + fundament + komponenty + arkusz tej strony
+     (rozdz. 0.1). nf-shop.css dokłada wyłącznie układ katalogu. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<link rel="stylesheet" href="assets/nf-shop.css">
+</head>
+
+<!-- Sklep jest ciemny w całości (rozdz. 8). Na tej stronie nie ma ani
+     jednej .section--light i ani jednego .glass--light. -->
+<body data-brand="nf">
+
+<a class="skip-link" href="#main">Przejdź do treści</a>
+
+<!-- ===== Nawigacja (6.3) — przezroczysta nad hero, potem pigułka ======= -->
+<header class="nav">
+  <div class="nav__inner" id="navInner">
+
+    <a class="nav__logo" href="index-nf.html">
+      <img src="assets/logo-icon.png" alt="" width="36" height="36">
+      <span>Nature &amp; Future</span>
+    </a>
+
+    <nav aria-label="Główne">
+      <ul class="nav__links">
+        <li><a href="sklep-nf.html" aria-current="page">Sklep</a></li>
+        <li><a href="technologia-nf.html">Technologia</a></li>
+        <li><a href="kamino-nf.html">Kamino</a></li>
+        <li><a href="pomona-nf.html">Pomona</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="nav__icon" type="button" aria-label="Szukaj roślin">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      </button>
+
+      <a class="nav__icon" href="#koszyk" aria-label="Koszyk, 2 pozycje">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 12H7.2z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="nav__count" aria-hidden="true">2</span>
+      </a>
+
+      <a class="btn btn--ghost btn--small" href="konto-logowanie-nf.html">Zaloguj</a>
+      <a class="btn btn--outline btn--small" href="#listing">Zamów rośliny</a>
+
+      <button class="nav__icon nav__burger" type="button" id="navBurger"
+              aria-label="Otwórz menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <ul class="nav__menu glass" id="navMenu" hidden>
+      <li><a href="sklep-nf.html">Sklep</a></li>
+      <li><a href="technologia-nf.html">Technologia</a></li>
+      <li><a href="kamino-nf.html">Kamino</a></li>
+      <li><a href="pomona-nf.html">Pomona</a></li>
+      <li><a href="konto-logowanie-nf.html">Zaloguj</a></li>
+      <li><a class="btn btn--outline btn--small" href="#listing">Zamów rośliny</a></li>
+    </ul>
+
+  </div>
+</header>
+
+
+<main id="main" class="shop-page shop-page--hero">
+
+  <!-- ===== Hero sklepu (7.1 / .hero--sub) ==============================
+       DOPISANE PONAD SCHEMAT Z ROZDZ. 8: dokument prowadzi sklep od razu
+       paskiem kategorii. Bez materiału na wejściu strona zaczynała się
+       płaskim gradientem i wyglądała na niedokończoną, więc na górze staje
+       ten sam komponent co na podstronach sub-marek — ~52vh, jedno zdanie,
+       bez przycisku (CTA jest w nawigacji, rozdz. 7.1).
+
+       Efekt uboczny, zgodny z 6.3: obecność .hero włącza nawigację
+       przezroczystą nad materiałem, która zwija się w pigułkę dopiero
+       po przescrollowaniu hero.
+
+       ZDJĘCIE DO POTWIERDZENIA: to samo ujęcie stoi w hero kategorii
+       „Wszystkie rośliny" (nf-catalogue.js). Sklep potrzebuje własnego
+       kadru — np. regał ze słoikami w laboratorium.
+  ==================================================================== -->
+  <section class="hero hero--sub">
+    <img class="hero__media" src="assets/akwarium%20sklep.jpg" decoding="async"
+         alt="Zarośnięte akwarium roślinne na komodzie: korzeń porośnięty mchem, paproć jawajska, trawiasty przedplan i ławica neonów.">
+
+    <div class="hero__scrim"></div>
+
+    <div class="hero__content container">
+      <p class="hero__eyebrow">Sklep</p>
+      <h1 class="h1 hero__title">Rośliny hodowane od pojedynczej komórki.</h1>
+      <p class="hero__lede">
+        Każda sadzonka wychodzi ze sterylnego słoika — bez glonów, ślimaków
+        i pasożytów. Wysyłka w 48 h.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ===== Hero kategorii (rozdz. 8) — renderowane przez nf-shop.js ==== -->
+  <section class="section" aria-labelledby="catHeroTitle">
+    <div class="container" id="catHero"></div>
+  </section>
+
+
+  <!-- Separatora z nitem tu nie ma celowo. Rytm robi zmiana tła na jasną
+       wyspę pod spodem (rozdz. 1) — kreska tuż nad jej krawędzią
+       konkurowała z tym przejściem. -->
+
+
+  <!-- ===== Pasek, listing i siatka — JASNA WYSPA (rozdz. 1) ============
+       Jedyna jasna sekcja na stronie. Pełna szerokość, własne krawędzie,
+       96px marginesu wewnętrznego na styku i zaokrąglone rogi --radius-l.
+
+       Wyspa zaczyna się od paska kategorii, a nie od siatki: pasek,
+       nagłówek listingu, blok wyróżniony i karty to jedna czynność —
+       wybieranie. Ciemne pasma nad nią opowiadają (hero strony, hero
+       kategorii), jasne pasmo służy do czytania i porównywania
+       (rozdz. 1, reguła 2).
+
+       Wszystko, co unosi się nad papierem, bierze .glass--light: pasek,
+       blok wyróżniony i karty (rozdz. 3). Blok i karty składa nf-shop.js
+       i to on podaje im tę klasę.
+
+       ODSTĘPSTWO OD ROZDZ. 8: dokument trzyma blok wyróżniony na ciemnym.
+       Tu wchodzi razem z listingiem na papier — rozdzielenie paska,
+       bloku i siatki trzema pasmami rozbijało jedną czynność na trzy
+       zmiany tła.
+  ==================================================================== -->
+  <section class="section section--light" id="shopGridSection"
+           aria-labelledby="listingTitle">
+    <div class="container">
+
+      <!-- Kategorie w segmentowanym kontrolku (.seg z 6.3), po prawej
+           sortowanie. Przełącznika sub-marek tu nie ma: sklep jest
+           wyłącznie Nature & Future. PomonaLab i Kamino BioLabs mają
+           własne podstrony, linkowane z nawigacji. -->
+      <div class="shopbar">
+        <div class="shopbar__inner">
+
+          <div class="shopbar__row">
+            <div class="seg" id="shopCategories" role="group" aria-label="Kategoria"></div>
+
+            <label class="field__label shopbar__sortlabel" for="shopSort">Sortuj</label>
+            <select class="input shopbar__sort" id="shopSort">
+              <option value="polecane">Polecane</option>
+              <option value="cena-rosnaco">Cena rosnąco</option>
+              <option value="cena-malejaco">Cena malejąco</option>
+              <option value="nazwa">Nazwa A–Z</option>
+              <option value="dostepnosc">Dostępność</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="listing__head" id="listing">
+        <h2 class="h2" id="listingTitle">W tej kategorii</h2>
+        <p class="small muted">
+          <b id="shopCount">—</b> · <span id="shopPlan">—</span>
+        </p>
+      </div>
+
+      <!-- Blok wyróżniony (8.1) i siatka kart. Liczba kolumn nie jest
+           zapisana w znacznikach ani w CSS — wychodzi z planLayout(). -->
+      <div class="shop-listing" id="shopFeatured"></div>
+      <div class="shop-listing" id="shopGrid"></div>
+
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ===== Stopka (--brand-900) ========================================== -->
+<footer class="footer" id="kontakt">
+  <div class="container">
+
+    <div class="footer__top">
+      <div class="newsletter">
+        <h2 class="h3">Nowe odmiany raz w miesiącu</h2>
+        <p class="muted small">Jeden e-mail miesięcznie: co weszło do sprzedaży i co wychodzi z hodowli. Wypisujesz się jednym kliknięciem.</p>
+        <form class="newsletter__form" action="#" method="post" novalidate>
+          <label class="visually-hidden" for="mail">Adres e-mail</label>
+          <input class="input" id="mail" name="mail" type="email" placeholder="imie@example.com" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Zapisz mnie</button>
+        </form>
+      </div>
+
+      <div class="footer__cols">
+        <div>
+          <h3>Sklep</h3>
+          <ul>
+            <li><a href="sklep-nf.html">Rośliny akwariowe</a></li>
+            <li><a href="sklep-nf.html">Zestawy startowe</a></li>
+            <li><a href="sklep-nf.html">Poziomy trudności</a></li>
+            <li><a href="sklep-nf.html">Wysyłka i zwroty</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Laboratorium</h3>
+          <ul>
+            <li><a href="technologia-nf.html">Technologia in vitro</a></li>
+            <li><a href="kamino-nf.html">Kamino BioLabs</a></li>
+            <li><a href="pomona-nf.html">PomonaLab</a></li>
+            <li><a href="#blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a></li>
+            <li><a href="tel:+48000000000">+48 000 000 000</a></li>
+            <li><a href="konto-nf.html">Twoje konto</a></li>
+            <li><a href="konto-zamowienia-nf.html">Status zamówienia</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      <span>© 2026 Nature &amp; Future. Laboratorium kultur in vitro.</span>
+      <span>Regulamin · Polityka prywatności</span>
+    </p>
+
+  </div>
+</footer>
+
+<script src="assets/nf-components.js"></script>
+<script src="assets/nf-catalogue.js"></script>
+<script src="assets/nf-shop.js"></script>
+
+</body>
+</html>

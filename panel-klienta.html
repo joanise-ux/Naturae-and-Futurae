@@ -17,12 +17,13 @@
 <meta name="description" content="Zaloguj się do panelu klienta Nature & Future: historia zamówień, obserwowane odmiany i adresy wysyłki.">
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
 <link rel="stylesheet" href="assets/mobile.css">
+<link rel="stylesheet" href="assets/theme.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; background: #071310; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; }
   html { scrollbar-gutter: stable; }
   a { color: inherit; text-decoration: none; }
   @keyframes nf-vt-out { to { opacity: 0; transform: translateY(-6px); filter: blur(2px); } }
@@ -34,7 +35,7 @@
 </style>
 </helmet>
 
-<div style="min-height:100vh; font-family:'EB Garamond',serif; background:radial-gradient(160% 140% at 50% 30%, rgba(140,120,55,.55), transparent 80%), linear-gradient(180deg, #2a7312 0%, #17180d 100%); background-attachment:fixed; color:#b8b0a0;">
+<div class="nf-shell">
 
   <!-- ===== NAV ===== -->
   <div class="nf-nav" style="position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:22px 40px; margin:0; background:rgba(10,20,14,.55); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid rgba(90,120,70,.15);">
@@ -513,6 +514,41 @@
 
 </div>
 </x-dc>
+<script>
+/* Powrót pod właściwy adres po zalogowaniu (rozdz. 8A / panel klienta).
+   Nowy panel (konto-*-nf.html) odsyła tu niezalogowanego z ?powrot=<plik>.
+   Po zalogowaniu wracamy tam, skąd przyszedł.
+
+   Whitelista, nie walidacja adresu: przyjmujemy wyłącznie nazwę pliku
+   panelu z opcjonalnym query. Dzięki temu parametr nie może posłużyć do
+   przekierowania na obcy serwis, nawet gdyby ktoś podrzucił użytkownikowi
+   spreparowany link. */
+(function () {
+  var DOZWOLONE = /^konto(-[a-z]+)?-nf\.html(\?[A-Za-z0-9_=&%.\-]*)?$/;
+
+  function cel() {
+    var p = new URLSearchParams(location.search).get('powrot');
+    return p && DOZWOLONE.test(p) ? p : null;
+  }
+
+  if (!cel()) return;
+
+  function start() {
+    var sb = window.supabaseClient;
+    if (!sb) { setTimeout(start, 80); return; }
+
+    sb.auth.getSession().then(function (r) {
+      if (r && r.data && r.data.session) location.replace(cel());
+    });
+
+    sb.auth.onAuthStateChange(function (_e, session) {
+      if (session) location.replace(cel());
+    });
+  }
+
+  start();
+})();
+</script>
 <script>
 /* Nature & Future — menu mobilne (hamburger). Faza capture, bo x-dc renderuje się dynamicznie. */
 (function(){

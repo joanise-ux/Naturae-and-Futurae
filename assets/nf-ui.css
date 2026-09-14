@@ -1,0 +1,639 @@
+/* ==========================================================================
+   Nature & Future — warstwa komponentow
+   --------------------------------------------------------------------------
+   Klasy odtwarzajace jezyk wizualny prototypu Figma Make. Wszystkie kolory,
+   promienie i obramowania biora sie z tokenow w assets/theme.css — w tym
+   pliku nie ma byc ani jednej wartosci wpisanej na sztywno. Jesli czegos
+   brakuje, token dochodzi do theme.css, a nie kolor tutaj.
+
+   Ladowany PO theme.css (potrzebuje jego zmiennych) i PO mobile.css.
+
+   Zasieg: dzis tylko index.html. Kolejne strony dochodza przez dodanie
+   klasy .nf-theme-deep na <html> i zamiane inline styli na te klasy.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Typografia pomocnicza
+   -------------------------------------------------------------------------- */
+.nf-serif   { font-family: 'Cinzel', serif; }
+.nf-body    { font-family: 'EB Garamond', Georgia, serif; }
+.nf-mono    { font-family: 'Space Mono', monospace; }
+
+/* Etykieta nad naglowkiem sekcji — Space Mono, szeroka spacja, kreska z lewej.
+   Powtarza sie w prototypie w kazdej sekcji, stad osobna klasa. */
+.nf-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #7aaa72;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nf-label::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+/* Wariant wysrodkowany — kreska po obu stronach. */
+.nf-label--center { justify-content: center; }
+.nf-label--center::after {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.nf-h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  /* clamp zamiast sztywnych 60px — prototyp skaluje naglowek z szerokoscia
+     okna, dzieki czemu na waskich ekranach nie trzeba go nadpisywac. */
+  font-size: clamp(42px, 5.5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: .01em;
+  color: var(--nf-heading);
+  margin: 0;
+  text-shadow: 0 2px 30px rgba(0,0,0,.6);
+}
+
+.nf-h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: clamp(30px, 3.4vw, 40px);
+  line-height: 1.14;
+  letter-spacing: .02em;
+  color: var(--nf-heading);
+  margin: 14px 0 0;
+}
+
+.nf-h3 {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: .02em;
+  color: var(--nf-heading);
+  margin: 0;
+}
+
+.nf-lead {
+  font-size: 18px;
+  line-height: 1.66;
+  color: var(--nf-muted);
+  margin: 24px 0 0;
+}
+
+.nf-em {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--nf-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Uklad
+   -------------------------------------------------------------------------- */
+.nf-section { padding: 100px 0; }
+
+/* Sekcje naprzemienne — prototyp rozdziela je delikatnym gradientem zamiast
+   jednolitego tla, zeby dlugie przewijanie nie bylo plaskie. */
+.nf-section--panel { background: linear-gradient(180deg, var(--nf-card), #060906); }
+.nf-section--deep  { background: linear-gradient(180deg, #060906, var(--nf-bg-deep)); }
+
+.nf-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
+.nf-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.nf-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.nf-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* --------------------------------------------------------------------------
+   Nawigacja
+   Klasa .nf-nav istniala juz wczesniej (uzywa jej mobile.css i markup
+   wszystkich stron) — tutaj dostaje tylko nowy wyglad, nie nowa nazwe.
+   -------------------------------------------------------------------------- */
+.nf-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px;
+  background: rgba(10,20,14,.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--nf-border-soft);
+}
+
+/* Nagowek jest fixed, wiec pierwsza sekcja musi dostac zapas od gory,
+   inaczej wjezdza pod pasek. */
+.nf-theme-deep .nf-shell { padding-top: 0; }
+
+.nf-nav__brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.nf-nav__name {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: .08em;
+  color: var(--nf-heading);
+}
+.nf-nav__tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .26em;
+  color: var(--nf-dim);
+  margin-top: 3px;
+}
+
+.nf-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 15px;
+  letter-spacing: .02em;
+  color: var(--nf-body);
+}
+.nf-nav__link {
+  position: relative;
+  padding: 4px 0;
+  color: inherit;
+  text-decoration: none;
+  transition: color .2s;
+}
+.nf-nav__link:hover { color: var(--nf-accent); }
+/* Podkreslenie aktywnej pozycji — dotad kolor aktywnego linku byl wpisywany
+   inline osobno na kazdej z 13 stron. */
+.nf-nav__link.is-active { color: var(--nf-accent); }
+.nf-nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--nf-accent);
+}
+
+.nf-nav__right { display: flex; align-items: center; gap: 18px; }
+
+/* Burger — widoczny dopiero ponizej progu, patrz sekcja RWD na koncu. */
+.nf-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--nf-border);
+  border-radius: var(--nf-radius);
+  cursor: pointer;
+}
+.nf-burger span {
+  display: block;
+  height: 1px;
+  width: 18px;
+  margin: 0 auto;
+  background: var(--nf-body);
+  transition: transform .25s, opacity .25s;
+}
+.nf-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nf-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nf-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Panel menu mobilnego. Zwiniety stan trzymamy na max-height + visibility,
+   a nie na display:none — dzieki temu da sie to animowac, a czytniki ekranu
+   nie widza schowanych linkow. */
+.nf-mobile-menu {
+  position: fixed;
+  top: 78px; left: 0; right: 0;
+  z-index: 49;
+  overflow: hidden;
+  max-height: 0;
+  visibility: hidden;
+  background: rgba(7,19,16,.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--nf-border-soft);
+  transition: max-height .3s ease, visibility .3s;
+}
+.nf-mobile-menu.is-open { max-height: 70vh; visibility: visible; }
+.nf-mobile-menu a {
+  display: block;
+  padding: 15px 24px;
+  font-size: 17px;
+  color: var(--nf-body);
+  border-bottom: 1px solid var(--nf-border-soft);
+  text-decoration: none;
+}
+.nf-mobile-menu a:last-child { border-bottom: none; }
+
+/* --------------------------------------------------------------------------
+   Przyciski
+   -------------------------------------------------------------------------- */
+.nf-btn {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 5px;
+  padding: 14px 24px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity .2s, border-color .2s, color .2s;
+}
+
+.nf-btn--primary {
+  color: #0a1a0c;
+  background: linear-gradient(180deg, #6a9a62, #3d6a38);
+  border: 1px solid var(--nf-accent);
+  box-shadow: inset 0 1px 0 rgba(180,220,170,.45), 0 0 24px rgba(90,120,70,.3);
+}
+.nf-btn--primary:hover { opacity: .85; }
+
+.nf-btn--ghost {
+  color: #a9c0a0;
+  background: none;
+  border: 1px solid rgba(90,120,70,.5);
+}
+.nf-btn--ghost:hover { border-color: rgba(90,120,70,.9); }
+
+.nf-btn-row { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+
+/* --------------------------------------------------------------------------
+   Karty i ramki
+   -------------------------------------------------------------------------- */
+.nf-card {
+  background: linear-gradient(180deg, var(--nf-card), #060906);
+  border: 1px solid var(--nf-border);
+  border-radius: 10px;
+  padding: 26px;
+  transition: border-color .25s, transform .25s;
+}
+.nf-card:hover { border-color: rgba(90,120,70,.45); }
+
+/* Karta klikalna (katalog roslin) — delikatne uniesienie zamiast zmiany tla. */
+.nf-card--link:hover { transform: translateY(-4px); }
+
+/* Mosiezna ramka wokol zdjecia — znak rozpoznawczy prototypu.
+   Cztery nity w rogach: dwa gorne rysuje sama ramka, dwa dolne warstwa
+   .nf-frame__rivets. Prototyp wstawial w tym miejscu cztery puste <span>;
+   pseudoelementy daja ten sam efekt bez smiecenia w markupie. */
+.nf-frame {
+  position: relative;
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(145deg, #241a10, #120c08);
+  border: 1px solid var(--nf-brass);
+  box-shadow: 0 30px 70px -38px rgba(0,0,0,.9),
+              inset 0 0 0 1px rgba(122,170,114,.2);
+}
+.nf-frame::before,
+.nf-frame::after,
+.nf-frame__rivets::before,
+.nf-frame__rivets::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3dca0, #7a531f);
+  box-shadow: 0 0 4px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+.nf-frame::before { left: 7px;  top: 7px; }
+.nf-frame::after  { right: 7px; top: 7px; }
+
+.nf-frame__rivets { position: absolute; inset: 0; pointer-events: none; }
+.nf-frame__rivets::before { left: 7px;  bottom: 7px; }
+.nf-frame__rivets::after  { right: 7px; bottom: 7px; }
+
+.nf-frame__photo { border-radius: 8px; overflow: hidden; position: relative; }
+.nf-frame__photo img { width: 100%; object-fit: cover; display: block; opacity: .82; }
+
+/* Poswiata pod ramka. */
+.nf-glow {
+  position: absolute;
+  inset: -8% -5%;
+  background: radial-gradient(55% 45% at 52% 44%, rgba(122,170,114,.22), transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* Plakietka "SPECIMEN // ..." wpieta w dolna krawedz zdjecia.
+   UWAGA na nazwe: klasa .nf-specimen (bez sufiksu) jest juz zajeta — nosza ja
+   karty katalogu generowane ze skryptu w index.html, a druga funkcja na dole
+   strony wyszukuje je przez '.nf-specimen[data-latin]', zeby podmienic linki
+   na produkt.html. Nadpisanie tamtej nazwy rozsypaloby katalog. */
+.nf-specimen-tag {
+  position: absolute;
+  left: 50%;
+  bottom: -13px;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #0a1a0c;
+  background: linear-gradient(180deg, #6a9a62, #3d6a38);
+  border: 1px solid var(--nf-accent);
+  border-radius: 3px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+/* Kartka botaniczna leżąca na zdjęciu. */
+.nf-botanical {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  transform: rotate(-3deg);
+  background: linear-gradient(180deg, #d8dcc8, #c4ccb0);
+  border: 1px solid #8a9a70;
+  border-radius: 3px;
+  padding: 9px 12px 10px;
+  box-shadow: 0 8px 18px -8px rgba(0,0,0,.7);
+  max-width: 182px;
+}
+.nf-botanical__name {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #2a3a1a;
+  line-height: 1.3;
+}
+.nf-botanical__meta {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 11.5px;
+  color: #4a5a36;
+  line-height: 1.4;
+  margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+.nf-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(160% 140% at 50% 30%, rgba(140,120,55,.45), transparent 80%),
+    linear-gradient(180deg, #2a7312 0%, #17180d 100%);
+  background-attachment: fixed;
+}
+/* Zdjecie pod trescia: luminosity + niska nieprzezroczystosc sprawiaja, ze
+   fotografia daje strukture, ale nie wnosi wlasnych kolorow. */
+.nf-hero__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: .12;
+  mix-blend-mode: luminosity;
+}
+.nf-hero__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    rgba(7,19,16,.96) 38%,
+    rgba(7,19,16,.6) 65%,
+    rgba(7,19,16,.2) 100%);
+}
+.nf-hero__inner {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 100px 40px 60px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Wskaznik przewijania. */
+.nf-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: nf-pulse 2s ease-in-out infinite;
+}
+.nf-scroll-hint__line {
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, var(--nf-accent), transparent);
+}
+.nf-scroll-hint span {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: var(--nf-dim);
+  text-transform: uppercase;
+}
+@keyframes nf-pulse { 0%,100% { opacity: .4 } 50% { opacity: 1 } }
+
+/* --------------------------------------------------------------------------
+   Statystyki z zegarami
+   -------------------------------------------------------------------------- */
+.nf-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--nf-border);
+  flex-wrap: wrap;
+}
+.nf-stat__value {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--nf-heading);
+}
+.nf-stat__label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: .06em;
+  color: #8c7d5e;
+  margin-top: 2px;
+}
+.nf-stats__divider { width: 1px; height: 42px; background: rgba(90,120,70,.25); }
+
+/* Zegar. Tarcza i podzialka to czysty CSS; wskazowka animuje sie sama,
+   bo w prototypie robila to biblioteka, a tu wystarczy @keyframes. */
+.nf-gauge {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #1a1812, #080c08);
+  border: 2px solid var(--nf-brass);
+  box-shadow: inset 0 0 12px rgba(0,0,0,.85), 0 0 14px rgba(90,120,70,.2);
+  position: relative;
+  flex-shrink: 0;
+}
+.nf-gauge::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, #8c7d5e 0deg .8deg, transparent .8deg 30deg);
+  opacity: .45;
+}
+.nf-gauge::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--nf-accent);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.nf-gauge__needle {
+  position: absolute;
+  left: 50%; bottom: 50%;
+  width: 2px; height: 18px;
+  margin-left: -1px;
+  background: linear-gradient(var(--nf-accent), #2a4a2a);
+  transform-origin: bottom center;
+  animation: nf-needle 5s ease-in-out infinite;
+}
+/* Drugi zegar chodzi wolniej i w innej fazie — w prototypie robil to
+   parametr offset przekazywany do komponentu. */
+.nf-gauge--slow .nf-gauge__needle { animation-duration: 7.4s; animation-delay: -1.2s; }
+@keyframes nf-needle {
+  0%, 100% { transform: rotate(22deg); }
+  50%      { transform: rotate(58deg); }
+}
+
+/* --------------------------------------------------------------------------
+   Formularz
+   -------------------------------------------------------------------------- */
+.nf-field { display: block; margin-bottom: 16px; }
+.nf-field__label {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--nf-dim);
+  margin-bottom: 7px;
+}
+.nf-input {
+  width: 100%;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 16px;
+  color: var(--nf-heading);
+  background: var(--nf-surface-2);
+  border: 1px solid var(--nf-border);
+  border-radius: var(--nf-radius);
+  padding: 12px 14px;
+  transition: border-color .2s;
+}
+.nf-input:focus {
+  outline: none;
+  border-color: var(--nf-accent);
+}
+.nf-input::placeholder { color: #5a5a4c; }
+textarea.nf-input { min-height: 130px; resize: vertical; }
+
+.nf-form__error {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: #d98b7a;
+  margin-top: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Animacje wejscia — sterowane z assets/nf-motion.js.
+   Element startuje przesuniety i przezroczysty, obserwator dokłada .is-in.
+   Krzywa i czasy przepisane z prototypu (duration .75s, ease [.16,1,.3,1]).
+   -------------------------------------------------------------------------- */
+.nf-fade {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .75s cubic-bezier(.16,1,.3,1),
+              transform .75s cubic-bezier(.16,1,.3,1);
+}
+.nf-fade.is-in { opacity: 1; transform: none; }
+
+/* Opoznienia kaskadowe dla elementow w jednym rzedzie. */
+.nf-fade[data-nf-delay="1"] { transition-delay: .09s; }
+.nf-fade[data-nf-delay="2"] { transition-delay: .18s; }
+.nf-fade[data-nf-delay="3"] { transition-delay: .27s; }
+.nf-fade[data-nf-delay="4"] { transition-delay: .36s; }
+.nf-fade[data-nf-delay="5"] { transition-delay: .45s; }
+
+/* Bez ruchu: wszystko od razu na miejscu. Reguly nie da sie zalatwic samym
+   .nf-anim z bloku w index.html, bo tamten wylacza tylko @keyframes. */
+@media (prefers-reduced-motion: reduce) {
+  .nf-fade { opacity: 1; transform: none; transition: none; }
+  .nf-gauge__needle,
+  .nf-scroll-hint { animation: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Pasek przewijania — przepisany z bloku <style> na koncu App.tsx.
+   -------------------------------------------------------------------------- */
+.nf-theme-deep * { scrollbar-width: thin; scrollbar-color: rgba(90,120,70,.3) transparent; }
+.nf-theme-deep *::-webkit-scrollbar { width: 6px; }
+.nf-theme-deep *::-webkit-scrollbar-track { background: transparent; }
+.nf-theme-deep *::-webkit-scrollbar-thumb { background: rgba(90,120,70,.3); border-radius: 3px; }
+
+/* --------------------------------------------------------------------------
+   RWD — progi 900 px i 600 px, tak jak w prototypie.
+   Bez !important: tu nie ma z czym walczyc, bo te elementy nie maja juz
+   styli inline. To rowniez powod, dla ktorego czesc regul z mobile.css
+   przestala byc potrzebna.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .nf-nav { padding: 18px 20px; }
+  .nf-nav__links { display: none; }
+  .nf-burger { display: flex; }
+
+  .nf-hero__inner,
+  .nf-split { grid-template-columns: 1fr; gap: 40px; }
+  .nf-hero__inner { padding: 110px 20px 60px; }
+  .nf-wrap { padding: 0 20px; }
+  .nf-section { padding: 70px 0; }
+
+  .nf-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .nf-grid-4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Prawa kolumna hero (ramka ze zdjeciem) znika — w prototypie mial ja
+     className="hidden md:block". */
+  .nf-hero__aside { display: none; }
+  .nf-scroll-hint { display: none; }
+}
+
+@media (max-width: 600px) {
+  .nf-grid-3,
+  .nf-grid-4 { grid-template-columns: 1fr; }
+  .nf-stats { gap: 14px; }
+  .nf-stats__divider { display: none; }
+}

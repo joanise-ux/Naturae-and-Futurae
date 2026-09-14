@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Nature & Future — nf-panel.css
+   Czwarty arkusz stron panelu klienta (rozdz. 0.1). Wyłącznie kompozycja
+   pięciu widoków: konto-nf, konto-zamowienia-nf, konto-zamowienie-nf,
+   konto-dane-nf, konto-ulubione-nf.
+
+   Komponenty panelu (.panel, .panel-nav, .panel-page, .panel-card,
+   .stat-tiles, .tile-stat, .filterbar, .table, .status, .empty, .skeleton,
+   .modal, .num) mieszkają w nf-components.css — używa ich także panel
+   administratora, więc z definicji nie jest to kompozycja jednej strony
+   (rozdz. 0.1, reguła porządku).
+
+   Zależy od: tokens.css, nf-base.css, nf-components.css.
+   ========================================================================== */
+
+
+/* --- Przegląd: trzy bloki (8A) ------------------------------------------- */
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: var(--space-s);
+  align-items: start;
+}
+
+/* Ostatnie zamówienie zajmuje pełną szerokość: niesie najwięcej treści
+   i to po nie klient tu przychodzi. */
+.overview__wide { grid-column: 1 / -1; }
+
+
+/* --- Miniatury pozycji (8A: zdjęcia to miniatury 64px) ------------------- */
+
+.thumbs { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  background: var(--brand-800);
+  flex: 0 0 auto;
+}
+
+/* Nadmiar pozycji jako liczba, nie jako dwudziesta miniatura. */
+.thumbs__more {
+  display: grid;
+  place-items: center;
+  width: 64px; height: 64px;
+  border-radius: var(--radius-s);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+
+/* --- Pozycje zamówienia (widok szczegółów) ------------------------------- */
+
+.items { list-style: none; margin: 0; padding: 0; display: grid; }
+
+.item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-s);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.item:last-child { border-bottom: 0; }
+
+.item__name { min-width: 0; }
+.item__name .latin { margin-bottom: 2px; }
+
+/* Ilość i cena w jednej kolumnie po prawej — mają stać w pionie
+   pod sobą przez całą listę (8A, zasada 5). */
+.item__money { text-align: right; white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .item { grid-template-columns: 64px minmax(0, 1fr); }
+  .item__money { grid-column: 2; text-align: left; }
+}
+
+
+/* --- Podsumowanie kwot: wyrównane do prawej ------------------------------ */
+
+.totals {
+  margin: 0;
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--space-2xs) var(--space-l);
+  width: fit-content;
+  text-align: right;
+}
+.totals dt { color: rgba(217, 252, 240, 0.72); text-align: left; }
+.totals dd { margin: 0; }
+
+.totals__sum { border-top: 1px solid rgba(255, 255, 255, 0.18); padding-top: var(--space-xs); }
+.totals dt.totals__sum { font-weight: 600; color: var(--brand-100); }
+
+
+/* --- Dane i adresy -------------------------------------------------------- */
+
+.addr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-s);
+}
+
+.addr {
+  padding: var(--space-s);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-s);
+  display: grid;
+  gap: var(--space-xs);
+  align-content: start;
+}
+
+/* Adres domyślny wyróżniony ramką, ale niesie też słowo w .badge —
+   sama ramka byłaby informacją przekazaną wyłącznie wyglądem. */
+.addr--default { border-color: var(--brand-300); }
+
+.addr__actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-2xs); }
+
+.addr__lines { margin: 0; color: rgba(217, 252, 240, 0.82); }
+
+
+/* --- Opieka po dostawie --------------------------------------------------- */
+
+.care-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
+
+.care-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-xs);
+  padding-block: var(--space-2xs);
+}
+
+
+/* --- Przegląd: układ ze starego panelu -----------------------------------
+   Powitanie, rząd kafli, dwie kolumny: historia zamówień po lewej,
+   skróty po prawej. Każdy blok po prawej jest wejściem do pełnego
+   widoku, nie jego kopią — panel ma pięć adresów, nie jeden.
+   -------------------------------------------------------------------------- */
+
+.panel-hello { align-items: start; }
+.panel-hello__id { margin: 0; }
+
+/* .panel-cols i .panel-side stoją w nf-components.css — przegląd
+   personelu używa tych samych dwóch kolumn. */
+
+
+/* --- Skrót zamówienia w przeglądzie --------------------------------------- */
+
+.order-brief {
+  padding: var(--space-m);
+  display: grid;
+  gap: var(--space-s);
+}
+
+.order-brief__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-xs) var(--space-s);
+}
+
+/* Lista skrótowa po prawej: miniatura, nazwa, jedna akcja. */
+.mini-list { list-style: none; margin: 0; padding: 0; display: grid; }
+
+.mini-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.mini-item:last-child { border-bottom: 0; }
+
+.mini-item__thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  background: var(--brand-800);
+}
+
+.mini-item__name { min-width: 0; }
+.mini-item__name .latin { font-size: var(--type-small); }
+
+
+/* --- Jasne karty: dopełnienie dla komponentów tylko klienckich ------------
+   Wspólne reguły jasnej karty stoją w nf-components.css. Tutaj zostaje to,
+   czego panel administratora nie używa. Dlaczego jasno: panel stał na
+   jednolitym ciemnozielonym gradiencie, a szkło różniło się od niego
+   o kilka procent jasności — bloki zlewały się w jedną płaszczyznę.
+   -------------------------------------------------------------------------- */
+
+.order-brief {
+  border-radius: var(--radius-m);
+  border: 1px solid rgba(11, 93, 30, 0.14);
+  box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18);
+}
+
+.order-brief .h3 { color: var(--ink); }
+
+/* Adres to karta w karcie — musi odciąć się od jasnego tła bloku,
+   więc idzie w biel, a nie w kolejny stopień zieleni. */
+.addr {
+  /* 0.92, nie 0.72: karta adresu leży wprost na ciemnej zieleni strony,
+     więc przy niższym kryciu tło mieszało się z tłem i --ink-muted
+     schodził do 3.7:1 — poniżej progu z rozdz. 10. */
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(11, 93, 30, 0.16);
+}
+.addr--default { border-color: var(--brand-500); }
+.addr__lines { color: var(--ink-muted); }
+
+.item,
+.mini-item { border-bottom-color: rgba(11, 93, 30, 0.12); }
+
+.totals dt { color: var(--ink-muted); }
+.totals__sum { border-top-color: rgba(11, 93, 30, 0.24); }
+.totals dt.totals__sum { color: var(--ink); }
+
+.thumb,
+.mini-item__thumb { background: rgba(11, 93, 30, 0.10); }
+
+.order-brief__head { color: var(--ink-muted); }
+

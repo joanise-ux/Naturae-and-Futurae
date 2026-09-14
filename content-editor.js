@@ -59,6 +59,27 @@
   function sb() { return window.supabaseClient; }
   function css(el, s) { for (var k in s) el.style[k] = s[k]; }
 
+  // --- Czyszczenie treści ze śladów edytora -------------------------------
+  // Do zapisywanego innerHTML potrafiły wsiąkać rzeczy techniczne:
+  //  • data-nf-key — klucz nadawany W LOCIE przez ensureKeyed (np. gdy Enter
+  //    utworzył nowy <div> w środku edytowanego bloku),
+  //  • outline/outline-offset — przerywana ramka podglądu spod kursora.
+  // Zapisane raz w bazie zostawały na stronie na zawsze (widoczna ramka),
+  // a „duchowy" data-nf-key bez klucza JS blokował ponowną edycję bloku.
+  // Dlatego czyścimy treść i przy zapisie, i przy wczytaniu (leczy stare wpisy).
+  function sanitizeHtml(html) {
+    var box = document.createElement('div');
+    box.innerHTML = (html == null ? '' : String(html));
+    var els = box.querySelectorAll('[data-nf-key], [style]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      el.removeAttribute('data-nf-key');
+      if (el.style) { el.style.outline = ''; el.style.outlineOffset = ''; }
+      if (el.getAttribute('style') === '') el.removeAttribute('style');
+    }
+    return box.innerHTML;
+  }
+
   // --- Klucz elementu -----------------------------------------------------
   function hashStr(str) {
     var h = 5381, i = str.length;
@@ -108,6 +129,9 @@
     var all = document.querySelectorAll('h1,h2,h3,h4,h5,h6,p,div,span,li,td,th,blockquote,figcaption,img,[data-edit-key]');
     for (var i = 0; i < all.length; i++) {
       var el = all[i];
+      // Nie kluczujemy niczego W ŚRODKU aktualnie edytowanego bloku — inaczej
+      // węzły utworzone przez Enter dostają data-nf-key i lądują w zapisie.
+      if (editingEl && el !== editingEl && editingEl.contains(el)) continue;
       if (el.__nfKeyed) {
         // Reaktywny framework strony (x-dc) potrafi przy re-renderze ZDJĄĆ
         // atrybut data-nf-key, zachowując sam obiekt węzła (i naszą właściwość
@@ -122,6 +146,11 @@
       // nawet jeśli to element inline (np. <span> z rokiem na osi czasu),
       // który auto-wykrywanie normalnie pomija.
       var manual = el.getAttribute('data-edit-key');
+      // Automatycznych kluczy nie nadajemy WEWNĄTRZ innego bloku edytowalnego:
+      // zapis rodzica i tak podmienia jego innerHTML, więc edycja dziecka
+      // wyglądałaby na „niezapisującą się". Ręczny data-edit-key ma pierwszeństwo.
+      if (!manual && el.parentElement &&
+          el.parentElement.closest('[data-nf-key],[data-edit-key]')) continue;
       var type = null;
       if (el.tagName === 'IMG') { if (manual || isEditableImg(el)) type = 'image'; }
       else if (manual || isEditableText(el)) type = 'html';
@@ -152,6 +181,7 @@
       for (var i = 0; i < nodes.length; i++) {
         var el = nodes[i];
         if (el === editingEl) continue;
+        if (!el.__nfKey) continue;   // atrybut z zapisanej treści, nie nasz klucz
         var ov = overrides[el.__nfKey];
         if (!ov) continue;
         if (el.tagName === 'IMG') {
@@ -184,7 +214,8 @@
           return (a.page === '_shared' ? 1 : 0) - (b.page === '_shared' ? 1 : 0);
         });
         rows.forEach(function (row) {
-          overrides[row.block] = { type: row.type, value: row.value };
+          var value = row.type === 'image' ? row.value : sanitizeHtml(row.value);
+          overrides[row.block] = { type: row.type, value: value };
         });
         applyAll();
       });
@@ -315,7 +346,9 @@
           if (els[i].hasAttribute && els[i].hasAttribute('data-nf-key')) { t = els[i]; break; }
         }
       }
-      if (t && t !== editingEl) { hoverEl = t; positionPencil(t); }
+      // __nfKey wymagane: sam atrybut data-nf-key mógł przyjść ze starej,
+      // zapisanej treści i nie da się takiego elementu zapisać.
+      if (t && t !== editingEl && t.__nfKey) { hoverEl = t; positionPencil(t); }
     }, true);
     window.addEventListener('scroll', function () {
       if (pencil) pencil.style.display = 'none';
@@ -328,6 +361,17 @@
     location.replace(location.pathname);
   }
 
+  // Ramkę podglądu trzymamy na JEDNYM elemencie naraz i zdejmujemy ją jawnie.
+  // Samo `mouseleave` nie wystarczało: ołówek leży W OBRĘBIE elementu, więc
+  // przejście myszy na ołówek nie zdejmowało ramki — i szła ona do zapisu.
+  var outlinedEl = null;
+  function clearOutline() {
+    if (!outlinedEl) return;
+    outlinedEl.style.outline = ''; outlinedEl.style.outlineOffset = '';
+    if (outlinedEl.getAttribute('style') === '') outlinedEl.removeAttribute('style');
+    outlinedEl = null;
+  }
+
   function positionPencil(el) {
     var r = el.getBoundingClientRect();
     css(pencil, {
@@ -335,10 +379,12 @@
       top: (window.scrollY + r.top + 4) + 'px',
       left: (window.scrollX + r.right - 34) + 'px'
     });
+    if (outlinedEl !== el) clearOutline();
+    outlinedEl = el;
     el.style.outline = '1px dashed rgba(198,154,76,.6)';
     el.style.outlineOffset = '2px';
     el.addEventListener('mouseleave', function h() {
-      el.style.outline = ''; el.style.outlineOffset = '';
+      if (el !== editingEl) clearOutline();
       el.removeEventListener('mouseleave', h);
     });
   }
@@ -346,6 +392,7 @@
   // --- Rozpoczęcie edycji --------------------------------------------------
   function startEdit(el) {
     pencil.style.display = 'none';
+    clearOutline();
     if (el.tagName === 'IMG') { editImage(el); return; }
     editText(el);
   }
@@ -359,7 +406,9 @@
     el.focus();
     attachLinkOpener(el);
     showToolbar(el, function save() {
-      var value = el.innerHTML;
+      clearOutline();
+      var value = sanitizeHtml(el.innerHTML);
+      el.innerHTML = value;              // DOM = to, co poszło do bazy
       persist(el.__nfKey, 'html', value);
       finishText(el);
     }, function cancel() {
@@ -372,6 +421,7 @@
     detachLinkOpener(el);
     el.removeAttribute('contenteditable');
     el.style.outline = ''; el.style.outlineOffset = '';
+    clearOutline();
     hideToolbar();
     editingEl = null;
   }

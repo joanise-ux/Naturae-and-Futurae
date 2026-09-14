@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Styleguide — Nature &amp; Future</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Wewnętrzny podgląd komponentów systemu Nature &amp; Future w trzech skórkach.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Te same trzy pliki, co strona główna. Nic nie jest tu przepisane. -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/nf-base.css">
+<link rel="stylesheet" href="assets/nf-components.css">
+<!-- Obudowa narzędzia: pasek, siatka przykładów, próbki koloru. -->
+<link rel="stylesheet" href="assets/styleguide.css">
+</head>
+
+<body data-brand="nf">
+
+<!-- ======================================================================
+     Pasek przełączników. Skórka zmienia data-brand na <body> i przefarbowuje
+     całą stronę (6.3, 400ms). Drugi przełącznik zamienia wszystkie pola
+     przykładów między sekcją deep a jasną wyspą (rozdz. 1).
+====================================================================== -->
+<div class="sg-bar">
+  <p class="sg-bar__title">
+    Styleguide
+    <small>narzędzie robocze · nielinkowane z nawigacji · docs/design-system.md</small>
+  </p>
+
+  <div class="sg-seg" role="group" aria-label="Skórka">
+    <button type="button" data-brand-value="nf"     aria-pressed="true">Nature &amp; Future</button>
+    <button type="button" data-brand-value="kamino" aria-pressed="false">Kamino</button>
+    <button type="button" data-brand-value="pomona" aria-pressed="false">PomonaLab</button>
+  </div>
+
+  <div class="sg-seg" role="group" aria-label="Wariant sekcji">
+    <button type="button" data-variant="deep"   aria-pressed="true">Ciemna sekcja</button>
+    <button type="button" data-variant="deeper" aria-pressed="false">Deep+</button>
+    <button type="button" data-variant="light"  aria-pressed="false">Jasna wyspa</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ===== Paleta ======================================================= -->
+<section class="section sg-canvas" aria-labelledby="sgPalette">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgPalette">Paleta</h2>
+      <p class="sg-ref">rozdz. <b>2.1–2.4</b> · <b>3A.1</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Wartości hex czytane w locie z <code>getComputedStyle</code> — to, co widzisz,
+      jest realną wartością tokenu w tej skórce, a nie liczbą przepisaną z dokumentu.
+      Trzy kolumny stoją obok siebie niezależnie od tego, którą skórkę wybierzesz
+      na pasku; przełącznik zmienia resztę strony.
+    </p>
+
+    <div class="sg-palette">
+
+      <div data-brand="nf">
+        <p class="sg-brandname">Nature &amp; Future <code>data-brand="nf"</code></p>
+        <div class="sg-swatches" data-swatches="brand"></div>
+      </div>
+
+      <div data-brand="kamino">
+        <p class="sg-brandname">Kamino BioLabs <code>data-brand="kamino"</code></p>
+        <div class="sg-swatches" data-swatches="brand"></div>
+      </div>
+
+      <div data-brand="pomona">
+        <p class="sg-brandname">PomonaLab <code>data-brand="pomona"</code></p>
+        <div class="sg-swatches" data-swatches="brand"></div>
+      </div>
+
+    </div>
+
+    <p class="sg-brandname" style="margin-top: var(--space-xl)">
+      Tokeny wspólne <code>:root</code>
+    </p>
+    <p class="muted small" style="margin-bottom: var(--space-s)">
+      Różowy <code>#C47B90</code> jest jedynym kolorem obecnym we wszystkich trzech
+      paletach — dlatego jest kolorem akcji w całym serwisie. Mosiądz nigdy nie jest
+      wypełnieniem, tylko linią, pierścieniem, wskazówką albo separatorem.
+    </p>
+    <div class="sg-swatches sg-swatches--cols" data-swatches="shared"></div>
+  </div>
+</section>
+
+
+<!-- ===== Warianty sekcji =============================================
+     Celowo BEZ klasy .sg-canvas — ten blok nie reaguje na przełącznik
+     u góry, bo pokazuje wszystkie trzy warianty naraz.
+================================================================= -->
+<section class="section" aria-labelledby="sgBands">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgBands">Warianty sekcji</h2>
+      <p class="sg-ref">rozdz. <b>1</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Cały serwis jest ciemny. Rytm robi się na poziomie sekcji, nie strony.
+      Trzy warianty poniżej to jedyne dopuszczone tła pasma — nie ma czwartego
+      i nie miesza się ich gradientem na styku. Odstęp pionowy ustawia
+      wyłącznie <code>.section</code>; wariant zmienia tło i kolor tekstu, nigdy padding.
+    </p>
+
+    <div class="sg-bands">
+
+      <div class="sg-band" style="background-image: var(--grad-deep); color: var(--brand-100)">
+        <h3>Deep — domyślny</h3>
+        <p class="small">
+          Gradient <code>--grad-deep</code>, tekst <code>--brand-100</code>, szkło
+          <code>.glass</code>. Większość sekcji na stronie. Tło jest przypięte do
+          okna, więc dwie sekcje Deep pod sobą nie mają między sobą krawędzi —
+          i tak ma być.
+        </p>
+        <p class="sg-ref">znacznik: <b>&lt;section class="section"&gt;</b> · bez modyfikatora</p>
+      </div>
+
+      <div class="sg-band section--deeper">
+        <h3>Deep+ — najciemniejszy</h3>
+        <p class="small">
+          Płaskie <code>--brand-900</code> zamiast gradientu, tekst
+          <code>--brand-300</code>, nagłówki zostają w <code>--brand-100</code>.
+          <b>Jeden na stronę</b>, w miejscu, gdzie strona zmienia temat. Daje realną
+          krawędź tam, gdzie dwie sekcje Deep by się zlały, bez sięgania po drugą
+          jasną wyspę.
+        </p>
+        <p class="sg-ref">znacznik: <b>.section.section--deeper</b></p>
+      </div>
+
+      <div class="sg-band section--light">
+        <h3>Jasna wyspa</h3>
+        <p class="small">
+          <code>--paper</code> z gradientem <code>--grad-light</code>, tekst
+          <code>--ink</code>, szkło <code>.glass--light</code>. <b>Maksymalnie dwie
+          na stronę</b> i nigdy obok siebie — między dwiema jasnymi wyspami stoją
+          minimum dwie ciemne sekcje. Rzadkość jest tu mechanizmem: pasmo dostaje
+          uwagę właśnie dlatego, że jest wyjątkiem.
+        </p>
+        <p class="sg-ref">znacznik: <b>.section.section--light</b></p>
+      </div>
+
+    </div>
+
+    <p class="muted small" style="margin-top: var(--space-m)">
+      Krawędź między pasmami jest ostra i wyraźna — zaokrąglone rogi
+      <code>--radius-l</code>, żadnego rozmycia gradientowego na styku.
+      Zaokrąglenie samo w sobie jest krawędzią.
+    </p>
+  </div>
+</section>
+
+
+<!-- ===== Typografia =================================================== -->
+<section class="section sg-canvas" aria-labelledby="sgType">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgType">Skala typograficzna</h2>
+      <p class="sg-ref">rozdz. <b>4</b></p>
+    </div>
+
+    <div class="sg-type">
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.display-xl</b> · hero · antykwa 400 · <span data-size-of=".display-xl"></span></p>
+        <p class="display-xl">Rośliny hodowane od pojedynczej komórki</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.h1</b> · antykwa 400 · <span data-size-of=".h1"></span></p>
+        <p class="h1">Dwa laboratoria pod jednym dachem</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.h2</b> · antykwa 500 · <span data-size-of=".h2"></span></p>
+        <p class="h2">Jak rośnie w słoiku</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.h3</b> · grotesk 600 · <span data-size-of=".h3"></span></p>
+        <p class="h3">Warunki zamówienia</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.lead</b> · Body L · grotesk 400 · <span data-size-of=".lead"></span></p>
+        <p class="lead">Roślina siedzi na żelu z pożywką, w zamkniętym słoiku, bez kontaktu z powietrzem z zewnątrz. Stąd bierze się brak glonów i pasożytów.</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref">Body · tekst domyślny <code>&lt;p&gt;</code> · <span data-size-of="p"></span></p>
+        <p>Po przesadzeniu roślina zrzuca liście i odbija w trzecim tygodniu — to normalny przebieg, nie choroba. Wiersz łamie się na 68 znakach, bo dłuższy męczy oko.</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.small</b> · <span data-size-of=".small"></span></p>
+        <p class="small">kubek 5×5 cm · wysyłka w 48 h · zwrot w 14 dni</p>
+      </div>
+
+      <div class="sg-type__row">
+        <p class="sg-ref"><b>.latin</b> + <b>.specimen-name</b> · nazwa gatunkowa zawsze kursywą antykwy, nad nazwą polską · <span data-size-of=".latin"></span></p>
+        <p>
+          <i class="latin" lang="la">Cryptocoryne wendtii</i>
+          <span class="specimen-name">Kryptokoryna wendta</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== Przyciski ==================================================== -->
+<section class="section sg-canvas" aria-labelledby="sgBtn">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgBtn">Przyciski</h2>
+      <p class="sg-ref"><b>.btn</b> · rozdz. <b>6.1</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Primary (różowy) występuje <b>raz na ekran</b>. Jeśli w widoku są dwa różowe
+      przyciski, jeden jest źle zaklasyfikowany. Stany hover i focus są tu wymuszone
+      klasami <code>.is-hover</code> / <code>.is-focus</code>, które w
+      <code>nf-base.css</code> i <code>nf-components.css</code> dzielą deklarację
+      z prawdziwym <code>:hover</code> i <code>:focus-visible</code> — nie ma
+      drugiego zestawu wartości.
+    </p>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Pierścień focusu jest w kolorze skórki (<code>--focus</code> na ciemnym,
+      <code>--focus-strong</code> na jasnej wyspie), nie różowy. Przełącz skórkę
+      na pasku, żeby zobaczyć, jak zmienia kolor. W realnym użyciu pokazuje się
+      tylko przy nawigacji klawiaturą — kliknięcie myszką go nie wywołuje.
+    </p>
+
+    <div class="sg-states">
+      <p class="sg-states__label">.btn.btn--primary — tło --accent-strong, tekst biały, pill</p>
+      <div class="sg-states__cell"><button class="btn btn--primary" type="button">Do koszyka</button><span>domyślny</span></div>
+      <div class="sg-states__cell"><button class="btn btn--primary is-hover" type="button">Do koszyka</button><span>hover</span></div>
+      <div class="sg-states__cell"><button class="btn btn--primary is-focus" type="button">Do koszyka</button><span>focus</span></div>
+      <div class="sg-states__cell"><button class="btn btn--primary" type="button" disabled>Do koszyka</button><span>disabled</span></div>
+
+      <p class="sg-states__label">.btn.btn--secondary — przezroczysty, border 1px --brand-500</p>
+      <div class="sg-states__cell"><button class="btn btn--secondary" type="button">Zobacz odmianę</button><span>domyślny</span></div>
+      <div class="sg-states__cell"><button class="btn btn--secondary is-hover" type="button">Zobacz odmianę</button><span>hover</span></div>
+      <div class="sg-states__cell"><button class="btn btn--secondary is-focus" type="button">Zobacz odmianę</button><span>focus</span></div>
+      <div class="sg-states__cell"><button class="btn btn--secondary" type="button" disabled>Zobacz odmianę</button><span>disabled</span></div>
+
+      <p class="sg-states__label">.btn.btn--ghost — sam tekst, podkreślenie na hover</p>
+      <div class="sg-states__cell"><button class="btn btn--ghost" type="button">Zaloguj</button><span>domyślny</span></div>
+      <div class="sg-states__cell"><button class="btn btn--ghost is-hover" type="button">Zaloguj</button><span>hover</span></div>
+      <div class="sg-states__cell"><button class="btn btn--ghost is-focus" type="button">Zaloguj</button><span>focus</span></div>
+      <div class="sg-states__cell"><button class="btn btn--ghost" type="button" disabled>Zaloguj</button><span>disabled</span></div>
+    </div>
+
+    <p class="sg-states__label" style="margin-top: var(--space-l)">
+      Warianty używane na stronie głównej, gdzie nie ma akcji na produkcie
+    </p>
+    <div class="sg-slot">
+      <a class="btn btn--fill" href="#0">Zobacz</a>
+      <a class="btn btn--underline" href="#0">Do koszyka</a>
+      <a class="btn btn--outline btn--small" href="#0">Zamów rośliny</a>
+    </div>
+    <p class="sg-ref"><b>.btn--fill</b> · <b>.btn--underline</b> · <b>.btn--outline</b></p>
+    <p class="muted small">
+      <b>.btn--outline</b> znika w jasnej wyspie i tak ma być: to przycisk
+      nawigacji, zaprojektowany na biały outline na ciemnym materiale (6.3).
+      Nie ma wariantu jasnego, bo nawigacja nigdy nie leży na papierze.
+    </p>
+  </div>
+</section>
+
+
+<!-- ===== Karta produktu =============================================== -->
+<section class="section sg-canvas" aria-labelledby="sgCard">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgCard">Karta produktu</h2>
+      <p class="sg-ref"><b>.card</b> · rozdz. <b>6.2</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Kropka przed stanem magazynowym: <code>--brand-500</code> gdy dostępne,
+      <code>--warn</code> gdy ≤ 3 szt., <code>--ink-muted</code> gdy 0.
+      Kolor nigdy nie niesie informacji sam — obok kropki zawsze stoi liczba.
+      Karta jest <code>.glass</code> na ciemnej sekcji i <code>.glass--light</code>
+      wewnątrz jasnej wyspy; przełącznik na pasku podmienia obie klasy.
+    </p>
+
+    <div class="sg-grid sg-grid--wide">
+
+      <article class="card glass" data-sg-glass>
+        <div class="card__photo">
+          <span class="tag">łatwa</span>
+          <button class="card__fav" type="button" aria-label="Dodaj do ulubionych" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5 4.7 12.2a4.7 4.7 0 0 1 6.5-6.5l.8.8.8-.8a4.7 4.7 0 0 1 6.5 6.5Z"/></svg>
+          </button>
+          <img src="assets/anubias.jpg" alt="" loading="lazy" decoding="async">
+          <span class="stock">20 dostępne</span>
+        </div>
+        <div class="card__body">
+          <p>
+            <i class="latin" lang="la">Anubias barteri var. nana</i>
+            <span class="specimen-name">Anubias nana</span>
+          </p>
+          <p class="muted small">Wolno rosnąca, znosi cień. Kłącze zostaje nad podłożem.</p>
+        </div>
+        <div class="card__foot">
+          <p>
+            <span class="price">22 PLN</span><br>
+            <span class="price-note muted">szt. · kubek 5×5</span>
+          </p>
+          <button class="btn btn--primary btn--small" type="button">Do koszyka</button>
+        </div>
+        <p class="sg-ref">stan: <b>.stock</b> — dostępny</p>
+      </article>
+
+      <article class="card glass" data-sg-glass>
+        <div class="card__photo">
+          <span class="tag">średnia</span>
+          <button class="card__fav" type="button" aria-label="Dodaj do ulubionych" aria-pressed="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5 4.7 12.2a4.7 4.7 0 0 1 6.5-6.5l.8.8.8-.8a4.7 4.7 0 0 1 6.5 6.5Z"/></svg>
+          </button>
+          <img src="assets/Kryptokoryna%20wendta.jpg" alt="" loading="lazy" decoding="async">
+          <span class="stock stock--low">2 sztuki</span>
+        </div>
+        <div class="card__body">
+          <p>
+            <i class="latin" lang="la">Cryptocoryne wendtii</i>
+            <span class="specimen-name">Kryptokoryna wendta</span>
+          </p>
+          <p class="muted small">Brązowo-zielona, średnie tempo wzrostu. Po przesadzeniu zrzuca liście.</p>
+        </div>
+        <div class="card__foot">
+          <p>
+            <span class="price">18 PLN</span><br>
+            <span class="price-note muted">szt. · kubek 5×5</span>
+          </p>
+          <button class="btn btn--primary btn--small" type="button">Do koszyka</button>
+        </div>
+        <p class="sg-ref">stan: <b>.stock--low</b> — mało sztuk (≤ 3)</p>
+      </article>
+
+      <article class="card glass" data-sg-glass>
+        <div class="card__photo">
+          <span class="tag">wymagająca</span>
+          <button class="card__fav" type="button" aria-label="Dodaj do ulubionych" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5 4.7 12.2a4.7 4.7 0 0 1 6.5-6.5l.8.8.8-.8a4.7 4.7 0 0 1 6.5 6.5Z"/></svg>
+          </button>
+          <img src="assets/zestaw%20startowy.jpg" alt="" loading="lazy" decoding="async">
+          <span class="stock stock--out">0 dostępnych</span>
+        </div>
+        <div class="card__body">
+          <p>
+            <i class="latin" lang="la">Hemianthus callitrichoides</i>
+            <span class="specimen-name">Hemianthus</span>
+          </p>
+          <p class="muted small">Dywanowa, wymaga CO₂ i mocnego światła. Następna partia w marcu.</p>
+        </div>
+        <div class="card__foot">
+          <p>
+            <span class="price">24 PLN</span><br>
+            <span class="price-note muted">szt. · kubek 5×5</span>
+          </p>
+          <button class="btn btn--primary btn--small" type="button" disabled>Wyprzedane</button>
+        </div>
+        <p class="sg-ref">stan: <b>.stock--out</b> — wyprzedany</p>
+      </article>
+
+    </div>
+
+    <p class="sg-states__label" style="margin-top: var(--space-xl)">
+      Wariant strony głównej: zdjęcie i treść obok siebie
+    </p>
+    <article class="card card--split glass" data-sg-glass style="max-width: 640px">
+      <span class="badge">Nowość</span>
+      <div class="card__photo">
+        <img src="assets/Kryptokoryna%20wendta.jpg" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="card__body">
+        <p>
+          <i class="latin" lang="la">Cryptocoryne wendtii</i>
+          <span class="specimen-name">Kryptokoryna wendta</span>
+        </p>
+        <p class="muted small">Brązowo-zielona, średnie tempo wzrostu.</p>
+        <p class="price">18 PLN</p>
+        <p class="price-note muted">kubek 5×5 cm · 12 dostępnych</p>
+      </div>
+    </article>
+    <p class="sg-ref"><b>.card.card--split</b> + <b>.badge</b></p>
+  </div>
+</section>
+
+
+<!-- ===== Wskaźnik mosiężny ============================================ -->
+<section class="section sg-canvas" aria-labelledby="sgGauge">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgGauge">Wskaźnik mosiężny <span class="sg-ref">— rezerwa</span></h2>
+      <p class="sg-ref"><b>.facts</b> · <b>.gauge</b> · rozdz. <b>3A.2</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      <b>Tarcze są wycofane z obecnych stron.</b> Strona główna, /kamino i /pomona
+      używają samego paska faktów — liczba plus podpis, bez tarczy. Ten komponent
+      zostaje w systemie jako rezerwa i wraca wyłącznie przy realnych danych
+      pomiarowych (dashboard laboratoryjny, odczyty z komory, widok partii).
+      Nie brać go z powrotem na strony marketingowe, gdzie liczba nie ma skali.
+    </p>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Skala biegnie od <code>-120deg</code> do <code>120deg</code> i jest zaznaczona
+      dwiema kreskami podziałki. Trzy wartości poniżej mają różne wychylenia, więc
+      widać, że wskazówka faktycznie coś mierzy. Jeśli liczba nie ma skali, wskazówka
+      jest ozdobą — wtedy lepiej użyć zwykłej liczby bez tarczy.
+      W skórce Kamino mosiądz zamienia się na <code>--brand-300</code> (3A.4).
+    </p>
+
+    <div class="facts glass" data-sg-glass>
+      <div class="fact">
+        <!-- 48 h w skali 0–72 h → 40deg -->
+        <div class="gauge" data-angle="40deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+        <p class="fact__value">48 h<span class="fact__label">wysyłka zamówień</span></p>
+      </div>
+      <div class="fact">
+        <!-- 100% w skali 0–100% → 120deg, wskazówka na końcu skali -->
+        <div class="gauge" data-angle="120deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+        <p class="fact__value">100 %<span class="fact__label">klonów in vitro</span></p>
+      </div>
+      <div class="fact">
+        <!-- 14 dni w skali 0–30 dni → -8deg, wskazówka poniżej środka -->
+        <div class="gauge" data-angle="-8deg" aria-hidden="true"><i class="gauge__ticks"></i><i class="gauge__needle"></i></div>
+        <p class="fact__value">14<span class="fact__label">dni na zwrot</span></p>
+      </div>
+    </div>
+    <p class="sg-ref">wychylenia: <b>40deg</b> · <b>120deg</b> · <b>-8deg</b> — kąt bierze się z atrybutu <b>data-angle</b></p>
+  </div>
+</section>
+
+
+<!-- ===== Szkło ======================================================== -->
+<section class="section sg-canvas" aria-labelledby="sgGlass">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgGlass">Szkło</h2>
+      <p class="sg-ref"><b>.glass</b> · <b>.glass--light</b> · rozdz. <b>3</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Szkło jest materiałem, nie ozdobą. Pod nim musi coś być — zdjęcie, gradient,
+      roślina; na jednolitym tle to zwykły szary prostokąt. Dlatego oba przykłady
+      leżą na materiale. Ten blok jako jedyny ignoruje przełącznik jasna/ciemna:
+      każdy wariant szkła pokazujemy na tle, do którego należy.
+    </p>
+
+    <div class="sg-grid sg-grid--wide">
+
+      <div class="sg-item">
+        <div class="sg-material">
+          <img src="assets/kamino_poznajkamino.jpg" alt="" loading="lazy" decoding="async">
+          <div class="glass" style="padding: var(--space-m)">
+            <p class="specimen-name" style="color:#fff">Szkło deep</p>
+            <p class="small" style="color: rgba(255,255,255,.82)">
+              Tło <code>--glass-bg</code>, blur 18px, saturate 130%, obramowanie 1px
+              i wewnętrzny biały highlight. Domyślne na ciemnych sekcjach.
+            </p>
+          </div>
+        </div>
+        <p class="sg-ref"><b>.glass</b> na ciemnym materiale · rozdz. <b>3</b></p>
+      </div>
+
+      <div class="sg-item">
+        <div class="sg-material section--light" style="background-image: var(--grad-light)">
+          <div class="glass--light" style="padding: var(--space-m)">
+            <p class="specimen-name">Szkło light</p>
+            <p class="small muted">
+              Biel 62%, blur 16px, obramowanie białe 75%. Wyłącznie wewnątrz jasnych
+              wysp — na ciemnej sekcji robi mleczną plamę.
+            </p>
+          </div>
+        </div>
+        <p class="sg-ref"><b>.glass--light</b> na jasnej wyspie · rozdz. <b>3</b></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== Pola formularza ============================================== -->
+<section class="section sg-canvas" aria-labelledby="sgField">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgField">Pola formularza</h2>
+      <p class="sg-ref"><b>.field</b> · <b>.input</b> · rozdz. <b>6.5</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Focus musi być widoczny w obu wariantach sekcji: obramowanie w kolorze
+      skórki plus pierścień. Błędy mówią co się stało i co zrobić —
+      „Podaj adres e-mail z @”, nie „Nieprawidłowa wartość”. Bez przepraszania.
+    </p>
+
+    <div class="sg-grid">
+
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgF1">Adres e-mail</label>
+          <input class="input" id="sgF1" type="email" placeholder="imie@domena.pl">
+        </div>
+        <p class="sg-ref">stan: <b>domyślny</b></p>
+      </div>
+
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgF2">Adres e-mail</label>
+          <input class="input is-focus" id="sgF2" type="email" value="anna.kowalska">
+        </div>
+        <p class="sg-ref">stan: <b>focus</b> (wymuszony klasą <b>.is-focus</b>)</p>
+      </div>
+
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgF3">Adres e-mail</label>
+          <input class="input input--error" id="sgF3" type="email" value="anna.kowalska"
+                 aria-invalid="true" aria-describedby="sgF3err">
+          <p class="field__error" id="sgF3err">Podaj adres e-mail z @</p>
+        </div>
+        <p class="sg-ref">stan: <b>błąd</b> — <b>.input--error</b> + <b>.field__error</b></p>
+      </div>
+
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgF4">Numer partii</label>
+          <input class="input" id="sgF4" type="text" value="IV/09/2026" disabled>
+        </div>
+        <p class="sg-ref">stan: <b>disabled</b></p>
+      </div>
+
+      <div class="sg-item">
+        <div class="field field--wide">
+          <label class="field__label" for="sgF5">Wiadomość</label>
+          <textarea class="input input--area" id="sgF5" rows="4" placeholder="Napisz, czego potrzebujecie."></textarea>
+        </div>
+        <p class="sg-ref"><b>.input.input--area</b> — pole wieloliniowe, wysokość zmieniana tylko w pionie</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== Adnotacja produktowa ========================================= -->
+<section class="section sg-canvas" aria-labelledby="sgAnno">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgAnno">Adnotacja produktowa</h2>
+      <p class="sg-ref"><b>.anno</b> · rozdz. <b>6.4</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Pływająca etykietka ze szkła, połączona linią 1px i kropką 8px z punktem na
+      zdjęciu. Max trzy na obraz. Treść to zawsze konkret: liczba, parametr, fakt —
+      nie hasło marketingowe. Kierunek kreski ustawia <code>.anno--left</code>
+      albo <code>.anno--right</code>; w pasmie edukacyjnym robią to kolumny
+      <code>.edu__col--left</code> / <code>--right</code>.
+    </p>
+
+    <div class="sg-grid sg-grid--wide">
+      <div class="sg-item">
+        <div class="sg-slot" style="justify-content: flex-end; padding-right: var(--space-2xl)">
+          <p class="anno anno--left glass" data-sg-glass>Eksplantat startowy ma <b>3–5&nbsp;mm</b> — sam wierzchołek wzrostu.</p>
+        </div>
+        <p class="sg-ref"><b>.anno.anno--left</b> — kreska i kropka w prawo</p>
+      </div>
+
+      <div class="sg-item">
+        <div class="sg-slot" style="padding-left: var(--space-2xl)">
+          <p class="anno anno--right glass" data-sg-glass>Pożywka: agar <b>7&nbsp;g/l</b>, sacharoza <b>30&nbsp;g/l</b>.</p>
+        </div>
+        <p class="sg-ref"><b>.anno.anno--right</b> — kreska i kropka w lewo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== Separator z nitem ============================================ -->
+<section class="section sg-canvas" aria-labelledby="sgRule">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgRule">Separator sekcji z nitem</h2>
+      <p class="sg-ref"><b>.rule-rivet</b> · rozdz. <b>3A.3</b></p>
+    </div>
+
+    <p class="muted small">
+      Linia 1px z okrągłym nitem na środku. Max dwa na stronę — razem z tarczami
+      wskaźników wchodzą w limit dwóch mosiężnych elementów na widok ekranu.
+    </p>
+
+    <hr class="rule-rivet">
+
+    <p class="sg-ref">znacznik: <b>&lt;hr class="rule-rivet"&gt;</b></p>
+  </div>
+</section>
+
+<!-- ===== Kroki procesu ================================================ -->
+<section class="section sg-canvas" aria-labelledby="sgSteps">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgSteps">Kroki procesu</h2>
+      <p class="sg-ref"><b>.steps</b> · <b>.step</b> · rozdz. <b>6.6</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      3–4 kroki w poziomie, połączone cienką linią z kropkami. Linia i kropka biorą
+      <code>--instrument</code>, więc w NF i Pomonie są mosiężne, a w Kaminie
+      przyrządowo błękitne — przełącznik skórki wystarcza. Kropka jest obrysem
+      1.5px, nigdy wypełnieniem. Poniżej 760px kolumna się prostuje i linia staje
+      pionowo po lewej. Nagłówek kroku dziedziczy krój po skórce: antykwa w NF,
+      grotesk z ciasnym trackingiem w Kaminie, kapitaliki w Pomonie.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <p class="step__no">01</p>
+        <h3 class="step__title">Eksplantat</h3>
+        <p class="muted">Wierzchołek wzrostu 3–5 mm pobrany z rośliny matecznej.</p>
+      </div>
+      <div class="step">
+        <p class="step__no">02</p>
+        <h3 class="step__title">Sterylizacja</h3>
+        <p class="muted">Kąpiel odkażająca i płukanie w wodzie jałowej.</p>
+      </div>
+      <div class="step">
+        <p class="step__no">03</p>
+        <h3 class="step__title">Namnażanie</h3>
+        <p class="muted">Pasaże na pożywce co kilka tygodni, w komorze ze stałym światłem.</p>
+      </div>
+      <div class="step">
+        <p class="step__no">04</p>
+        <h3 class="step__title">Aklimatyzacja</h3>
+        <p class="muted">Wyjście ze słoika do podłoża, przy stopniowo obniżanej wilgotności.</p>
+      </div>
+    </div>
+
+    <p class="sg-ref">kropka i linia: <b>--instrument</b> / <b>--instrument-dim</b></p>
+  </div>
+</section>
+
+
+<!-- ===== Pasek powrotu ================================================ -->
+<section class="section sg-canvas" aria-labelledby="sgBack">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgBack">Pasek powrotu do Nature &amp; Future</h2>
+      <p class="sg-ref"><b>.backbar</b> · rozdz. <b>6.7</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Zamyka każdą podstronę sub-marki (7A, pkt 7). Sub-marka nie ma własnej
+      nawigacji, więc to jedyne wyjście z niej w górę. Jedno zdanie i jeden link,
+      nigdy różowy — róż jest zarezerwowany dla jednego CTA na stronie.
+    </p>
+
+    <div class="backbar glass" data-sg-glass>
+      <p>Kamino BioLabs jest częścią Nature &amp; Future.</p>
+      <a class="btn btn--secondary btn--small" href="sklep-nf.html">Wróć do sklepu</a>
+    </div>
+
+    <p class="sg-ref">znacznik: <b>&lt;div class="backbar glass"&gt;</b></p>
+  </div>
+</section>
+
+
+<!-- ===== Pasek górny / nawigacja ====================================== -->
+<section class="section sg-canvas" aria-labelledby="sgNav">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgNav">Pasek górny</h2>
+      <p class="sg-ref"><b>.nav</b> · rozdz. <b>6.3</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Nawigacja ma <b>dwa stany</b>. Nad hero leży wprost na materiale, bez tła
+      i bez obramowania — czytelność daje welon <code>.nav::before</code>, pasmo
+      <code>--scrim</code> schodzące do zera. Po przescrollowaniu wysokości hero
+      zwija się w wyśrodkowaną pigułkę ze szkła i welon gaśnie, bo czytelność
+      przejmuje szkło. Przejście 250 ms.
+      Poniżej oba stany zamrożone obok siebie; w ramce nawigacja jest
+      <code>position: absolute</code> zamiast <code>fixed</code>, poza tym
+      to ten sam kod.
+    </p>
+
+    <div class="sg-grid sg-grid--wide">
+
+      <div class="sg-item">
+        <div class="sg-frame sg-frame--nav">
+          <img class="sg-frame__material" src="assets/kamino_poznajkamino.jpg" alt="" loading="lazy" decoding="async">
+          <header class="nav">
+            <div class="nav__inner">
+              <a class="nav__logo" href="#0">
+                <img src="assets/logo-icon.png" alt="" width="36" height="36">
+                <span>Nature &amp; Future</span>
+              </a>
+              <div class="nav__actions">
+                <a class="btn btn--ghost btn--small" href="#0">Zaloguj</a>
+                <a class="btn btn--outline btn--small" href="#0">Zamów rośliny</a>
+              </div>
+            </div>
+          </header>
+        </div>
+        <p class="sg-ref">stan: <b>nad hero</b> — przezroczysta, welon <b>.nav::before</b></p>
+      </div>
+
+      <div class="sg-item">
+        <div class="sg-frame sg-frame--nav">
+          <img class="sg-frame__material" src="assets/kamino_poznajkamino.jpg" alt="" loading="lazy" decoding="async">
+          <header class="nav">
+            <div class="nav__inner is-pinned">
+              <a class="nav__logo" href="#0">
+                <img src="assets/logo-icon.png" alt="" width="36" height="36">
+                <span>Nature &amp; Future</span>
+              </a>
+              <div class="nav__actions">
+                <a class="btn btn--ghost btn--small" href="#0">Zaloguj</a>
+                <a class="btn btn--outline btn--small" href="#0">Zamów rośliny</a>
+              </div>
+            </div>
+          </header>
+        </div>
+        <p class="sg-ref">stan: <b>zwinięta</b> — <b>.nav__inner.is-pinned</b>, szkło nawigacyjne</p>
+      </div>
+
+    </div>
+
+    <p class="muted small" style="margin-top: var(--space-m)">
+      „Zamów rośliny" celowo <b>nie jest różowy</b>. Różowy zostaje dla akcji na
+      konkretnym produkcie — gdyby siedział w nawigacji na każdym ekranie,
+      przestałby cokolwiek znaczyć. Biały outline na ciemnym tle jest równie
+      widoczny, a nie zjada akcentu.
+    </p>
+  </div>
+</section>
+
+
+<!-- ===== Hero ========================================================= -->
+<section class="section sg-canvas" aria-labelledby="sgHero">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgHero">Hero</h2>
+      <p class="sg-ref"><b>.hero</b> · rozdz. <b>7.1</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Dwa warianty. Strona główna: 72vh, nagłówek Display XL w dolnej trzeciej
+      kadru, bez podtytułu i bez przycisku w środku — rolę CTA przejmuje
+      nawigacja. Podstrony sub-marek <code>.hero--sub</code>: niższe (52vh),
+      z nadtytułem i jednym zdaniem pod nagłówkiem, bez animacji wjazdu.
+      W podglądzie wysokość jest przycięta; reszta to ten sam kod.
+    </p>
+
+    <div class="sg-grid sg-grid--wide">
+
+      <div class="sg-item">
+        <div class="sg-frame sg-frame--hero">
+          <section class="hero">
+            <img class="hero__media" src="assets/wodospad-poster.jpg" alt="" loading="lazy" decoding="async">
+            <div class="hero__scrim"></div>
+            <div class="hero__content container">
+              <h1 class="display-xl hero__title" style="font-size: 2rem">Rośliny hodowane od pojedynczej komórki</h1>
+            </div>
+          </section>
+        </div>
+        <p class="sg-ref"><b>.hero</b> — strona główna, materiał wideo, nagłówek u dołu</p>
+      </div>
+
+      <div class="sg-item">
+        <div class="sg-frame sg-frame--hero">
+          <section class="hero hero--sub">
+            <img class="hero__media" src="assets/kamino_poznajkamino.jpg" alt="" loading="lazy" decoding="async">
+            <div class="hero__scrim"></div>
+            <div class="hero__content container">
+              <p class="hero__eyebrow">Kamino BioLabs</p>
+              <h1 class="h1 hero__title" style="font-size: 1.5rem">Kontrolujemy warunki, w których rośnie roślina.</h1>
+              <p class="hero__lede small">Laboratorium kultur in vitro i bank genotypów.</p>
+            </div>
+          </section>
+        </div>
+        <p class="sg-ref"><b>.hero.hero--sub</b> — podstrona sub-marki, nadtytuł + lede</p>
+      </div>
+
+    </div>
+
+    <p class="muted small" style="margin-top: var(--space-m)">
+      Gradient czytelności <code>.hero__scrim</code> bierze <code>--scrim</code>
+      z tokenów, nie zieleń wpisaną na sztywno — inaczej Kamino dostałoby zielony
+      welon na błękicie. Przy <code>prefers-reduced-motion</code> wideo ustępuje
+      miejsca <code>.hero__still</code>: tej samej klatce jako obrazkowi.
+    </p>
+  </div>
+</section>
+
+
+
+<!-- ===== Panel — komponenty interfejsów zalogowanych =================== -->
+<!-- Celowo bez .sg-canvas: panel nie używa jasnych wysp (8A), więc jego
+     sekcja nie reaguje na przełącznik wariantu. Pokazywanie .table na
+     --paper byłoby pokazywaniem stanu, który w produkcie nie istnieje. -->
+<section class="section section--deeper" aria-labelledby="sgPanel">
+  <div class="container">
+    <div class="sg-head">
+      <h2 id="sgPanel">Panel klienta</h2>
+      <p class="sg-ref"><b>.panel</b> · <b>.panel-nav</b> · <b>.table</b> · <b>.status</b> ·
+         <b>.empty</b> · <b>.skeleton</b> · <b>.modal</b> · <b>.num</b> · rozdz. <b>8A</b></p>
+    </div>
+
+    <p class="muted small" style="margin-bottom: var(--space-l)">
+      Panel jest narzędziem: odstęp <code>--space-l</code> zamiast pasm
+      marketingowych, nagłówki groteskiem do H2, zero mosiądzu, zero jasnych
+      wysp. Róż pojawia się raz na ekran i tylko na akcji głównej danego widoku.
+    </p>
+
+
+    <!-- --- Status --- -->
+    <p class="sg-states__label">.status — kropka koloru jest dodatkiem do słowa, nigdy zamiast niego</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <p><span class="status status--new">Nowe</span></p>
+        <p class="sg-ref"><b>.status.status--new</b> — kropka <code>--brand-100</code>,
+          na jasnej karcie <code>--brand-900</code>. Widzi go tylko personel:
+          klient dostaje „Nowe” i „W realizacji” jako jeden etap.</p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--progress">W realizacji</span></p>
+        <p class="sg-ref"><b>.status.status--progress</b> — kropka <code>--warn</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--sent">Wysłane</span></p>
+        <p class="sg-ref"><b>.status.status--sent</b> — kropka <code>--brand-300</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--delivered">Dostarczone</span></p>
+        <p class="sg-ref"><b>.status.status--delivered</b> — kropka <code>--brand-500</code></p>
+      </div>
+      <div class="sg-item">
+        <p><span class="status status--cancelled">Anulowane</span></p>
+        <p class="sg-ref"><b>.status.status--cancelled</b> — kropka <code>--error</code></p>
+      </div>
+    </div>
+
+
+
+    <!-- --- Postęp realizacji --- -->
+    <p class="sg-states__label">.progress — postęp realizacji: ptaszek dla etapu przebytego, kropka dla bieżącego</p>
+    <div style="margin-bottom: var(--space-l)">
+      <ol class="progress" aria-label="Postęp realizacji zamówienia">
+        <li class="progress__step is-done">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Przyjęte<span class="visually-hidden"> — etap ukończony</span></span>
+        </li>
+        <li class="progress__step is-done">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">W realizacji<span class="visually-hidden"> — etap ukończony</span></span>
+        </li>
+        <li class="progress__step is-current" aria-current="step">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Wysłane<span class="visually-hidden"> — etap bieżący</span></span>
+        </li>
+        <li class="progress__step">
+          <span class="progress__mark" aria-hidden="true"></span>
+          <span class="progress__label">Dostarczone<span class="visually-hidden"> — etap przed nami</span></span>
+        </li>
+      </ol>
+    </div>
+    <p class="sg-ref" style="margin-bottom: var(--space-l)">
+      Stan nie zależy od koloru: etap przebyty ma ptaszek, bieżący wypełnioną
+      kropkę, przyszły jest pusty. Bieżący niesie <code>aria-current="step"</code>,
+      a każdy etap ukryty tekst stanu. Poniżej 560px pasek prostuje się w pion.
+      Wariant <b>.progress--cancelled</b> wygasza cały pasek — anulowane
+      zamówienie nie idzie dalej.
+    </p>
+
+    <!-- --- Pola: podgląd hasła, checkbox, separator --- -->
+    <p class="sg-states__label">.input-action · .checkbox · .divider — uzupełnienia rozdz. 6.5 dla ekranów logowania</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <div class="field">
+          <label class="field__label" for="sgPass">Hasło</label>
+          <div class="input-wrap">
+            <input class="input" id="sgPass" type="password" value="tajnehaslo">
+            <button class="input-action" type="button" aria-label="Pokaż hasło" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="sg-ref"><b>.input-wrap</b> + <b>.input-action</b> — przycisk w polu;
+           <code>aria-label</code> mówi, co zrobi, <code>aria-pressed</code> niesie stan</p>
+      </div>
+
+      <div class="sg-item">
+        <label class="checkbox" for="sgChk">
+          <input type="checkbox" id="sgChk" checked>
+          <span>Zapamiętaj mnie</span>
+        </label>
+        <p class="sg-ref"><b>.checkbox</b> — prawdziwy <code>&lt;input type="checkbox"&gt;</code>
+           z <code>accent-color</code>, nie podrobiony <code>&lt;span&gt;</code></p>
+      </div>
+
+      <div class="sg-item">
+        <p class="divider"><span>lub</span></p>
+        <p class="sg-ref"><b>.divider</b> — kreska, słowo, kreska</p>
+      </div>
+    </div>
+
+    <!-- --- Tabela --- -->
+    <p class="sg-states__label">.table — wiersz 52px; poniżej 760px zamienia się w listę kart, nie w poziomy scroll</p>
+    <div class="table-wrap" style="margin-bottom: var(--space-l)">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Zamówienie</th>
+            <th scope="col">Data</th>
+            <th scope="col">Pozycje</th>
+            <th scope="col" class="th--right">Kwota</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Zamówienie"><a class="table__link num" href="#sgPanel">NF-0156</a></td>
+            <td data-label="Data" class="num">18.08.2026</td>
+            <td data-label="Pozycje" class="num">3</td>
+            <td data-label="Kwota" class="num td--right">189,00 zł</td>
+            <td data-label="Status"><span class="status status--sent">Wysłane</span></td>
+          </tr>
+          <tr>
+            <td data-label="Zamówienie"><a class="table__link num" href="#sgPanel">NF-0151</a></td>
+            <td data-label="Data" class="num">02.07.2026</td>
+            <td data-label="Pozycje" class="num">1</td>
+            <td data-label="Kwota" class="num td--right">64,00 zł</td>
+            <td data-label="Status"><span class="status status--delivered">Dostarczone</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sg-ref" style="margin-bottom: var(--space-l)">
+      Nagłówki mają <code>scope="col"</code>, a każda komórka <code>data-label</code> —
+      etykieta wraca wtedy w wariancie kartowym. Klikalny jest link w pierwszej
+      komórce, nie <code>onclick</code> na wierszu: inaczej wiersza nie da się
+      otworzyć klawiaturą ani skopiować adresu.
+    </p>
+
+
+    <!-- --- Stan pusty i stan ładowania --- -->
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <div class="empty">
+          <p>Nie masz jeszcze żadnych zamówień.</p>
+          <a class="btn btn--secondary" href="sklep-nf.html">Zobacz rośliny</a>
+        </div>
+        <p class="sg-ref"><b>.empty</b> — jedno zdanie, jedno wyjście. Bez ilustracji.</p>
+      </div>
+
+      <div class="sg-item">
+        <div class="skeleton-stack" aria-hidden="true">
+          <div class="skeleton skeleton--row"></div>
+          <div class="skeleton skeleton--row"></div>
+          <div class="skeleton skeleton--row"></div>
+        </div>
+        <p class="sg-ref"><b>.skeleton</b> — bloki <code>--brand-800</code>, bez spinnera
+           i bez animowanego połysku</p>
+      </div>
+    </div>
+
+
+    <!-- --- Dane liczbowe --- -->
+    <p class="sg-states__label">.num — numery, kwoty, daty i ilości stoją w kolumnie</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <p class="num">NF-0156<br>1 240,00 zł<br>18.08.2026<br>×3</p>
+        <p class="sg-ref"><b>.num</b> — <code>--font-mono</code> +
+           <code>lining-nums tabular-nums</code></p>
+      </div>
+      <div class="sg-item">
+        <p>NF-0156<br>1 240,00 zł<br>18.08.2026<br>×3</p>
+        <p class="sg-ref">bez <b>.num</b> — cyfry o różnej szerokości, kolumna się rozjeżdża</p>
+      </div>
+    </div>
+
+
+    <!-- --- Modal --- -->
+    <p class="sg-states__label">.modal — potwierdzenie z nazwą tego, co ginie, i czasownikiem skutku</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <button class="btn btn--secondary" type="button" data-sg-modal-open="sgModal">Pokaż modal</button>
+        <dialog class="modal" id="sgModal">
+          <h3 class="h3 modal__title">Usunąć adres „Dom”?</h3>
+          <div class="modal__body">
+            <p>Anna Kowalska, ul. Świdnicka 12, 50-068 Wrocław. Tego nie da się cofnąć.</p>
+          </div>
+          <div class="modal__actions">
+            <button class="btn btn--primary" type="button" data-sg-modal-close="sgModal">Usuń adres</button>
+            <button class="btn btn--secondary" type="button" data-sg-modal-close="sgModal">Zachowaj</button>
+          </div>
+        </dialog>
+        <p class="sg-ref"><b>.modal</b> na <code>&lt;dialog&gt;</code> — pułapka focusu
+           i zamknięcie <kbd>Esc</kbd> są zachowaniem przeglądarki, nie kodem do napisania</p>
+      </div>
+    </div>
+
+
+
+    <!-- --- Wysuwka boczna --- -->
+    <p class="sg-states__label">.drawer — wysuwka boczna na &lt;dialog&gt;, uzyta jako koszyk</p>
+    <div class="sg-grid" style="margin-bottom: var(--space-l)">
+      <div class="sg-item">
+        <button class="btn btn--secondary" type="button" data-sg-modal-open="sgDrawer">Pokaż wysuwkę</button>
+
+        <dialog class="drawer" id="sgDrawer" aria-labelledby="sgDrawerTytul">
+          <div class="drawer__inner">
+            <div class="drawer__head">
+              <h3 class="h3 drawer__title" id="sgDrawerTytul">Koszyk</h3>
+              <button class="drawer__close" type="button" data-sg-modal-close="sgDrawer" aria-label="Zamknij koszyk">×</button>
+            </div>
+
+            <div class="drawer__body">
+              <ul class="mini-list">
+                <li class="drawer__item">
+                  <img class="drawer__thumb" src="assets/anubias.jpg" alt="" width="56" height="56">
+                  <div class="mini-item__name">
+                    <i class="latin" lang="la">Anubias barteri var. nana</i>
+                    <span>Anubias nana</span>
+                    <span class="qty" role="group" aria-label="Ilość: Anubias nana">
+                      <button class="qty__btn" type="button" aria-label="Mniej: Anubias nana">−</button>
+                      <span class="qty__val num" aria-live="polite">2</span>
+                      <button class="qty__btn" type="button" aria-label="Więcej: Anubias nana">+</button>
+                    </span>
+                  </div>
+                  <div class="drawer__money">
+                    <span class="num">44,00 zł</span>
+                    <button class="btn btn--underline btn--small" type="button">Usuń</button>
+                  </div>
+                </li>
+                <li class="drawer__item">
+                  <span class="drawer__thumb" aria-hidden="true"></span>
+                  <div class="mini-item__name">
+                    <i class="latin" lang="la">Cryptocoryne wendtii</i>
+                    <span>Kryptokoryna Wendta</span>
+                    <span class="qty" role="group" aria-label="Ilość: Kryptokoryna Wendta">
+                      <button class="qty__btn" type="button" aria-label="Mniej: Kryptokoryna Wendta" disabled>−</button>
+                      <span class="qty__val num" aria-live="polite">1</span>
+                      <button class="qty__btn" type="button" aria-label="Więcej: Kryptokoryna Wendta">+</button>
+                    </span>
+                  </div>
+                  <div class="drawer__money">
+                    <span class="num">28,00 zł</span>
+                    <button class="btn btn--underline btn--small" type="button">Usuń</button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="drawer__foot">
+              <p class="drawer__sum"><span>Razem</span><strong class="num">72,00 zł</strong></p>
+              <a class="btn btn--primary" href="#sgPanel">Przejdź do kasy</a>
+            </div>
+          </div>
+        </dialog>
+
+        <p class="sg-ref"><b>.qty</b> — licznik ilości pod nazwą: dwa przyciski
+           i liczba, bez pola do wpisywania. Minus przy jednej sztuce jest
+           wyłączony (usunięcie ma swoje potwierdzenie), plus zatrzymuje się
+           na stanie magazynowym. Wyłączony przycisk blednie, ale zostaje na
+           miejscu — inaczej licznik skakałby przy każdej granicy.</p>
+
+        <p class="sg-ref"><b>.drawer</b> na <code>&lt;dialog&gt;</code> — trzy pasy:
+           nagłówek i stopka stoją, środek się przewija, więc suma i przycisk kasy
+           są widoczne niezależnie od długości listy. Poniżej 480px zajmuje pełną
+           szerokość ekranu.</p>
+      </div>
+    </div>
+
+    <!-- --- Układ i nawigacja --- -->
+    <p class="sg-states__label">.panel + .panel-nav — lewa kolumna 240px, .glass, przyklejona</p>
+    <div class="sg-frame">
+      <div class="panel" style="padding-block: var(--space-s)">
+        <nav class="panel-nav glass" aria-label="Panel klienta">
+          <button class="btn btn--secondary btn--small panel-nav__toggle" type="button"
+                  aria-expanded="false" aria-controls="sgPanelNavList">Menu konta</button>
+          <ul class="panel-nav__list" id="sgPanelNavList">
+            <li><a class="panel-nav__link" href="#sgPanel" aria-current="page">Przegląd</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Zamówienia</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Dane i adresy</a></li>
+            <li><a class="panel-nav__link" href="#sgPanel">Zapisane rośliny</a></li>
+          </ul>
+        </nav>
+
+        <div class="panel__main">
+          <div class="panel__block">
+            <div class="panel__head">
+              <h3 class="h3">Ostatnie zamówienie</h3>
+              <a class="btn btn--underline" href="#sgPanel">Szczegóły</a>
+            </div>
+            <p class="muted small">
+              <span class="status status--sent">Wysłane</span> ·
+              <span class="num">18.08.2026</span> ·
+              <span class="num">189,00 zł</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="sg-ref" style="margin-top: var(--space-m)">
+      Poniżej 900px kolumna chowa się pod <b>.panel-nav__toggle</b> i wysuwa jako
+      panel ze szkła. Nagłówek serwisu zostaje ten sam co na stronach — powrót do
+      sklepu ma być jednym kliknięciem.
+    </p>
+
+  </div>
+</section>
+
+</main>
+
+<script src="assets/nf-components.js"></script>
+<script src="assets/styleguide.js"></script>
+</body>
+</html>

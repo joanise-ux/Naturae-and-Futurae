@@ -1,0 +1,2398 @@
+/* ==========================================================================
+   Nature & Future — nf-components.css
+   Komponenty wspólne dla wszystkich stron. Jedno źródło: to, co widać na
+   stronie głównej, i to, co pokazuje styleguide.html, jest tym samym kodem.
+
+   Spis (numery rozdziałów z docs/design-system.md):
+     6.1  .btn                 przyciski
+     6.3  .nav                 nawigacja
+     ---  .badge .tag .price   etykiety i cena
+     6.2  .card                karta produktu (+ .card--split)
+     6.2  .stock               wskaźnik stanu magazynowego
+     3A.2 .facts .fact .gauge  wskaźnik mosiężny
+     ---  .tile                kafel sub-marki
+     6.4  .anno                adnotacja produktowa
+     6.5  .field .input        pole formularza (+ .input--area, .field-grid)
+     6.5b .input-action        podgląd hasła w polu
+     6.5b .checkbox .divider   pole wyboru i separator z tekstem
+     3A.3 .rule-rivet          separator sekcji z nitem
+     7.1  .hero                hero (+ .hero--sub dla podstron sub-marek)
+     6.6  .steps .step         kroki procesu połączone linią
+     6.7  .backbar             pasek powrotu do Nature & Future
+     8A   .panel .panel-nav    układ panelu z lewą kolumną 240px
+     8A   .table .status       tabela 52px i status słowem
+     8A   .empty .skeleton     stan pusty i stan ładowania
+     8A   .modal .num          potwierdzenie i dane liczbowe
+     8A   .progress            postęp realizacji zamówienia
+     ---  .drawer              wysuwka boczna (koszyk)
+     ---  .qty                 licznik ilości w koszyku (− n +)
+
+   Zależy od: assets/tokens.css, assets/nf-base.css.
+   ========================================================================== */
+
+/* --- Przyciski (rozdz. 6.1) ---------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease),
+              color var(--dur-hover) var(--ease),
+              border-color var(--dur-hover) var(--ease);
+}
+
+/* Wypełniony: biały na ciemnym */
+.btn--fill {
+  background: var(--brand-100);
+  color: var(--brand-900);
+}
+.btn--fill:hover { background: #FFFFFF; }
+
+/* Na jasnej wyspie kontrast się odwraca — ciemny wypełniony */
+.section--light .btn--fill {
+  background: var(--brand-900);
+  color: var(--brand-100);
+}
+.section--light .btn--fill:hover { background: var(--brand-700); }
+
+/* Drugi poziom obok wypełnionego: podkreślony tekst (7.2) */
+.btn--underline {
+  padding-inline: 0;
+  background: none;
+  color: var(--brand-100);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.btn--underline:hover { color: var(--brand-300); }
+.section--light .btn--underline { color: var(--brand-900); }
+.section--light .btn--underline:hover { color: var(--brand-700); }
+
+/* Outline — „Zamów rośliny" w nawigacji i „Poznaj" na kaflach */
+.btn--outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #FFFFFF;
+}
+.btn--outline:hover { background: #FFFFFF; color: var(--brand-900); }
+
+.btn--ghost {
+  padding-inline: var(--space-xs);
+  background: none;
+  color: var(--brand-100);
+}
+.btn--ghost:hover,
+.btn--ghost.is-hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.btn--small { padding: 10px 20px; font-size: var(--type-small); }
+
+/* Para przycisków w karcie. Odkąd oba poziomy są pigułkami (primary +
+   secondary, wcześniej wypełniony + podkreślony tekst), --space-m łamał
+   parę do dwóch linii w wąskiej kolumnie karty. */
+.btn-pair {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  flex-wrap: wrap;
+}
+
+
+/* 6.1 — trzy poziomy z dokumentu. Primary (różowy) to jedna akcja na ekran:
+   „Do koszyka", „Zamów", „Napisz do nas", „Wyślij zapytanie".
+
+   Karta produktu ma tę akcję wszędzie, gdzie się pojawia — także na stronie
+   głównej. Para w karcie to teraz primary („Do koszyka") + secondary
+   („Zobacz"): głośny jest zakup, cichszy podgląd. Wcześniej było odwrotnie
+   — wypełniony „Zobacz" i „Do koszyka" jako podkreślony tekst — przez co
+   najważniejsza akcja w sklepie wyglądała na przypis.
+
+   Rząd identycznych kart powtarza tę samą akcję i to nie jest złamanie
+   reguły „raz na ekran": reguła pilnuje, żeby na widoku nie konkurowały
+   ze sobą dwie RÓŻNE akcje pierwszego poziomu. --fill i --underline
+   zostają w systemie dla par bez zakupu (kafle, bloki treściowe). */
+
+.btn--primary {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.btn--primary:hover,
+.btn--primary.is-hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn--secondary {
+  background: transparent;
+  border-color: var(--brand-500);
+  color: var(--brand-300);
+}
+.btn--secondary:hover,
+.btn--secondary.is-hover { border-color: var(--brand-300); color: var(--brand-100); }
+.section--light .btn--secondary { color: var(--brand-700); }
+.section--light .btn--secondary:hover,
+.section--light .btn--secondary.is-hover { border-color: var(--brand-700); color: var(--brand-900); }
+
+.section--light .btn--ghost { color: var(--brand-900); }
+
+/* Wyłączony: bez koloru akcji, bez kursora wskazującego akcję.
+   Dotyczy wszystkich wariantów naraz, więc stoi po nich. */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(217, 252, 240, 0.42);
+  cursor: not-allowed;
+  transform: none;
+  text-decoration: none;
+}
+.section--light .btn:disabled,
+.section--light .btn[aria-disabled="true"] {
+  background: rgba(26, 29, 24, 0.06);
+  border-color: rgba(26, 29, 24, 0.14);
+  color: var(--ink-muted);
+}
+
+/* --- 1. Nawigacja (rozdz. 6.3) ------------------------------------------- */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  padding-inline: var(--gutter);
+}
+
+/* Welon czytelności pod nierozwiniętą nawigacją.
+
+   W stanie nierozwiniętym nawigacja nie ma własnego tła i leży wprost na
+   materiale (7.1). Na stronie głównej działa to, bo kadr hero jest u góry
+   ciemny — ale na jasnym zdjęciu (komora Kamino) biały logotyp i linki
+   znikają. Ten sam zabieg co gradient hero: pasmo --scrim schodzące do
+   zera, dzięki czemu nawigacja jest czytelna nad każdym materiałem,
+   a nadal nie ma „paska".
+
+   Gaśnie, kiedy nawigacja zwinie się w pigułkę — wtedy czytelność bierze
+   na siebie szkło (rozdz. 1, reguła 4). */
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 128px;
+  background: linear-gradient(to bottom, var(--scrim) 0%, rgba(0, 0, 0, 0) 100%);
+  opacity: .85;
+  pointer-events: none;
+  transition: opacity var(--dur-nav) var(--ease);
+}
+.nav:has(.is-pinned)::before { opacity: 0; }
+
+.nav__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-l);
+  height: 72px;
+  max-width: var(--container);
+  margin-inline: auto;
+  margin-top: 0;
+  padding-inline: 0;
+  /* Nad hero: bez tła i bez obramowania */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  transition: max-width var(--dur-nav) var(--ease),
+              margin-top var(--dur-nav) var(--ease),
+              padding var(--dur-nav) var(--ease),
+              background-color var(--dur-nav) var(--ease),
+              border-color var(--dur-nav) var(--ease),
+              box-shadow var(--dur-nav) var(--ease);
+}
+
+/* Po przescrollowaniu hero: szkło nawigacyjne, zwężone do pigułki */
+.nav__inner.is-pinned {
+  max-width: 1080px;
+  margin-top: 16px;
+  padding-inline: var(--space-m);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28),
+              inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.nav__logo { display: flex; align-items: center; gap: var(--space-xs); text-decoration: none; }
+.nav__logo img { width: 36px; height: 36px; }
+.nav__logo span {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.nav__links a {
+  text-decoration: none;
+  font-size: var(--type-small);
+  color: var(--brand-100);
+  padding-block: var(--space-2xs);
+}
+.nav__links a:hover { text-decoration: underline; text-underline-offset: 5px; }
+
+.nav__actions { display: flex; align-items: center; gap: var(--space-s); }
+
+.nav__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand-100);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.nav__icon:hover { background: rgba(255, 255, 255, 0.12); }
+.nav__icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+.nav__count {
+  position: absolute;
+  top: 2px; right: 0;
+  min-width: 18px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-100);
+  color: var(--brand-900);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+
+.nav__burger { display: none; }
+
+/* Menu mobilne — panel ze szkła pod nawigacją. Otwiera się i zamyka bez
+   animacji: strona ma już swój jeden orkiestrowany moment (rozdz. 9). */
+.nav__menu {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0; right: 0;
+  display: grid;
+  gap: var(--space-s);
+  padding: var(--space-m);
+  border-radius: var(--radius-m);
+  list-style: none;
+  margin: 0;
+}
+.nav__menu[hidden] { display: none; }
+.nav__menu a { color: var(--brand-100); text-decoration: none; }
+.nav__menu a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.nav__menu .btn { display: inline-flex; justify-self: start; }
+
+/* Fallback nawigacji bez backdrop-filter (rozdz. 3, pkt 4) */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav__inner.is-pinned { background: var(--brand-800); }
+}
+
+@media (max-width: 1040px) {
+  .nav__links { display: none; }
+  .nav__burger { display: grid; }
+}
+
+@media (max-width: 760px) {
+  /* 6.3: na mobile w nawigacji zostają tylko ikony i hamburger */
+  .nav__actions .btn { display: none; }
+}
+
+@media (max-width: 400px) {
+  .nav__logo span { display: none; }
+  .btn { padding: 12px 20px; }
+}
+
+
+/* --- Etykiety, tagi, cena -------------------------------------------------
+   Wspólne drobiazgi kart i kafli. Wszystkie leżą na szkle, więc mają własne
+   warianty dla ciemnej sekcji i dla jasnej wyspy.
+   -------------------------------------------------------------------------- */
+
+.badge {
+  position: absolute;
+  top: var(--space-m);
+  left: var(--space-m);
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 12px;
+  font-weight: 500;
+  color: #FFFFFF;
+}
+.section--light .badge {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(11, 93, 30, 0.18);
+  color: var(--brand-900);
+}
+
+/* Tag trudności (6.2): szkło, 12px. Na karcie siedzi na zdjęciu. */
+.tag {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 12px;
+  color: #FFFFFF;
+}
+.section--light .tag {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(11, 93, 30, 0.22);
+  color: var(--brand-900);
+}
+
+.price {
+  font-size: var(--type-h3);
+  font-weight: 600;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.price-note { font-size: var(--type-small); }
+
+
+/* --- 6.2 Karta produktu ---------------------------------------------------
+   Domyślnie pionowa, dokładnie wg schematu z dokumentu: tag trudności i serce
+   na zdjęciu, wskaźnik stanu w lewym dolnym rogu zdjęcia, pod spodem nazwa
+   łacińska, nazwa polska, dwie linie opisu, kreska, cena i akcja.
+   Karta = .glass (deep) albo .glass--light (jasna wyspa).
+
+   .card--split to wariant strony głównej: zdjęcie i treść obok siebie,
+   używany w rzędzie dwóch szerokich kart w jasnej wyspie.
+   -------------------------------------------------------------------------- */
+
+.card {
+  position: relative;
+  display: grid;
+  gap: var(--space-s);
+  padding: var(--space-s);
+  border-radius: var(--radius-m);
+}
+
+.card__photo {
+  position: relative;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+.card__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* Tag i wskaźnik stanu na zdjęciu — przeciwległe rogi, jak w 6.2 */
+.card__photo .tag {
+  position: absolute;
+  top: var(--space-s);
+  left: var(--space-s);
+}
+.card__photo .stock {
+  position: absolute;
+  left: var(--space-s);
+  bottom: var(--space-s);
+  padding: 4px 10px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #FFFFFF;
+}
+
+/* Serce: koło 36px, prawy górny róg zdjęcia */
+.card__fav {
+  position: absolute;
+  top: var(--space-s);
+  right: var(--space-s);
+  display: grid;
+  place-items: center;
+  width: 36px; height: 36px;
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.card__fav:hover { background: rgba(255, 255, 255, 0.22); }
+.card__fav svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.card__fav[aria-pressed="true"] svg { fill: currentColor; }
+
+.card__body { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+/* Kreska nad wierszem ceny — ta z rysunku w 6.2 */
+.card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  padding-top: var(--space-s);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.section--light .card__foot { border-top-color: rgba(11, 93, 30, 0.16); }
+
+/* Wariant strony głównej: dwie kolumny, większy oddech */
+.card--split {
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-l);
+  padding: var(--space-l);
+}
+.card--split .card__photo img { aspect-ratio: 3 / 4; }
+.card--split .card__body { justify-content: center; }
+
+
+/* Wskaźnik stanu magazynowego (6.2).
+   Kolor nigdy nie niesie informacji sam — obok kropki zawsze stoi liczba. */
+.stock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--type-small);
+  line-height: var(--lh-small);
+}
+.stock::before {
+  content: "";
+  flex: none;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--brand-500);
+}
+.stock--low::before { background: var(--warn); }        /* ≤ 3 szt. */
+.stock--out::before { background: var(--ink-muted); }   /* 0 szt.   */
+
+@media (max-width: 1040px) {
+  /* Karta składa się na jedną kolumnę wcześniej niż cały rząd — inaczej
+     przy dwóch kartach obok siebie robią się cztery wąskie tory. */
+  .card--split { grid-template-columns: 1fr; }
+  .card--split .card__photo img { aspect-ratio: 4 / 3; }
+}
+
+@media (max-width: 760px) {
+  .card--split { padding: var(--space-m); }
+}
+
+
+/* --- 3A.2 Pasek faktów + wskaźnik mosiężny (gauge) ------------------------
+   STATUS: .facts / .fact są w użyciu, .gauge jest REZERWĄ. Tarcze zostały
+   zdjęte ze strony głównej, /kamino i /pomona — zostaje liczba z podpisem.
+   Wracają wyłącznie przy realnych danych pomiarowych (dashboard, odczyty
+   z komory, widok partii), nigdy na stronę marketingową bez skali.
+   ---------------------------------------------------------------------------
+   Tarcza 56px, pierścień 1.5px --instrument, wskazówka 1px, kąt = wartość.
+   Skala biegnie od -120deg do 120deg i jest zaznaczona dwiema kreskami
+   podziałki, więc wychylenie widać bez opisywania zakresu słowami.
+   W Kamino --instrument to --brand-300 zamiast mosiądzu (3A.4).
+   Cały blok siedzi na .glass — pod szkłem musi być materiał.
+   -------------------------------------------------------------------------- */
+
+.facts {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: var(--space-m);
+  padding: var(--space-l) var(--space-m);
+}
+
+/* Sam pasek faktów nie ma własnego koloru tła: --glass-bg to ciemna zieleń,
+   która na gradiencie strony czytała się jak wycięty prostokąt. Zamiast tego
+   zostaje sama tafla — jasnozielony nalot, jasna krawędź i rozmycie tła.
+   Gradient przechodzi przez blok, a szkło widać po krawędzi i refleksie. */
+.facts.glass {
+  background: rgba(217, 252, 240, 0.06);
+  border-color: rgba(217, 252, 240, 0.24);
+  box-shadow: inset 0 1px 0 rgba(217, 252, 240, 0.18),
+              0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+/* Bez backdrop-filter nie ma czego rozmywać — nalot musi sam dać krawędź,
+   inaczej blok znika i zostają trzy tarcze wiszące w tle. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .facts.glass { background: rgba(217, 252, 240, 0.10); }
+}
+
+/* Separator: pionowa kreska 1px --brass-dim, 60% wysokości bloku */
+.facts .fact + .fact { border-left: 1px solid var(--instrument-dim); }
+
+/* Wariant na jasnej wyspie. Pasek stał wcześniej na płaskiej zieleni jako
+   osobna sekcja i szkło nie miało pod sobą materiału — czyli dokładnie to,
+   czego zabrania rozdz. 3. Na jasnej wyspie tło daje papier, ale wtedy
+   wartości w --brand-100 i podpisy w --brand-300 znikają, a separator
+   w --instrument-dim jest w Kaminie prawie niewidoczny. */
+.section--light .facts .fact + .fact { border-left-color: var(--instrument-strong); }
+
+/* Tarcza na papierze: biel 82% na bieli to sam pierścień w powietrzu.
+   Lekko cieplejsze wypełnienie i delikatniejszy cień oddzielają ją od tła. */
+.section--light .gauge {
+  /* Pierścień schodzi na --instrument-strong z tego samego powodu co kropka
+     kroków (6.6): jasny mosiądz na papierze daje 2.4:1, poniżej progu 3:1
+     dla elementu nietekstowego. */
+  border-color: var(--instrument-strong);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(26, 29, 24, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.fact {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-s);
+  padding-inline: var(--space-m);
+}
+
+.gauge {
+  position: relative;
+  flex: none;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid var(--instrument);
+  /* Tarcza jest jasna i przezierna: pierścień mosiądzu ma się odcinać od
+     zieleni, a przez szkło widać rozmyte tło — to na niej widać materiał.
+     Ciemna tarcza wtapiała się w sekcję. */
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Wskazówka 1px, kąt = wartość. Startuje na minimum skali (-120deg).
+   Kolor to --instrument-strong, nie --instrument: jasny mosiądz na jasnej
+   tarczy daje 1.9:1 i wskazówka znika. */
+.gauge__needle {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 1px;
+  height: 20px;
+  background: var(--instrument-strong);
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) rotate(-120deg);
+  transition: transform var(--dur-gauge) var(--ease);
+}
+.gauge.is-live .gauge__needle { transform: translateX(-50%) rotate(var(--angle)); }
+
+.gauge::after {           /* oś wskazówki */
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 4px; height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--instrument-strong);
+}
+
+/* Podziałka: dwie kreski na krańcach skali (3A.3). */
+.gauge__ticks { position: absolute; inset: 0; }
+.gauge__ticks::before,
+.gauge__ticks::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(to top, transparent 0 18px, var(--instrument-strong) 18px 24px);
+  transform-origin: 50% 100%;
+}
+.gauge__ticks::before { transform: translateX(-50%) rotate(-120deg); }
+.gauge__ticks::after  { transform: translateX(-50%) rotate(120deg); }
+
+.fact__value {
+  font-size: 1.75rem;
+  font-weight: 500;
+  font-family: var(--font-display);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--brand-100);
+  line-height: 1.1;
+}
+
+/* 7A — dane pomiarowe zamiast liczby „marketingowej”: wartość schodzi na
+   --font-mono. Wolno tylko przy realnym odczycie (temperatura, wilgotność,
+   fotoperiod, ID partii), nigdy jako ozdobna etykietka. */
+.fact__value--data {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Podpis: kapitaliki antykwy, --brand-300, max trzy słowa w jednej linii */
+.fact__label {
+  display: block;
+  font-family: var(--font-display);
+  font-variant-caps: small-caps;
+  font-size: var(--type-small);
+  letter-spacing: 0.02em;
+  color: var(--brand-300);
+  white-space: nowrap;
+}
+
+/* Pasek faktów żyje na stronie głównej wyłącznie na sekcji deep, ale jako
+   komponent musi się bronić także w jasnej wyspie: --brand-100 i --brand-300
+   są tam praktycznie niewidoczne. */
+.section--light .fact__value { color: var(--ink); }
+/* --brand-700 na papierze przechodzi tylko w NF (7.7:1); w Kaminie daje
+   2.9:1, w Pomonie 2.3:1 — podpis 14px musi mieć 4.5:1, więc bierze
+   --ink-muted (5.9:1 w każdej skórce). Ta sama poprawka co przy .step__no. */
+.section--light .fact__label { color: var(--ink-muted); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .gauge { background: #EDF2EA; }
+}
+
+@media (max-width: 1040px) {
+  /* Trzy wskaźniki obok siebie potrzebują szerokości — poniżej 1040px
+     podpisy zaczynają się ucinać, więc pasek staje pionowo. */
+  .facts { flex-direction: column; padding: var(--space-m); }
+  .fact { justify-content: flex-start; padding-inline: 0; position: relative; }
+  /* W pionie separator na całą szerokość wyglądał jak wiersz tabeli.
+     Zostaje krótka kreska szerokości tarczy, wyrównana do niej. */
+  .facts .fact + .fact {
+    border-left: 0;
+    padding-top: var(--space-m);
+  }
+  .facts .fact + .fact::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 56px; height: 1px;
+    background: var(--instrument-dim);
+  }
+}
+
+/* 3A.6 — wskazówka animuje się raz przy wejściu w widok; przy ograniczonym
+   ruchu od razu stoi na wartości. */
+@media (prefers-reduced-motion: reduce) {
+  .gauge__needle { transition: none; transform: translateX(-50%) rotate(var(--angle)); }
+}
+
+
+/* --- 3A.3 Separator sekcji z nitem ----------------------------------------
+   Linia 1px z okrągłym nitem na środku. Max dwa na stronę.
+   -------------------------------------------------------------------------- */
+
+.rule-rivet {
+  position: relative;
+  height: 1px;
+  border: 0;
+  margin: var(--space-xl) 0;
+  background: var(--instrument-dim);
+}
+.rule-rivet::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 9px; height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  border: 1px solid var(--instrument);
+  background: var(--brand-900);
+  box-shadow: 0 0 0 4px var(--instrument-glow);
+}
+.section--light .rule-rivet::after { background: var(--paper); }
+
+
+/* --- 6. Kafle sub-marek --------------------------------------------------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-m);
+}
+
+.tile {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-s);
+  padding: var(--space-l);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  color: var(--brand-100);
+  isolation: isolate;
+}
+
+.tile__photo { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+
+.tile::before {          /* przyciemnienie pod tekstem */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Zdjęcia sub-marek są jasne (białe laboratorium, kwitnący sad), więc
+     przesłona musi być mocniejsza niż przy ciemnym materiale. */
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, .85) 0%,
+    rgba(0, 0, 0, .62) 45%,
+    rgba(0, 0, 0, .25) 75%,
+    transparent 100%);
+}
+
+.tile__name { font-family: var(--font-display); font-size: var(--type-h2); line-height: 1.1; }
+.tile__role { color: var(--brand-300); }
+
+/* Kamino — wariant przyrządowy: cienkie linie --brand-300, dane w monosp. */
+.tile--kamino .tile__readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s) var(--space-m);
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--brand-300);
+  font-family: var(--font-mono);
+  font-size: var(--type-small);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--brand-300);
+}
+
+/* Pomona — ta sama anatomia co Kamino: nazwa, rola, wiersz danych.
+   Zamiast drugiego nagłówka odmiana schodzi do wiersza danych: antykwa
+   w kapitalikach, wersaliki cyfrowe (3A.5), --brand-300. */
+.tile--pomona .tile__readout {
+  display: grid;
+  gap: var(--space-2xs);
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--brand-300);
+  color: var(--brand-300);
+}
+.tile--pomona .tile__readout i {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--type-latin);
+}
+.tile--pomona .tile__readout span {
+  font-family: var(--font-display);
+  font-variant-caps: small-caps;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--type-body-l);
+  letter-spacing: 0.03em;
+}
+
+/* Mosiądz w Pomonie: cztery narożniki ramki kafla, po 1px (3A.3).
+   Zamiast pełnego obramowania i zamiast osobnej ramki na środku zdjęcia. */
+.tile__corners { position: absolute; inset: var(--space-s); z-index: 1; }
+.tile__corners span {
+  position: absolute;
+  width: 20px; height: 20px;
+  border: 0 solid var(--brass);
+}
+.tile__corners span:nth-child(1) { top: 0; left: 0;  border-top-width: 1px; border-left-width: 1px; }
+.tile__corners span:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.tile__corners span:nth-child(3) { bottom: 0; left: 0;  border-bottom-width: 1px; border-left-width: 1px; }
+.tile__corners span:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+@media (max-width: 1040px) {
+  .tiles { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .tile { min-height: 460px; padding: var(--space-m); }
+}
+
+
+/* --- 6.4 Adnotacja produktowa --------------------------------------------
+   Pływająca etykietka ze szkła, połączona cienką linią i kropką z punktem
+   na zdjęciu. Max trzy na obraz, sześć na przekrój edukacyjny. Treść to
+   zawsze konkret: liczba, parametr, fakt — nie hasło.
+
+   Strona kreski wynika z kolumny: --left rysuje w prawo, --right w lewo.
+   Klasy .anno--left / .anno--right robią to samo dla pojedynczej adnotacji
+   poza siatką dwóch kolumn.
+   -------------------------------------------------------------------------- */
+
+.anno {
+  position: relative;
+  padding: var(--space-s) var(--space-m);
+  border-radius: var(--radius-m);
+  font-size: var(--type-small);
+  line-height: 1.45;
+}
+.anno::before {           /* linia 1px */
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: var(--space-l);
+  height: 1px;
+  background: rgba(255, 255, 255, .35);
+}
+.anno::after {            /* kropka 8px na końcu linii */
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 8px; height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+/* Wewnątrz jasnej wyspy kropka --accent na papierze robi się różową plamą
+   bez związku z treścią, a biała linia znika. Oba schodzą na zieleń marki. */
+.section--light .anno::before { background: rgba(11, 93, 30, .35); }
+.section--light .anno::after  { background: var(--brand-700); }
+
+.edu__col--left .anno::before,
+.anno--left::before  { right: calc(-1 * var(--space-l)); }
+.edu__col--left .anno::after,
+.anno--left::after   { right: calc(-1 * var(--space-l) - 4px); }
+.edu__col--right .anno::before,
+.anno--right::before { left: calc(-1 * var(--space-l)); }
+.edu__col--right .anno::after,
+.anno--right::after  { left: calc(-1 * var(--space-l) - 4px); }
+
+.anno b { font-variant-numeric: lining-nums tabular-nums; font-weight: 600; }
+
+
+/* --- 6.5 Pole formularza --------------------------------------------------
+   Szkło, --radius-s, obramowanie 1px. Focus: obramowanie --focus plus
+   pierścień z fundamentu — oba w kolorze skórki, oba widoczne w obu
+   wariantach sekcji.
+   Błąd mówi co się stało i co zrobić, bez przepraszania.
+   -------------------------------------------------------------------------- */
+
+.field { display: grid; gap: var(--space-2xs); }
+
+.field__label { font-size: var(--type-small); font-weight: 500; }
+
+.input {
+  padding: 13px var(--space-s);
+  border-radius: var(--radius-s);
+  border: 1px solid rgba(255, 255, 255, .18);
+  background: rgba(255, 255, 255, .06);
+  color: var(--brand-100);
+  font: inherit;
+  width: 100%;
+}
+.input::placeholder { color: rgba(217, 252, 240, .55); }
+
+/* Lista rozwijana <select> rysuje się poza stroną, w warstwie systemowej —
+   nie ma tam ani szkła, ani ciemnego tła sekcji, a --brand-100 na białej
+   liście znika. Opcje dostają więc własną, kontrastową parę kolorów:
+   --ink na --paper, niezależnie od skórki i od wariantu sekcji. */
+select.input option { color: var(--ink); background-color: var(--paper); }
+
+/* 6.5: focus pola to obramowanie w kolorze skórki + pierścień z fundamentu */
+.input:focus-visible,
+.input.is-focus { border-color: var(--focus); }
+.section--light .input:focus-visible,
+.section--light .input.is-focus { border-color: var(--focus-strong); }
+
+.section--light .input {
+  border-color: rgba(11, 93, 30, .18);
+  background: rgba(255, 255, 255, .62);
+  color: var(--ink);
+}
+.section--light .input::placeholder { color: var(--ink-muted); }
+
+.input:disabled {
+  background: rgba(255, 255, 255, .03);
+  color: rgba(217, 252, 240, .42);
+  cursor: not-allowed;
+}
+.section--light .input:disabled { background: rgba(26, 29, 24, .05); color: var(--ink-muted); }
+
+.input--error { border-color: var(--error); }
+
+/* Na ciemnym #B4453F daje 3.1:1 — komunikat błędu musi być czytelny,
+   więc na ciemnej sekcji bierze różowy z palety akcentu, a na jasnej
+   wyspie wraca do czerwieni stanu. */
+.field__error {
+  font-size: var(--type-small);
+  color: var(--accent-soft);
+}
+.section--light .field__error { color: var(--error); }
+
+
+
+
+/* --- 6.5b Pole z akcją w środku, pole wyboru, separator ------------------
+   Trzy uzupełnienia rozdz. 6.5, potrzebne wszędzie tam, gdzie użytkownik
+   się uwierzytelnia: logowanie, rejestracja, reset hasła. Dlatego stoją
+   tutaj, a nie w arkuszu jednej strony.
+   -------------------------------------------------------------------------- */
+
+/* Pole z przyciskiem w środku — podgląd hasła. Przycisk siedzi w polu,
+   więc pole dostaje zapas miejsca po prawej, żeby tekst nie wchodził
+   pod ikonę. */
+.input-wrap { position: relative; display: grid; }
+.input-wrap .input { padding-right: 52px; }
+
+.input-action {
+  position: absolute;
+  top: 50%;
+  right: var(--space-xs);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand-100);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.input-action:hover { background: rgba(255, 255, 255, 0.12); }
+.input-action svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+.section--light .input-action { color: var(--ink); }
+.section--light .input-action:hover { background: rgba(26, 29, 24, 0.08); }
+
+
+/* Pole wyboru. Kwadrat rysuje przeglądarka (accent-color), więc stan
+   zaznaczenia jest natywny — czytnik ekranu i tryb wysokiego kontrastu
+   dostają prawdziwy <input type="checkbox">, nie podrobiony <span>. */
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  font-size: var(--type-small);
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--brand-500);
+  cursor: pointer;
+}
+
+.section--light .checkbox input { accent-color: var(--brand-700); }
+
+
+/* Separator z tekstem: kreska, słowo, kreska. Używany między logowaniem
+   hasłem a logowaniem przez dostawcę zewnętrznego. */
+.divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-s);
+  color: rgba(217, 252, 240, 0.72);
+  font-size: var(--type-small);
+}
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.section--light .divider { color: var(--ink-muted); }
+.section--light .divider::before,
+.section--light .divider::after { background: rgba(11, 93, 30, 0.18); }
+
+/* --- 7.1 Hero i wariant podstrony sub-marki (7A) ---------------------------
+   Ten sam komponent na trzech stronach. Strona główna bierze pełne .hero
+   (72vh, nagłówek w dolnej trzeciej), podstrony sub-marek .hero--sub:
+   niższe (~52vh), bez animacji nagłówka, z jednym zdaniem pod tytułem.
+
+   Gradient czytelności bierze --scrim z tokenów, nie zieleń wpisaną
+   na sztywno — inaczej Kamino dostaje zielony welon na błękicie.
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  height: 48vh;
+  min-height: 350px;
+  border-bottom-left-radius: var(--radius-l);
+  border-bottom-right-radius: var(--radius-l);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* Gradient czytelności — bez niego biały tekst rozsypie się na jasnych klatkach */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  /* Niskie hero: tekst zajmuje większą część kadru, więc gradient idzie
+     wyżej, a druga warstwa od lewej przyciemnia pas, w którym stoi tytuł. */
+  background:
+    linear-gradient(to right, var(--scrim) 0%, rgba(0, 0, 0, 0) 65%),
+    linear-gradient(to top, var(--scrim) 0%, var(--scrim) 25%, rgba(0, 0, 0, 0) 90%);
+}
+
+.hero__content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: clamp(var(--space-l), 9vh, var(--space-2xl));
+}
+
+.hero__title {
+  color: #FFFFFF;
+  text-align: left;
+  text-wrap: balance;
+  max-width: 16ch;   /* wymusza dwie linie na desktopie */
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroIn var(--dur-headline) var(--ease) var(--delay-headline) forwards;
+}
+
+@keyframes heroIn {
+  to { opacity: 1; transform: none; }
+}
+
+.hero__still { display: none; }
+
+/* Wariant podstrony sub-marki (7A, pkt 1) */
+/* Niskie hero: wysokość jest minimalna, a górny margines trzyma stos
+   eyebrow + tytuł + lede z dala od nawigacji, gdy tekst się nie mieści. */
+.hero--sub { height: auto; min-height: max(35vh, 280px); }
+.hero--sub .hero__content { padding-top: calc(72px + var(--space-l)); }
+
+/* align-items z .hero__content dosuwa treść do dołu w układzie wierszowym;
+   po obróceniu osi na kolumnę ta sama wartość dosuwałaby tekst do prawej,
+   więc wariant --sub ustawia ją z powrotem na początek osi. */
+.hero--sub .hero__content {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--space-s);
+}
+
+/* Hero podstrony jest niższe, a pod nagłówkiem stoi jeszcze zdanie wprowadzające
+   — gradient musi sięgać wyżej, żeby lede nie leżało na jasnym oknie zdjęcia. */
+.hero--sub .hero__scrim {
+  background:
+    linear-gradient(to right, var(--scrim) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(to top, var(--scrim) 0%, var(--scrim) 40%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Cień pod tekstem ratuje pojedyncze jasne plamy zdjęcia, których gradient nie kryje */
+.hero__title,
+.hero__lede,
+.hero__eyebrow {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 2px 18px rgba(0, 0, 0, .35);
+}
+
+/* Nagłówek podstrony nie wjeżdża: orkiestrowany moment na stronie sub-marki
+   należy do wskaźników, a nie do tytułu (rozdz. 9 — jeden na stronę). */
+.hero--sub .hero__title {
+  max-width: 22ch;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+/* Kamino: grotesk z ciasnym trackingiem zamiast antykwy (7A) */
+.hero--sub .hero__title--tight {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.hero__lede {
+  position: relative;
+  color: rgba(255, 255, 255, .88);
+  font-size: var(--type-body-l);
+  line-height: var(--lh-body-l);
+  max-width: 46ch;
+}
+
+.hero__eyebrow {
+  color: var(--brand-300);
+  font-size: var(--type-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Nagłówek hero wjeżdża raz; przy ograniczonym ruchu stoi od razu (rozdz. 9) */
+@media (prefers-reduced-motion: reduce) {
+  .hero__title { opacity: 1; transform: none; }
+}
+
+@media (max-width: 760px) {
+  .hero { min-height: 310px; }
+  .hero--sub { min-height: max(35vh, 255px); }
+  .hero__title { max-width: 100%; }
+
+  /* Na wąskim ekranie zdjęcie jest przycięte do pionowego wycinka i tekst
+     hero zajmuje niemal cały kadr — jedna warstwa gradientu przestaje
+     wystarczać. Druga warstwa dokłada krycie tam, gdzie leży tekst. */
+  .hero--sub .hero__scrim {
+    background:
+      linear-gradient(to top, var(--scrim) 0%, var(--scrim) 50%, rgba(0, 0, 0, 0) 92%),
+      linear-gradient(to top, var(--scrim) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+
+/* --- 6.6 Kroki procesu (.steps) ------------------------------------------
+   3–4 kroki w poziomie, połączone cienką linią z kropkami. Linia i kropka
+   biorą --instrument, więc w NF i Pomonie są mosiężne, a w Kaminie
+   przyrządowo błękitne — bez ani jednej wartości spoza tokenów.
+
+   Kropka jest obrysem 1.5px, nigdy wypełnieniem (3A: mosiądz nie wypełnia).
+   Na wąskim ekranie kolumna się prostuje i linia staje pionowo po lewej —
+   ten sam schemat, obrócony, zamiast czterech kart bez związku.
+   -------------------------------------------------------------------------- */
+
+/* Kolumn tyle, ile kroków — auto-fit zawijał czwarty krok do drugiego
+   rzędu, a wtedy linia od trzeciej kropki prowadziła donikąd i schemat
+   przestawał być schematem. Grid-auto-flow: column trzyma wszystkie kroki
+   w jednym rzędzie niezależnie od tego, czy jest ich trzy czy cztery. */
+.steps {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-l);
+}
+
+.step {
+  position: relative;
+  padding-top: calc(var(--space-m) + 12px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Kropka na osi kroku */
+.step::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--instrument);
+  background: var(--brand-900);
+  box-shadow: 0 0 0 4px var(--instrument-glow);
+}
+
+/* Odcinek linii do następnej kropki. Ostatni krok linii nie prowadzi. */
+.step::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  right: calc(-1 * var(--space-l));
+  height: 1px;
+  background: var(--instrument-dim);
+}
+.step:last-child::after { display: none; }
+
+/* Na jasnej wyspie --instrument jest za jasny na papierze: w Kaminie
+   #B5E1E3 na #F4F7F3 daje 1.2:1 i schemat znika. Kropka i linia biorą tam
+   --instrument-strong, tak samo jak wskazówka na jasnej tarczy (3A.2). */
+.section--light .step::before {
+  background: var(--paper);
+  border-color: var(--instrument-strong);
+  box-shadow: none;
+}
+.section--light .step::after { background: var(--instrument-strong); opacity: .45; }
+
+.step__no {
+  font-size: var(--type-small);
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--brand-300);
+}
+/* --brand-700 na papierze przechodzi tylko w NF (7.7:1); w Kaminie
+   i Pomonie spada poniżej 3:1, więc numer kroku bierze --ink-muted (5.9:1
+   w każdej skórce). */
+.section--light .step__no { color: var(--ink-muted); }
+
+.step__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--type-h3);
+  line-height: var(--lh-h3);
+}
+
+/* Kamino pisze kroki groteskiem z ciasnym trackingiem (7A) */
+[data-brand="kamino"] .step__title {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Pomona — antykwa w kapitalikach (7A) */
+[data-brand="pomona"] .step__title { font-variant-caps: small-caps; }
+
+.step p { font-size: var(--type-small); line-height: var(--lh-small); }
+
+@media (max-width: 760px) {
+  .steps { grid-auto-flow: row; grid-auto-columns: auto; gap: var(--space-m); }
+  .step { padding-top: 0; padding-left: calc(var(--space-m) + 12px); }
+  .step::before { top: 4px; }
+  .step::after {
+    top: 16px;
+    left: 5px;
+    right: auto;
+    width: 1px;
+    height: calc(100% + var(--space-m) - 16px);
+  }
+}
+
+
+/* --- 6.7 Pasek powrotu do Nature & Future (7A, pkt 7) ---------------------
+   Zamyka każdą podstronę sub-marki. Jedno zdanie i jeden link — sub-marka
+   nie ma własnej nawigacji, więc to jedyne wyjście z niej w górę.
+   -------------------------------------------------------------------------- */
+
+.backbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-m);
+  padding: var(--space-m) var(--space-l);
+}
+
+.backbar p { margin: 0; }
+
+
+/* --- 6.5 c.d. — pole wieloliniowe i siatka pól ---------------------------- */
+
+.input--area { min-height: 150px; resize: vertical; }
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-m);
+}
+.field-grid .field--wide { grid-column: 1 / -1; }
+
+@media (max-width: 760px) {
+  .field-grid { grid-template-columns: 1fr; }
+}
+
+
+/* --- 6.8 Nagłówek sekcji --------------------------------------------------
+   Odstęp nagłówka od zawartości sekcji. Używany na każdej stronie, więc
+   mieszka tutaj, a nie w arkuszu jednej z nich.
+   -------------------------------------------------------------------------- */
+
+.section__head { margin-bottom: var(--space-l); }
+
+
+/* --- 7.3 Pasmo edukacyjne -------------------------------------------------
+   Ilustracja w środku, adnotacje (.anno, 6.4) w dwóch kolumnach po bokach.
+   Kierunek kreski adnotacji ustawiają .edu__col--left / --right.
+
+   Wzorzec „rysunek + adnotacje" powtarza się na stronie głównej, w Kaminie
+   i w Pomonie, dlatego jest komponentem, nie układem jednej strony.
+   -------------------------------------------------------------------------- */
+
+.edu__head { margin-bottom: var(--space-xl); }
+.edu__head p { margin-top: var(--space-s); }
+
+.edu {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 340px) 1fr;
+  gap: var(--space-l);
+  align-items: center;
+}
+
+.edu__col { display: flex; flex-direction: column; gap: var(--space-l); }
+
+.jar { width: 100%; height: auto; }
+.jar__layer-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  fill: var(--ink-muted);
+}
+
+@media (max-width: 1040px) {
+  .edu { grid-template-columns: 1fr; }
+  .edu__col { gap: var(--space-m); }
+  /* Kolumny stoją jedna nad drugą, więc kreska adnotacji nie ma już do czego
+     prowadzić — zostaje sama etykieta. */
+  .edu .anno::before, .edu .anno::after { display: none; }
+  .jar { max-width: 320px; margin-inline: auto; }
+}
+
+
+/* --- 6.9 Stopka i newsletter ----------------------------------------------
+   Stopka stoi na KAŻDEJ stronie serwisu, łącznie z podstronami sub-marek
+   i sklepem. Do 2026-09-02 mieszkała w nf-home.css, przez co /technologia
+   renderowała ją bez tła, bez paddingu i bez siatki kolumn — a pozostałe
+   podstrony musiały wciągać arkusz strony głównej tylko po to, żeby mieć
+   stopkę. Dlatego jest komponentem.
+
+   Tło --brand-900 (rozdz. 1: stopka to najciemniejsze pasmo strony).
+   -------------------------------------------------------------------------- */
+
+.footer {
+  background: var(--brand-900);
+  padding-block: var(--space-2xl) var(--space-l);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.newsletter p { margin: var(--space-xs) 0 var(--space-m); }
+.newsletter__form { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+/* Pole newslettera to komponent .input (6.5). Tutaj zostaje wyłącznie
+   sposób, w jaki dzieli szerokość z przyciskiem. */
+.newsletter__form .input { flex: 1 1 220px; }
+
+.footer__cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-l);
+}
+.footer__cols h3 { font-size: var(--type-small); font-weight: 600; margin-bottom: var(--space-s); }
+.footer__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); }
+/* Adres e-mail jest dłuższy niż kolumna na wąskich ekranach — musi się łamać,
+   inaczej wypycha stronę w poziomie. */
+.footer__cols a { font-size: var(--type-small); color: rgba(217, 252, 240, .8); text-decoration: none; overflow-wrap: anywhere; }
+.footer__cols a:hover { color: var(--brand-100); text-decoration: underline; text-underline-offset: 4px; }
+
+.footer__legal {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  padding-top: var(--space-l);
+  font-size: var(--type-small);
+  color: rgba(217, 252, 240, .6);
+}
+
+@media (max-width: 1040px) {
+  .footer__top { grid-template-columns: 1fr; gap: var(--space-xl); }
+}
+
+@media (max-width: 760px) {
+  .footer__cols { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 400px) {
+  .footer__cols { grid-template-columns: 1fr; }
+}
+
+
+/* ==========================================================================
+   8A. Panel — interfejsy zalogowane
+   Osiem komponentów zapowiedzianych w docs/design-system.md, rozdz. 8A
+   („Stan wdrożenia"). Panel to narzędzie: gęściej, bez mosiądzu, bez
+   jasnych wysp, nagłówki groteskiem, dane liczbowe w kolumnie.
+
+     .panel       układ z lewą kolumną 240px
+     .panel-nav   przyklejona kolumna .glass + wysuwka na mobile
+     .table       wiersz 52px, wariant kartowy poniżej 760px
+     .status      kropka + etykieta słowna
+     .empty       stan pusty: jedno zdanie, jedno wyjście
+     .skeleton    bloki --brand-800, bez połysku
+     .modal       potwierdzenie z nazwą i czasownikiem skutku
+     .num         --font-mono + lining-nums tabular-nums
+   ========================================================================== */
+
+/* --- .num — dane liczbowe (8A, zasada 5) ---------------------------------
+   Numery zamówień, kwoty, daty, ilości. Mają stać w kolumnie, więc
+   tabular-nums jest tu obowiązkowe, nie ozdobne. Rozdz. 4 rezerwuje
+   --font-mono dla Kamino i danych pomiarowych — panel jest drugim
+   dopuszczonym miejscem, bo pokazuje wyłącznie realne dane. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -0.01em;
+}
+
+/* --- .panel — układ (8A, Nawigacja panelu) -------------------------------- */
+
+.panel {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--space-l);
+  align-items: start;
+  width: 100%;
+  /* Panel to narzędzie, nie strona do czytania: ma pokazać wszystko naraz
+     na całym ekranie, jak stary panel i dashboard. Limit 1280px z --container
+     zostawiał na szerokim monitorze po 300px pustki z każdej strony, a karty
+     spychał pod zgięcie. Górna granica 2000px trzyma tylko monitory 4K,
+     na których wiersz tabeli rozjechałby się na pół metra. */
+  max-width: 2000px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-l);
+}
+
+/* Odstęp sekcji nadpisany raz, na kontenerze panelu — nie na każdej
+   sekcji z osobna (8A, koniec rozdziału). */
+.panel .section { padding-block: var(--space-l); }
+
+/* Nagłówki panelu groteskiem, maksymalnie H2. Antykwa zostaje stronom
+   marketingowym; tu tytuł ma nazywać widok, nie otwierać opowieść. */
+.panel .h1,
+.panel .h2 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.panel__main { display: grid; gap: var(--space-l); min-width: 0; }
+
+/* Blok treści wewnątrz kolumny głównej. Gęściej niż .section. */
+.panel__block { display: grid; gap: var(--space-s); }
+
+.panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+/* Dwie kolumny: treść główna i pas skrótów. Proporcja 1.6 : 1 — lista
+   zamówień jest tym, po co się tu wchodzi. Wspólne dla przeglądu klienta
+   i personelu, dlatego tutaj, a nie w arkuszu jednej strony. */
+.panel-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-l);
+  align-items: start;
+}
+
+.panel-side { display: grid; gap: var(--space-s); align-content: start; }
+
+@media (max-width: 900px) {
+  .panel-cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
+}
+
+/* --- .panel-nav — przyklejona kolumna ------------------------------------ */
+
+.panel-nav {
+  position: sticky;
+  /* Nagłówek serwisu jest position:fixed i w stanie zwiniętym zajmuje
+     16px marginesu + 72px wysokości. Sticky top musi zaczynać się
+     poniżej, inaczej pigułka nawigacji nachodzi na kolumnę panelu
+     przy przewijaniu. */
+  top: calc(72px + 2 * var(--space-s));
+  padding: var(--space-s);
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.panel-nav__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+
+.panel-nav__link {
+  display: block;
+  padding: 11px var(--space-s);
+  border-radius: var(--radius-s);
+  color: var(--brand-100);
+  text-decoration: none;
+  font-size: var(--type-small);
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.panel-nav__link:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* Widok bieżący niesie stan atrybutem, nie samą klasą — czytnik ekranu
+   ma się dowiedzieć tego samego, co widzi oko (rozdz. 10). */
+.panel-nav__link[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+}
+
+/* Przycisk wysuwki widoczny dopiero na wąskim ekranie */
+/* Sekcja personelu w kolumnie panelu: cichy nagłówek i kreska, żeby
+   skróty administracyjne nie mieszały się z widokami klienta. */
+.panel-nav__staff {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--space-xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.panel-nav__label {
+  margin: 0 0 var(--space-2xs);
+  padding-inline: var(--space-s);
+  font-size: var(--type-small);
+  color: rgba(217, 252, 240, 0.55);
+}
+
+.panel-nav__toggle { display: none; }
+
+/* --- .table — wiersz 52px (8A, zasada 6) ---------------------------------- */
+
+.table-wrap { width: 100%; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  height: 52px;
+  padding: var(--space-s);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  vertical-align: middle;
+}
+
+.table thead th {
+  height: auto;
+  padding-block: var(--space-xs);
+  font-size: var(--type-small);
+  font-weight: 600;
+  color: rgba(217, 252, 240, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.18);
+  white-space: nowrap;
+}
+
+.table tbody tr { transition: background-color var(--dur-hover) var(--ease); }
+.table tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+/* Cały wiersz prowadzi do szczegółów, ale klikalny jest link w pierwszej
+   komórce — dzięki temu wiersz da się otworzyć klawiaturą i skopiować
+   adres, czego onclick na <tr> nie potrafi. */
+.table__link { color: inherit; text-decoration: none; }
+.table__link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.table .td--right,
+.table .th--right { text-align: right; }
+
+/* Wariant kartowy poniżej 760px. Nie poziomy scroll (8A, zasada 6):
+   każda komórka dostaje własną etykietę z data-label. */
+@media (max-width: 760px) {
+  .table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+
+  .table tr {
+    margin-bottom: var(--space-s);
+    padding: var(--space-xs) var(--space-s);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-s);
+  }
+
+  .table td {
+    height: auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-inline: 0;
+    padding-block: var(--space-xs);
+    border-bottom: 0;
+    text-align: left;
+  }
+  .table .td--right { text-align: left; }
+
+  .table td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-size: var(--type-small);
+    color: rgba(217, 252, 240, 0.72);
+  }
+}
+
+
+
+/* --- 8A .progress — postęp realizacji zamówienia --------------------------
+   Pasek kroków ze stanem: ukończone, bieżący, przed nami. Osobny komponent,
+   a nie wariant .steps (6.6) — tamten opisuje proces w treści marketingowej
+   i rysuje linię mosiądzem, którego w panelu nie ma ani jednego (8A).
+
+   Stan nie zależy od koloru (rozdz. 10): krok ukończony ma ptaszek, bieżący
+   ma wypełnioną kropkę, przyszły jest pusty. Do tego aria-current="step"
+   i ukryty tekst stanu przy każdym kroku, więc czytnik ekranu dostaje to
+   samo, co oko.
+   -------------------------------------------------------------------------- */
+
+.progress {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: progress;
+}
+
+.progress__step {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-xs);
+  text-align: center;
+  min-width: 0;
+}
+
+/* Linia łącząca biegnie od środka poprzedniego znacznika do środka
+   bieżącego, więc rysuje ją każdy krok poza pierwszym. Dzięki temu
+   nie wystaje poza pasek na żadnym z końców. */
+.progress__step::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  right: 50%;
+  left: -50%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.progress__step:first-child::before { content: none; }
+
+/* Odcinek przed krokiem ukończonym lub bieżącym jest już „przebyty”. */
+.progress__step.is-done::before,
+.progress__step.is-current::before { background: var(--brand-300); }
+
+.progress__mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  background: var(--brand-900);
+  color: var(--brand-900);
+}
+
+/* Ukończony: wypełnione kółko z ptaszkiem. Ptaszek jest kształtem, więc
+   niesie stan także tam, gdzie koloru nie widać. */
+.progress__step.is-done .progress__mark {
+  border-color: var(--brand-300);
+  background: var(--brand-300);
+}
+.progress__step.is-done .progress__mark::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+/* Bieżący: obrys w kolorze marki i kropka w środku. */
+.progress__step.is-current .progress__mark { border-color: var(--brand-300); }
+.progress__step.is-current .progress__mark::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-300);
+}
+
+.progress__label {
+  font-size: var(--type-small);
+  color: rgba(217, 252, 240, 0.72);
+  overflow-wrap: anywhere;
+}
+.progress__step.is-current .progress__label { color: var(--brand-100); font-weight: 600; }
+.progress__step.is-done .progress__label { color: rgba(217, 252, 240, 0.9); }
+
+/* Data pod etykietą — kiedy krok się wydarzył. */
+.progress__when { font-size: var(--type-small); color: rgba(217, 252, 240, 0.55); }
+
+/* Zamówienie anulowane nie idzie dalej: pasek gaśnie, a słowo „Anulowane”
+   stoi obok niego w .status. Bez tego przerwany pasek wyglądałby jak błąd
+   wczytywania. */
+.progress--cancelled .progress__mark,
+.progress--cancelled .progress__step::before { opacity: 0.4; }
+
+.section--light .progress__step::before { background: rgba(11, 93, 30, 0.16); }
+.section--light .progress__mark { background: var(--paper); color: var(--paper); border-color: rgba(11, 93, 30, 0.28); }
+.section--light .progress__label { color: var(--ink-muted); }
+
+/* Wąski ekran: pasek prostuje się w pion, linia biegnie po lewej.
+   Ten sam schemat obrócony — nie cztery kafle bez związku. */
+@media (max-width: 560px) {
+  .progress { grid-auto-flow: row; gap: var(--space-s); }
+
+  .progress__step {
+    grid-template-columns: 28px minmax(0, 1fr);
+    justify-items: start;
+    text-align: left;
+    align-items: center;
+    gap: var(--space-xs) var(--space-s);
+  }
+
+  .progress__step::before {
+    top: -50%;
+    bottom: 50%;
+    left: 13px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .progress__label { grid-column: 2; }
+  .progress__when  { grid-column: 2; }
+}
+
+/* --- .status — kropka + etykieta (8A, zasada 3) ---------------------------
+   Etykieta zostaje w zwykłym kolorze tekstu, kolor niesie wyłącznie kropka.
+   Dzięki temu żaden status nie zależy od koloru (rozdz. 10) i żaden nie
+   musi walczyć o kontrast 4.5:1 jako tekst. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  white-space: nowrap;
+}
+
+.status::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-dot, rgba(217, 252, 240, 0.55));
+}
+
+.status--progress  { --status-dot: var(--warn); }
+.status--sent      { --status-dot: var(--brand-300); }
+.status--delivered { --status-dot: var(--brand-500); }
+.status--cancelled { --status-dot: var(--error); }
+
+/* --- .empty — stan pusty (8A, zasada 1) -----------------------------------
+   Jedno zdanie i jedno wyjście. Bez ilustracji i bez żartów. */
+.empty {
+  display: grid;
+  gap: var(--space-s);
+  justify-items: start;
+  padding: var(--space-l) var(--space-m);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-s);
+}
+.empty p { margin: 0; color: rgba(217, 252, 240, 0.72); }
+
+/* --- .skeleton — stan ładowania (8A, zasada 2) ----------------------------
+   Kształt zawartości w --brand-800. Bez spinnera i bez animowanego
+   połysku — panel ma nie migotać podczas wczytywania. */
+.skeleton {
+  background: var(--brand-800);
+  border-radius: var(--radius-s);
+  height: 1em;
+}
+.skeleton--row   { height: 52px; }
+.skeleton--line  { height: 12px; max-width: 22ch; }
+.skeleton--thumb { width: 64px; height: 64px; }
+.skeleton--block { height: 120px; }
+
+.skeleton-stack { display: grid; gap: var(--space-xs); }
+
+/* --- .modal — potwierdzenie (8A, zasada 4) --------------------------------
+   Zbudowany na <dialog>: pułapka focusu i zamknięcie Esc są wtedy
+   zachowaniem przeglądarki, a nie kodem, który można zapomnieć napisać. */
+.modal {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+  max-width: 34rem;
+  width: calc(100% - 2 * var(--gutter));
+  background: var(--brand-900);
+  color: var(--brand-100);
+}
+.modal::backdrop { background: rgba(0, 0, 0, 0.55); }
+
+.modal__title { margin-bottom: var(--space-xs); }
+.modal__body  { color: rgba(217, 252, 240, 0.82); }
+.modal__body p { margin-bottom: var(--space-s); }
+
+.modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-m);
+}
+
+/* Otwarcie 200ms (rozdz. 9). Nic poza tym się nie rusza. */
+@media (prefers-reduced-motion: no-preference) {
+  .modal[open] { animation: modal-in var(--dur-open) var(--ease); }
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* --- Panel na wąskim ekranie ---------------------------------------------
+   Kolumna chowa się pod przycisk i wysuwa jako karta. Karta zostaje jasna
+   także tutaj: linki biorą --ink z .section--light, więc zdjęcie jej tła
+   dawało ciemny tekst na ciemnej zieleni — menu było na miejscu, tylko
+   nie dało się go odczytać. */
+@media (max-width: 900px) {
+  .panel { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
+
+  .panel-nav {
+    position: static;
+    padding: var(--space-xs);
+  }
+
+  .panel-nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    justify-self: start;
+  }
+
+  /* Lista i skróty personelu chowają się razem — inaczej „Personel”
+     zostawał na ekranie po zwinięciu menu, bo stoi za listą, a nie w niej.
+     Stąd ~ zamiast +. */
+  .panel-nav__list,
+  .panel-nav__staff { display: none; }
+
+  .panel-nav__toggle[aria-expanded="true"] ~ .panel-nav__list,
+  .panel-nav__toggle[aria-expanded="true"] ~ .panel-nav__staff { display: grid; }
+
+  .panel-nav__list { margin-top: var(--space-xs); }
+}
+
+
+/* --- Siatka kart (rozdz. 8.1) ---------------------------------------------
+   Liczba kolumn NIE jest zapisana w CSS. Ustala ją logika strony na
+   podstawie liczby pozycji i wpisuje w --listing-cols. CSS zna tylko
+   zasadę „tyle równych kolumn, ile każe logika”.
+
+   Mieszkała w nf-shop.css do chwili, w której panel klienta (widok
+   „Zapisane rośliny”, rozdz. 8A) sięgnął po tę samą siatkę. Reguła
+   z rozdz. 0.1: komponent użyty na drugiej stronie przenosi się tutaj,
+   zamiast dopinać arkusz sklepu do panelu.
+   -------------------------------------------------------------------------- */
+
+.listing {
+  display: grid;
+  grid-template-columns: repeat(var(--listing-cols, 3), 1fr);
+  gap: var(--space-m);
+}
+
+.listing__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-bottom: var(--space-l);
+}
+
+/* Tablet: trzy kolumny się nie mieszczą — schodzimy do dwóch. */
+@media (max-width: 1040px) {
+  .listing { grid-template-columns: repeat(min(var(--listing-cols, 3), 2), 1fr); }
+}
+
+@media (max-width: 760px) {
+  .listing { grid-template-columns: 1fr; }
+}
+
+
+/* --- 8A: komponenty panelu na jasnej karcie -------------------------------
+   Panel klienta stawia bloki na jasnym tle (decyzja z 2026-09-02), więc
+   komponenty panelowe potrzebują wariantu jasnego tak samo, jak miały go
+   przyciski i pola. Selektor jest ten sam co w reszcie pliku —
+   .section--light — dzięki czemu karta panelu włącza je wszystkie naraz
+   jedną klasą, zamiast powtarzać kolory w arkuszu strony. */
+
+.section--light .table th,
+.section--light .table td { border-bottom-color: rgba(11, 93, 30, 0.14); }
+.section--light .table thead th {
+  color: var(--ink-muted);
+  border-bottom-color: rgba(11, 93, 30, 0.24);
+}
+.section--light .table tbody tr:hover { background: rgba(11, 93, 30, 0.05); }
+
+@media (max-width: 760px) {
+  .section--light .table tr { border-color: rgba(11, 93, 30, 0.16); }
+  .section--light .table td::before { color: var(--ink-muted); }
+}
+
+.section--light .empty { border-color: rgba(11, 93, 30, 0.28); }
+.section--light .empty p { color: var(--ink-muted); }
+
+/* Szkielet na jasnym tle nie może być --brand-800: ciemny blok wygląda
+   jak treść, a nie jak jej brak. */
+.section--light .skeleton { background: rgba(11, 93, 30, 0.12); }
+
+.section--light .panel-nav__link { color: var(--ink); }
+.section--light .panel-nav__link:hover { background: rgba(11, 93, 30, 0.08); }
+.section--light .panel-nav__link[aria-current="page"] { background: rgba(11, 93, 30, 0.14); }
+.section--light .panel-nav__staff { border-top-color: rgba(11, 93, 30, 0.16); }
+
+.section--light .progress__step::before { background: rgba(11, 93, 30, 0.18); }
+.section--light .progress__step.is-done::before,
+.section--light .progress__step.is-current::before { background: var(--brand-500); }
+.section--light .progress__mark {
+  background: var(--paper);
+  color: var(--paper);
+  border-color: rgba(11, 93, 30, 0.28);
+}
+.section--light .progress__step.is-done .progress__mark {
+  background: var(--brand-500);
+  border-color: var(--brand-500);
+}
+.section--light .progress__step.is-current .progress__mark { border-color: var(--brand-500); }
+.section--light .progress__step.is-current .progress__mark::after { background: var(--brand-500); }
+.section--light .progress__label { color: var(--ink-muted); }
+.section--light .progress__step.is-current .progress__label { color: var(--ink); }
+.section--light .progress__step.is-done .progress__label { color: var(--ink); }
+
+/* Kropka statusu zostaje w swoim kolorze — to ona niesie dodatek do słowa.
+   Na jasnym tle zieleń „Dostarczone” i „Wysłane” muszą zejść o stopień,
+   inaczej gubią się w bieli. */
+.section--light .status--sent      { --status-dot: var(--brand-600); }
+.section--light .status--delivered { --status-dot: var(--brand-700); }
+.section--light .status::before    { background: var(--status-dot, var(--ink-muted)); }
+
+.section--light .tag,
+.section--light .thumbs__more {
+  border-color: rgba(11, 93, 30, 0.24);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink);
+}
+
+
+/* Tag i wskaźnik stanu leżą NA ZDJĘCIU, nie na tle karty — jasna karta
+   nie może im zabrać ciemnego szkła, bo na jasnym kadrze biały napis
+   na białej pigułce znika. Wyjątek dotyczy tylko tych dwóch w .card__photo;
+   ten sam .tag poza zdjęciem dalej korzysta z wariantu jasnego. */
+.section--light .card__photo .tag {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  color: #FFFFFF;
+}
+.section--light .card__photo .stock { color: #FFFFFF; }
+
+
+/* --- .drawer — wysuwka boczna (koszyk) ------------------------------------
+   Zbudowana na <dialog>, tak jak .modal: pułapka focusu, zamknięcie Esc
+   i tło blokujące klikanie w treść pod spodem są wtedy zachowaniem
+   przeglądarki, a nie kodem, który można zapomnieć napisać.
+
+   Różnica wobec .modal to pozycja i kształt: wysuwka trzyma się prawej
+   krawędzi na pełną wysokość okna, bo zawiera listę, która rośnie.
+   -------------------------------------------------------------------------- */
+
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  max-width: 420px;
+  width: 100%;
+  max-height: 100dvh;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--glass-border);
+  border-radius: 0;
+  background: var(--brand-900);
+  color: var(--brand-100);
+  overflow: hidden;
+}
+.drawer::backdrop { background: rgba(0, 0, 0, 0.55); }
+
+/* Trzy pasy: nagłówek i stopka stoją, środek się przewija. Dzięki temu
+   suma i przycisk kasy są widoczne niezależnie od długości listy. */
+.drawer__inner {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+}
+
+.drawer__head,
+.drawer__foot {
+  padding: var(--space-m);
+  display: grid;
+  gap: var(--space-s);
+}
+
+.drawer__head {
+  grid-auto-flow: column;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.drawer__title { margin: 0; }
+
+.drawer__close {
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.drawer__close:hover { background: rgba(255, 255, 255, 0.12); }
+
+.drawer__body {
+  overflow-y: auto;
+  padding: var(--space-s) var(--space-m);
+}
+
+.drawer__foot { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+
+/* Wiersz pozycji: miniatura, opis, kwota i usunięcie. Ten sam raster
+   co .item w szczegółach zamówienia — koszyk i zamówienie pokazują to
+   samo, więc nie ma powodu, żeby wyglądały inaczej. */
+.drawer__item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: var(--space-s);
+  align-items: center;
+  padding-block: var(--space-s);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.drawer__item:last-child { border-bottom: 0; }
+
+/* Licznik ilości stoi pod nazwą, nie w kolumnie kwoty: kwota ma zostać
+   jednym słupkiem liczb przez całą listę, a licznik jest szerszy niż ona
+   i rozepchnąłby ten słupek. */
+.drawer__item .mini-item__name > span:not(.qty) { display: block; }
+.drawer__item .qty { margin-top: var(--space-2xs); }
+
+.drawer__thumb {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  background: var(--brand-800);
+}
+
+.drawer__money { text-align: right; white-space: nowrap; display: grid; gap: var(--space-2xs); justify-items: end; }
+
+/* --- .qty — licznik ilości (− n +) ---------------------------------------
+   Zmiana ilości to najczęstsza poprawka, jaką ktoś robi po dodaniu
+   produktu: „wezmę dwa, nie jeden”. Bez licznika trzeba było usunąć
+   pozycję i dodać ją ponownie w sklepie — trzy kroki na coś, co jest
+   jednym kliknięciem.
+
+   Dwa przyciski i liczba między nimi, bez pola do wpisywania: ilości
+   w koszyku są jednocyfrowe, a klawiatura numeryczna na telefonie to
+   więcej kłopotu niż plus. Krawędź pigułki obejmuje całość, więc licznik
+   czyta się jako jedna rzecz, nie trzy.
+   -------------------------------------------------------------------------- */
+
+.qty {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+}
+
+.qty__btn {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.qty__btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+
+/* Wyłączony przycisk zostaje na miejscu, tylko blednie: gdyby znikał,
+   licznik skakałby o 32px przy każdym dojściu do granicy. */
+.qty__btn:disabled { opacity: 0.35; cursor: default; }
+
+.qty__val {
+  min-width: 2ch;
+  padding-inline: var(--space-2xs);
+  text-align: center;
+}
+
+/* Na jasnej płycie ta sama pigułka potrzebuje ciemniejszej krawędzi. */
+.section--light .qty { border-color: rgba(0, 0, 0, 0.18); }
+.section--light .qty__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
+
+.drawer__sum {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+/* Otwarcie 200ms (rozdz. 9) — wysuwka wjeżdża z prawej, nic poza tym
+   się nie rusza. */
+@media (prefers-reduced-motion: no-preference) {
+  .drawer[open] { animation: drawer-in var(--dur-open) var(--ease); }
+}
+@keyframes drawer-in {
+  from { transform: translateX(24px); opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .drawer { max-width: 100%; border-left: 0; }
+}
+
+
+/* --- 8A: komponenty wspólne obu panelom -----------------------------------
+   Do 2026-09-02 te bloki siedziały w nf-panel.css, czyli w arkuszu jednej
+   strony. Panel administratora (admin-*-nf.html) używa ich tak samo jak
+   panel klienta, więc reguła porządku z rozdz. 0.1 każe im zamieszkać tutaj:
+   komponent użyty na drugiej stronie przenosi się do nf-components.css.
+
+   Nie przeniosło się to, co zostaje kompozycją jednego panelu: układ dwóch
+   kolumn przeglądu klienta, lista adresów, pozycje zamówienia, opieka po
+   dostawie (nf-panel.css) oraz wykresy i poczta (nf-admin.css).
+   -------------------------------------------------------------------------- */
+
+/* Nagłówek serwisu jest ten sam co na stronach (8A), ale bez hero pod
+   spodem .nav stoi od razu jako pigułka — panel musi sam odsunąć treść
+   spod niej. */
+.panel-page {
+  --nav-clear: calc(var(--space-s) + 72px + var(--space-l));
+  padding-top: var(--nav-clear);
+}
+
+.panel-card {
+  padding: var(--space-m);
+  display: grid;
+  gap: var(--space-s);
+  align-content: start;
+}
+
+/* display z reguły wyżej wygrywa z display:none, które atrybut hidden
+   dostaje z arkusza przeglądarki — formularz potrafił przez to stać
+   otwarty od wejścia na stronę. Ta reguła przywraca hidden. */
+.panel-card[hidden] { display: none; }
+
+/* Numer sekcji. Prowadzi wzrok po kolejności bloków, tak jak w starym
+   panelu — dlatego jest cichy i nie wchodzi w drogę nagłówkowi. */
+.panel__no {
+  color: rgba(217, 252, 240, 0.45);
+  font-size: var(--type-small);
+  margin-right: var(--space-2xs);
+}
+
+/* Rząd kafli liczbowych. Nazwa własna, a nie .tiles — .tiles to kafle
+   sub-marek z rozdz. 6 i mają w tym pliku inną siatkę. Dwie różne rzeczy
+   pod jedną nazwą kończyły się tym, że o wyniku decydowała kolejność
+   wczytania arkuszy. */
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-s);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile-stat {
+  padding: var(--space-s) var(--space-m);
+  display: grid;
+  gap: var(--space-2xs);
+  align-content: center;
+  min-height: 92px;
+}
+
+.tile-stat__value {
+  margin: 0;
+  font-size: var(--type-h3);
+  line-height: 1.2;
+  color: var(--brand-100);
+}
+
+/* Szkielet wartości musi mieć wysokość wiersza, inaczej kafel skacze
+   po wczytaniu danych. */
+.tile-stat__value.skeleton { min-height: 1.2em; max-width: 6ch; }
+
+.tile-stat__label {
+  margin: 0;
+  font-size: var(--type-small);
+  color: rgba(217, 252, 240, 0.72);
+}
+
+/* --- Filtr nad tabelą ----------------------------------------------------- */
+
+.filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-s);
+  margin-bottom: var(--space-s);
+}
+.filterbar .field { min-width: 220px; }
+.filterbar__count { margin-left: auto; color: rgba(217, 252, 240, 0.72); }
+
+@media (max-width: 560px) {
+  .filterbar__count { margin-left: 0; }
+}
+
+/* --- Zapis formularza (8A, zasada 7) --------------------------------------
+   Potwierdzenie stoi przy formularzu, nie jako znikający toast w rogu. */
+
+.form-note { color: var(--brand-300); }
+.form-note--error { color: var(--accent-soft); }
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s);
+  margin-top: var(--space-s);
+}
+
+/* Przycisk jako bezpośrednie dziecko karty rozciągał się na całą jej
+   szerokość — .panel-card jest gridem, a grid domyślnie rozciąga dzieci.
+   Akcja ma mieć szerokość swojej treści. */
+.panel-card > .btn,
+.panel__block > .btn,
+.panel-card > .btn--primary,
+.panel__head .btn--primary { justify-self: start; }
+
+
+/* --- Jasne karty panelu ---------------------------------------------------
+   Bloki panelu używają .section--light, żeby włączyć jasne warianty
+   wszystkich komponentów naraz (przyciski, pola, tabela, status, postęp).
+   Klasa jest jednak pisana pod pasmo pełnej szerokości, więc karta
+   nadpisuje trzy rzeczy: promień, obrys i odstęp. -------------------------- */
+
+.panel-card,
+.panel-nav,
+.tile-stat {
+  border-radius: var(--radius-m);
+  border: 1px solid rgba(11, 93, 30, 0.14);
+  box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18);
+}
+
+/* Nagłówki na jasnej karcie: grotesk i --ink, bez dziedziczenia
+   --brand-100 z ciemnej bazy. */
+.panel-card .h3,
+.tile-stat__value { color: var(--ink); }
+
+.tile-stat__label,
+.panel__no,
+.panel-nav__label { color: var(--ink-muted); }
+
+.panel-card .muted { color: var(--ink-muted); }
+
+/* Nagłówki widoków i etykieta filtra zostają na ciemnym tle strony,
+   więc nie mogą przejąć --ink z kart. */
+.panel__main > .panel__head .h2,
+.panel__block > .panel__head .h3,
+.filterbar .field__label,
+.filterbar__count { color: var(--brand-100); }
+.panel__main > .panel__head .num { color: rgba(217, 252, 240, 0.72); }
+
+/* Tabela wypełnia kartę do krawędzi — własny padding komórek wystarcza,
+   a podwójny odstęp odsuwałby wiersze od obrysu bez powodu. */
+.table-wrap.panel-card { padding: var(--space-xs) var(--space-s); }
+
+/* Piąty status widzi tylko personel. Klient dostaje „Nowe” i „W realizacji”
+   jako jeden etap (8A), w panelu staffa to dwa różne kroki, więc „Nowe”
+   ma własną kropkę. */
+.status--new { --status-dot: var(--brand-100); }
+.section--light .status--new { --status-dot: var(--brand-900); }
+
+
+
+/* --- 3A.7 Mosiężna obwódka płyt -------------------------------------------
+   Każda płyta w serwisie — karta produktu, kafel liczbowy, karta panelu,
+   pigułka nawigacji, modal, wysuwka koszyka — ma włos obwódki w kolorze
+   przyrządu zamiast ledwie widocznej krechy neutralnej.
+
+   Skąd to się wzięło: płyty stały na tłach, których jasność różniła się od
+   nich o kilka procent, więc granica bloku istniała właściwie tylko w cieniu.
+   Strona czytała się płasko — karty wyglądały jak plamy, a nie jak coś
+   osadzonego. Włos mosiądzu daje krawędź, której cień sam nie dawał.
+
+   Dlaczego --instrument, a nie --brass: to ten sam token, którym rządzi się
+   cała warstwa przyrządowa (3A.1). W NF i Pomonie rozwija się w mosiądz,
+   w Kaminie w --brand-300 (3A.4) — obwódka przefarbowuje się razem ze skórką
+   i nikt nie musi o tym pamiętać. Wpisany na sztywno --brass dałby Kaminowi
+   mosiężne ramki na błękicie.
+
+   Mosiądz zostaje linią, nigdy wypełnieniem — czyli dokładnie tym, na co
+   pozwala 3A.1. Zmienia się wyłącznie liczba wystąpień; zapis o tym stoi
+   w 3A.1 i 8A.
+
+   Blok jest ostatni w pliku celowo: nadpisuje border-color ustawiony wcześniej
+   przy .glass, .modal i .drawer, nie ruszając reszty ich stylu.
+   -------------------------------------------------------------------------- */
+
+.glass,
+.glass--light,
+.card,
+.modal { border-color: var(--instrument); }
+
+.drawer { border-left-color: var(--instrument); }
+
+/* Na papierze jasny mosiądz daje 2.4:1 — poniżej progu 3:1 dla elementu
+   nietekstowego (rozdz. 10). Jasne płyty biorą więc ciemniejszy wariant,
+   z tego samego powodu, dla którego zrobiła to tarcza wskaźnika (3A.2)
+   i kropka kroków (6.6).
+
+   Płyty panelu są jednocześnie .section--light, więc reguła z potomkiem
+   ich nie łapie — stoją tu z nazwy. */
+.section--light .card,
+.section--light .glass,
+.section--light .glass--light,
+.tile-stat,
+.panel-nav,
+.panel-card,
+.order-brief { border-color: var(--instrument-strong); }
+
+/* Płytom panelu brakuje wewnętrznego rozjaśnienia, które .glass ma z gruntu.
+   Drugi, słabszy włos do środka robi to samo: karta czyta się jak wpuszczona
+   w ramkę, a nie jak prostokąt odbity cieniem. */
+.tile-stat,
+.panel-nav,
+.panel-card,
+.order-brief {
+  box-shadow: 0 6px 24px rgba(5, 43, 10, 0.18),
+              inset 0 0 0 1px var(--instrument-glow);
+}
+
+/* Kreski wewnątrz płyt idą za obwódką. Inaczej blok ma mosiężną ramkę
+   i neutralne przegrody — dwa różne materiały w jednym pudełku. */
+.card__foot,
+.section--light .card__foot,
+.item,
+.mini-item { border-color: var(--instrument-glow); }
+
+.totals__sum { border-top-color: var(--instrument-dim); }
+
+/* Pigułka nawigacji nie jest .glass — ma własny zestaw stylów i własną,
+   wyższą specyficzność (.nav__inner.is-pinned). Stoi więc tu z nazwy,
+   inaczej zostałaby jedyną płytą w serwisie z krawędzią neutralną. */
+.nav__inner.is-pinned { border-color: var(--instrument); }

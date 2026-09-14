@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Nature & Future — globalna warstwa tokenow i tla
+   --------------------------------------------------------------------------
+   To jest JEDYNE miejsce, w ktorym definiowane jest globalne tlo serwisu.
+   Zmiana palety = zmiana tego pliku. Nie duplikuj tych wartosci w stronach
+   ani w atrybutach style="" — strony maja tylko dziedziczyc.
+
+   Ladowany przez wszystkie strony zaraz po assets/mobile.css.
+   ========================================================================== */
+
+:root {
+  /* --- paleta bazowa ---------------------------------------------------- */
+  --nf-cream:       #EDECE5;   /* baza, tlo stron jasnych */
+  --nf-green-900:   #16341A;   /* nav, stopka, sekcje ciemne */
+  --nf-green-800:   #1E4520;   /* start gradientu */
+  /* Koniec gradientu. Wartosc z pierwotnej palety (#3F7A34) byla za jasna:
+     jasny tekst lezacy bezposrednio na tle spadal do ~1.1:1. Przyciemnienie
+     do #2E5A26 zbija liczbe pozycji ponizej progu WCAG z 197 do 102 i nadal
+     zostawia czytelny gradient. Ciemniej (#22461C) daje juz tylko 11 pozycji
+     wiecej, a gradient splaszcza sie do jednolitej plamy.
+
+     UWAGA: na stronach z klasa .nf-theme-deep problem znika u zrodla —
+     tlo #071310 daje jasnemu tekstowi kontrast grubo powyzej progu, wiec
+     nie ma tam czego ratowac przyciemnianiem. Powyzszy kompromis dotyczy
+     wylacznie stron wciaz siedzacych na gradiencie zielonym. */
+  --nf-green-600:   #2E5A26;   /* koniec gradientu */
+  --nf-panel:       #12301A;   /* karty/panele na zielonym */
+  --nf-mint:        #8FD79C;   /* akcent */
+  --nf-amber:       #C9922E;   /* mikro-akcent */
+
+  --nf-bg-gradient: linear-gradient(180deg,
+                      var(--nf-green-800) 0%,
+                      var(--nf-green-600) 100%);
+
+  /* --- paleta glboka (prototyp Figma Make) -------------------------------
+     Wprowadzana stronami. Strona glowna juz na niej siedzi, reszta serwisu
+     wciaz na gradiencie zielonym powyzej — dlatego oba zestawy zyja obok
+     siebie. Gdy ostatnia strona przejdzie na glboka palete, gradient
+     i --nf-green-* mozna usunac.
+
+     Kolory pochodza wprost z src/styles/theme.css prototypu; akcenty
+     (--nf-accent-*) sa identyczne z tymi, ktore strona uzywala juz wczesniej
+     w inline stylach, wiec nie zmieniaja wygladu — tylko przestaja byc
+     przepisywane recznie w kazdym miejscu.
+     --------------------------------------------------------------------- */
+  --nf-bg-deep:     #071310;   /* tlo bazowe */
+  --nf-card:        #0a140d;   /* karty */
+  --nf-surface-2:   #0e1610;   /* pola formularzy, drugi poziom */
+  --nf-border:      rgba(90,120,70,.2);
+  --nf-border-soft: rgba(90,120,70,.15);
+  --nf-radius:      .375rem;
+
+  --nf-accent:      #8aba82;   /* zielen akcentowa */
+  --nf-brass:       #c69a4c;   /* mosiadz */
+  --nf-heading:     #ddd8c6;   /* naglowki */
+  --nf-body:        #b8b0a0;   /* tekst */
+  --nf-muted:       #9a9480;   /* tekst drugorzedny */
+  --nf-dim:         #5d7a50;   /* etykiety Space Mono */
+
+  /* --- warstwa mapujaca -------------------------------------------------
+     Projekt nie mial wczesniej ZADNYCH zmiennych CSS (zero blokow :root),
+     wiec nie bylo istniejacych tokenow do przemapowania. Ponizsze nazwy
+     rolowe wprowadzam jako punkt zaczepienia: nowy kod bindujemy do nich,
+     a nie do surowych --nf-*. Dzieki temu kolejny rebranding to podmiana
+     prawej strony tych czterech linii.
+     --------------------------------------------------------------------- */
+  --background:     var(--nf-cream);
+  --surface:        var(--nf-panel);
+  --accent:         var(--nf-mint);
+  --accent-muted:   var(--nf-amber);
+
+  /* kolor tekstu body — zachowany z dotychczasowego wrappera */
+  --nf-text:        #b8b0a0;
+}
+
+/* --------------------------------------------------------------------------
+   Tlo globalne.
+   background-color (cream) jest fallbackiem widocznym zanim wyrenderuje sie
+   gradient; gradient zieleni pokrywa pelny viewport. background-attachment
+   fixed sprawia, ze obszar malowania to viewport, wiec gradient nie powtarza
+   sie i nie rozciaga przy scrollu niezaleznie od wysokosci dokumentu.
+   -------------------------------------------------------------------------- */
+html,
+body {
+  background-color: var(--nf-cream);
+  background-image: var(--nf-bg-gradient);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* --------------------------------------------------------------------------
+   .nf-theme-deep — opt-in na glboka palete, zakladana na <html>.
+   Swiadomie opt-in, a nie zmiana globalna: serwis przechodzi na nowy styl
+   strona po stronie, a strony jeszcze nieprzeniesione musza dalej dostawac
+   gradient zielony. Selektor na <html> (a nie na .nf-shell) jest konieczny,
+   bo tlo maluje body — wrapper jest przezroczysty.
+   -------------------------------------------------------------------------- */
+html.nf-theme-deep,
+html.nf-theme-deep body {
+  background-color: var(--nf-bg-deep);
+  background-image: none;
+}
+
+html.nf-theme-deep body {
+  color: var(--nf-body);
+}
+
+/* --------------------------------------------------------------------------
+   .nf-shell — root wrapper kazdej strony.
+   Przejmuje typografie i kolor tekstu, ktore wczesniej siedzialy w inline
+   style="". Tlo celowo transparent: tlo maluje body, wrapper go nie zaslania.
+   -------------------------------------------------------------------------- */
+.nf-shell {
+  min-height: 100vh;
+  font-family: 'EB Garamond', serif;
+  color: var(--nf-text);
+  background: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Wariant ciemny.
+   W repo nie istnieje dzis zaden przelacznik .dark — blok jest nieaktywny,
+   trzymany po to, zeby struktura zmiennych byla identyczna, gdy motyw
+   zostanie podpiety. Wystarczy dodac klase .dark na <html>.
+   -------------------------------------------------------------------------- */
+.dark {
+  --nf-cream:   var(--nf-green-900);
+  --background: var(--nf-green-900);
+}

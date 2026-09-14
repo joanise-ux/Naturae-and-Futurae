@@ -1,0 +1,296 @@
+/* ==========================================================================
+   Nature & Future — styleguide.css
+   Wyłącznie obudowa narzędzia: pasek przełączników, siatka przykładów,
+   podpisy i próbki koloru. ŻADNEGO komponentu — komponenty przychodzą
+   z nf-components.css i mają wyglądać dokładnie tak, jak na produkcji.
+   Jeśli coś na styleguide wygląda inaczej niż na stronie, to jest błąd
+   w komponencie, a nie w tym pliku.
+
+   Strona jest robocza i nielinkowana z nawigacji.
+   ========================================================================== */
+
+
+/* --- Przefarbowanie całej strony przy zmianie data-brand (6.3, 400ms) -----
+   tokens.css definiuje przejście na samym elemencie [data-brand]. Tu
+   rozciągamy je na całe drzewo, bo styleguide zmienia skórkę na <body>
+   i cała strona ma przejechać razem.
+
+   Selektor `body *` ma specyficzność 0,0,1 — komponenty z własnym
+   przejściem (.btn 150ms, .gauge__needle 700ms, .nav__inner 250ms) wygrywają
+   i zachowują swoje czasy. Gradienty (--grad-deep, --grad-light) nie
+   interpolują się w CSS, więc tło sekcji przeskakuje — przejeżdżają kolory,
+   obramowania, szkło i tekst.
+   -------------------------------------------------------------------------- */
+
+body * {
+  transition:
+    background-color var(--dur-brand-swap) var(--ease),
+    border-color     var(--dur-brand-swap) var(--ease),
+    color            var(--dur-brand-swap) var(--ease),
+    fill             var(--dur-brand-swap) var(--ease),
+    stroke           var(--dur-brand-swap) var(--ease),
+    box-shadow       var(--dur-brand-swap) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body * { transition: none; }
+}
+
+
+/* --- Pasek przełączników -------------------------------------------------- */
+
+.sg-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-m);
+  padding: var(--space-s) var(--gutter);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+}
+
+.sg-bar__title {
+  font-family: var(--font-display);
+  font-size: var(--type-body-l);
+  margin-right: auto;
+}
+.sg-bar__title small {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Segmentowany kontrolek — ten sam gest co przełącznik sub-marek w 6.3 */
+.sg-seg {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+.sg-seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 7px 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: var(--type-small);
+  cursor: pointer;
+}
+.sg-seg button::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .45;
+}
+.sg-seg button[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+}
+.sg-seg button[aria-pressed="true"]::before { opacity: 1; }
+.sg-seg button[data-brand-value="nf"][aria-pressed="true"]::before     { background: #139A43; }
+.sg-seg button[data-brand-value="kamino"][aria-pressed="true"]::before { background: #5BC3D9; }
+.sg-seg button[data-brand-value="pomona"][aria-pressed="true"]::before { background: #FFBE5C; }
+
+
+/* --- Rusztowanie przykładów ----------------------------------------------- */
+
+.sg-canvas { padding-block: var(--space-xl); }
+
+.sg-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-bottom: var(--space-m);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid currentColor;
+}
+.sg-head h2 { font-family: var(--font-display); font-size: var(--type-h2); }
+.sg-head .sg-ref { margin-left: auto; }
+
+/* Podpis techniczny: nazwa klasy i rozdział z dokumentu. Monospace tu jest
+   uzasadniony — to realny identyfikator w kodzie, nie ozdobna etykietka. */
+.sg-ref {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0;
+  opacity: .8;
+}
+.sg-ref b { font-weight: 500; }
+
+.sg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-m);
+  align-items: start;
+}
+.sg-grid--wide { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+.sg-item { display: grid; gap: var(--space-xs); align-content: start; }
+.sg-item > .sg-ref { order: 99; }
+
+/* Pole, na którym stoi pojedynczy przykład. Neutralne, żeby nie mieszać się
+   z komponentem — sam obrys i nic więcej. */
+.sg-slot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-m);
+  min-height: 88px;
+  padding: var(--space-m);
+  border: 1px dashed currentColor;
+  border-radius: var(--radius-s);
+}
+.sg-slot--plain { border: 0; padding: 0; min-height: 0; }
+
+/* Materiał pod szkłem — bez niego szkło jest szarym prostokątem (3, pkt 2) */
+.sg-material {
+  position: relative;
+  padding: var(--space-l);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+.sg-material > img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+/* --- Próbki koloru --------------------------------------------------------- */
+
+.sg-palette {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-l);
+}
+
+.sg-swatches { display: grid; gap: 2px; }
+
+.sg-swatch {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: var(--space-s);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.sg-swatch i {
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid rgba(128, 128, 128, .35);
+}
+.sg-swatch b { font-weight: 400; overflow-wrap: anywhere; }
+.sg-swatch var { font-style: normal; opacity: .75; text-transform: uppercase; }
+
+/* Nazwa skórki nad kolumną. Selektor tokenu schodzi do własnej linii, żeby
+   trzy kolumny palety zaczynały próbki na tej samej wysokości niezależnie
+   od długości nazwy marki. */
+.sg-brandname {
+  margin-bottom: var(--space-s);
+  font-family: var(--font-display);
+  font-size: var(--type-h3);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.sg-brandname code {
+  display: block;
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  opacity: .75;
+}
+.sg-palette > div { display: grid; grid-template-rows: auto 1fr; align-content: start; }
+
+
+/* --- Skala typograficzna --------------------------------------------------- */
+
+.sg-type { display: grid; gap: var(--space-l); }
+.sg-type__row { display: grid; gap: var(--space-2xs); }
+.sg-type__row > p, .sg-type__row > div { max-width: none; }
+
+
+/* --- Tabela stanów --------------------------------------------------------- */
+
+.sg-states {
+  display: grid;
+  /* cztery stany: domyślny, hover, focus, disabled */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-s) var(--space-m);
+  align-items: center;
+}
+.sg-states__label {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  opacity: .8;
+  padding-top: var(--space-s);
+}
+.sg-states__cell { display: grid; gap: var(--space-2xs); justify-items: start; }
+.sg-states__cell span { font-family: var(--font-mono); font-size: 11px; opacity: .7; }
+
+@media (max-width: 900px) {
+  .sg-palette { grid-template-columns: 1fr; }
+  .sg-states { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.sg-swatches--cols { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-m); }
+@media (max-width: 900px) { .sg-swatches--cols { grid-template-columns: 1fr; } }
+
+
+/* --- Podgląd komponentów pełnoekranowych ---------------------------------
+   Nawigacja jest position: fixed, a hero ma 72vh — obu nie da się pokazać
+   w kolumnie przykładów w ich naturalnej postaci. Te dwie ramki tworzą
+   kontekst, w którym komponent renderuje się prawdziwym kodem, tylko
+   przyciętym do rozmiaru podglądu. Nie zmieniają wyglądu komponentu.
+   -------------------------------------------------------------------------- */
+
+.sg-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1px dashed currentColor;
+}
+
+/* Unieruchamia .nav wewnątrz ramki zamiast przy krawędzi okna */
+.sg-frame .nav { position: absolute; }
+.sg-frame--nav { min-height: 200px; padding-bottom: var(--space-m); }
+
+/* Materiał pod nawigacją — bez niego nie widać ani welonu, ani szkła */
+.sg-frame__material {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* Hero w podglądzie: ta sama kompozycja, mniejsza wysokość */
+.sg-frame--hero .hero { height: 260px; min-height: 0; border-radius: 0; }
+.sg-frame--hero .hero--sub { height: 220px; }
+
+/* Pasmo wariantu sekcji: realne klasy, przycięta wysokość */
+.sg-band {
+  display: grid;
+  gap: var(--space-2xs);
+  padding: var(--space-l) var(--space-m);
+  border-radius: var(--radius-l);
+}
+.sg-band h3 { font-family: var(--font-display); font-size: var(--type-h3); }
+.sg-band p { max-width: 52ch; }
+.sg-bands { display: grid; gap: var(--space-s); }
