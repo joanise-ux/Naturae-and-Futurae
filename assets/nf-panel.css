@@ -147,20 +147,8 @@
 .panel-hello { align-items: start; }
 .panel-hello__id { margin: 0; }
 
-/* Dwie kolumny: treść główna i pas skrótów. Proporcja 1.6 : 1 — historia
-   zamówień jest tym, po co klient tu wchodzi. */
-.panel-cols {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: var(--space-l);
-  align-items: start;
-}
-
-.panel-side { display: grid; gap: var(--space-s); align-content: start; }
-
-@media (max-width: 900px) {
-  .panel-cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
-}
+/* .panel-cols i .panel-side stoją w nf-components.css — przegląd
+   personelu używa tych samych dwóch kolumn. */
 
 
 /* --- Skrót zamówienia w przeglądzie --------------------------------------- */

@@ -69,6 +69,17 @@
 }
 
 
+/* --- Przegląd w dwóch kolumnach --------------------------------------------
+   Tabela ostatnich zamówień ma pięć kolumn, więc potrzebuje więcej miejsca
+   niż historia klienta. Poniżej 1280px bloki wracają pod siebie wcześniej
+   niż wspólny próg 900px — inaczej klient i pozycje łamały się po trzy linie.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1280px) {
+  .panel-cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
+}
+
+
 /* --- Przełącznik zakresu (okres analizy, zakładki poczty) -----------------
    Grupa przycisków ze stanem w aria-pressed — stan siedzi w atrybucie,
    nie tylko w kolorze (rozdz. 10). -------------------------------------- */
@@ -112,20 +123,30 @@
 
 
 /* --- Siatka kart analizy --------------------------------------------------
-   Karty układają się same: tyle kolumn, ile zmieści się przy 380px.
-   Karta pełnej szerokości dostaje modyfikator.
+   Układ ze starego dashboardu: na szerokim ekranie trzy kolumny, a karta
+   szeroka (trend, ranking) zajmuje dwie z nich — obok zostaje miejsce na
+   rentowność. Wcześniej trend brał cały rząd i wysokość ekranu, więc
+   resztę analizy trzeba było przewijać.
+
+   Kolumny zapisane progami, nie auto-fit: szeroka karta musi wiedzieć,
+   ile kolumn ma rząd, a auto-fit tego nie mówi.
    -------------------------------------------------------------------------- */
 
 .admin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-s);
-  align-items: start;
+  align-items: stretch;
 }
 
-.admin-grid__wide { grid-column: 1 / -1; }
+.admin-grid__wide { grid-column: span 2; }
 
-@media (max-width: 560px) {
+@media (max-width: 1400px) {
+  .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-grid__wide { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1100px) {
   .admin-grid { grid-template-columns: minmax(0, 1fr); }
 }
 

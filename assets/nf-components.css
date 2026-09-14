@@ -1427,7 +1427,12 @@ select.input option { color: var(--ink); background-color: var(--paper); }
   gap: var(--space-l);
   align-items: start;
   width: 100%;
-  max-width: var(--container);
+  /* Panel to narzędzie, nie strona do czytania: ma pokazać wszystko naraz
+     na całym ekranie, jak stary panel i dashboard. Limit 1280px z --container
+     zostawiał na szerokim monitorze po 300px pustki z każdej strony, a karty
+     spychał pod zgięcie. Górna granica 2000px trzyma tylko monitory 4K,
+     na których wiersz tabeli rozjechałby się na pół metra. */
+  max-width: 2000px;
   margin-inline: auto;
   padding-inline: var(--gutter);
   padding-block: var(--space-l);
@@ -1457,6 +1462,22 @@ select.input option { color: var(--ink); background-color: var(--paper); }
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-s);
+}
+
+/* Dwie kolumny: treść główna i pas skrótów. Proporcja 1.6 : 1 — lista
+   zamówień jest tym, po co się tu wchodzi. Wspólne dla przeglądu klienta
+   i personelu, dlatego tutaj, a nie w arkuszu jednej strony. */
+.panel-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-l);
+  align-items: start;
+}
+
+.panel-side { display: grid; gap: var(--space-s); align-content: start; }
+
+@media (max-width: 900px) {
+  .panel-cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
 }
 
 /* --- .panel-nav — przyklejona kolumna ------------------------------------ */
