@@ -94,16 +94,18 @@
           image: 'assets/sp-desk-bottles.jpg', price: 26, unit: 'szt. · kubek 5×5', stock: 0, tag: 'trudna' } }
     ],
 
-    /* Jedna pozycja, żeby na podglądzie widać było licznik przy koszyku. */
+    /* Dwie pozycje, żeby na podglądzie widać było licznik przy koszyku
+       i licznik ilości: anubias ma zapas, kryptokoryna jedną sztukę, więc
+       przy niej plus jest wyłączony stanem magazynowym. */
     cart_items: [
       { id: 'demo-koszyk-1', user_id: UID, product_id: 'anubias', qty: 2,
         created_at: '2026-09-01T10:00:00Z',
         products: { id: 'anubias', name: 'Anubias nana', latin: 'Anubias barteri var. nana',
-          image: 'assets/anubias.jpg', price: 22, unit: 'szt. · kubek 5×5' } },
+          image: 'assets/anubias.jpg', price: 22, unit: 'szt. · kubek 5×5', stock: 20 } },
       { id: 'demo-koszyk-2', user_id: UID, product_id: 'krypto', qty: 1,
         created_at: '2026-09-01T11:00:00Z',
         products: { id: 'krypto', name: 'Kryptokoryna Wendta', latin: 'Cryptocoryne wendtii',
-          image: 'assets/sp-flasks.jpg', price: 28, unit: 'szt. · kubek 5×5' } }
+          image: 'assets/sp-flasks.jpg', price: 28, unit: 'szt. · kubek 5×5', stock: 1 } }
     ],
 
     /* --- Poniżej: zestaw dla panelu personelu (admin-*-nf.html) ----------

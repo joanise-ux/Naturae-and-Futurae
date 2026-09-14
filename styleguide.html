@@ -1043,7 +1043,11 @@
                   <div class="mini-item__name">
                     <i class="latin" lang="la">Anubias barteri var. nana</i>
                     <span>Anubias nana</span>
-                    <span class="muted small num"> × 2</span>
+                    <span class="qty" role="group" aria-label="Ilość: Anubias nana">
+                      <button class="qty__btn" type="button" aria-label="Mniej: Anubias nana">−</button>
+                      <span class="qty__val num" aria-live="polite">2</span>
+                      <button class="qty__btn" type="button" aria-label="Więcej: Anubias nana">+</button>
+                    </span>
                   </div>
                   <div class="drawer__money">
                     <span class="num">44,00 zł</span>
@@ -1055,7 +1059,11 @@
                   <div class="mini-item__name">
                     <i class="latin" lang="la">Cryptocoryne wendtii</i>
                     <span>Kryptokoryna Wendta</span>
-                    <span class="muted small num"> × 1</span>
+                    <span class="qty" role="group" aria-label="Ilość: Kryptokoryna Wendta">
+                      <button class="qty__btn" type="button" aria-label="Mniej: Kryptokoryna Wendta" disabled>−</button>
+                      <span class="qty__val num" aria-live="polite">1</span>
+                      <button class="qty__btn" type="button" aria-label="Więcej: Kryptokoryna Wendta">+</button>
+                    </span>
                   </div>
                   <div class="drawer__money">
                     <span class="num">28,00 zł</span>
@@ -1071,6 +1079,12 @@
             </div>
           </div>
         </dialog>
+
+        <p class="sg-ref"><b>.qty</b> — licznik ilości pod nazwą: dwa przyciski
+           i liczba, bez pola do wpisywania. Minus przy jednej sztuce jest
+           wyłączony (usunięcie ma swoje potwierdzenie), plus zatrzymuje się
+           na stanie magazynowym. Wyłączony przycisk blednie, ale zostaje na
+           miejscu — inaczej licznik skakałby przy każdej granicy.</p>
 
         <p class="sg-ref"><b>.drawer</b> na <code>&lt;dialog&gt;</code> — trzy pasy:
            nagłówek i stopka stoją, środek się przewija, więc suma i przycisk kasy

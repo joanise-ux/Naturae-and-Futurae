@@ -25,6 +25,7 @@
      8A   .modal .num          potwierdzenie i dane liczbowe
      8A   .progress            postęp realizacji zamówienia
      ---  .drawer              wysuwka boczna (koszyk)
+     ---  .qty                 licznik ilości w koszyku (− n +)
 
    Zależy od: assets/tokens.css, assets/nf-base.css.
    ========================================================================== */
@@ -2077,6 +2078,12 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 }
 .drawer__item:last-child { border-bottom: 0; }
 
+/* Licznik ilości stoi pod nazwą, nie w kolumnie kwoty: kwota ma zostać
+   jednym słupkiem liczb przez całą listę, a licznik jest szerszy niż ona
+   i rozepchnąłby ten słupek. */
+.drawer__item .mini-item__name > span:not(.qty) { display: block; }
+.drawer__item .qty { margin-top: var(--space-2xs); }
+
 .drawer__thumb {
   width: 56px; height: 56px;
   border-radius: var(--radius-s);
@@ -2085,6 +2092,57 @@ select.input option { color: var(--ink); background-color: var(--paper); }
 }
 
 .drawer__money { text-align: right; white-space: nowrap; display: grid; gap: var(--space-2xs); justify-items: end; }
+
+/* --- .qty — licznik ilości (− n +) ---------------------------------------
+   Zmiana ilości to najczęstsza poprawka, jaką ktoś robi po dodaniu
+   produktu: „wezmę dwa, nie jeden”. Bez licznika trzeba było usunąć
+   pozycję i dodać ją ponownie w sklepie — trzy kroki na coś, co jest
+   jednym kliknięciem.
+
+   Dwa przyciski i liczba między nimi, bez pola do wpisywania: ilości
+   w koszyku są jednocyfrowe, a klawiatura numeryczna na telefonie to
+   więcej kłopotu niż plus. Krawędź pigułki obejmuje całość, więc licznik
+   czyta się jako jedna rzecz, nie trzy.
+   -------------------------------------------------------------------------- */
+
+.qty {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+}
+
+.qty__btn {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.qty__btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+
+/* Wyłączony przycisk zostaje na miejscu, tylko blednie: gdyby znikał,
+   licznik skakałby o 32px przy każdym dojściu do granicy. */
+.qty__btn:disabled { opacity: 0.35; cursor: default; }
+
+.qty__val {
+  min-width: 2ch;
+  padding-inline: var(--space-2xs);
+  text-align: center;
+}
+
+/* Na jasnej płycie ta sama pigułka potrzebuje ciemniejszej krawędzi. */
+.section--light .qty { border-color: rgba(0, 0, 0, 0.18); }
+.section--light .qty__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
 
 .drawer__sum {
   display: flex;

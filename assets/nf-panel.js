@@ -20,6 +20,9 @@
   var sb = null;
   var user = null;
 
+  /* Przycisk licznika, na który ma wrócić focus po przerysowaniu koszyka. */
+  var ostatniFokus = null;
+
   /* --- Słownik statusów (8A, zasada 3) ------------------------------------
      Baza trzyma pięć wartości, bo tyle ma panel staffa. Klient widzi cztery:
      „Nowe” i „W realizacji” to dla niego ten sam etap. Etykieta jest zawsze
@@ -202,7 +205,7 @@
 
   function pozycjeKoszyka() {
     return sb.from('cart_items')
-      .select('id, product_id, qty, products(id, name, latin, image, price, unit)')
+      .select('id, product_id, qty, products(id, name, latin, image, price, unit, stock)')
       .eq('user_id', user.id);
   }
 
@@ -257,12 +260,14 @@
     var stopka = document.getElementById('koszykStopka');
 
     if (blad) {
+      ostatniFokus = null;
       bladWczytania('koszykTresc');
       if (stopka) stopka.hidden = true;
       return;
     }
 
     if (!poz.length) {
+      ostatniFokus = null;
       podmien('koszykTresc', el('div', { cls: 'empty' }, [
         el('p', { text: 'Koszyk jest pusty.' }),
         el('a', { cls: 'btn btn--secondary', text: 'Zobacz rośliny', attr: { href: 'sklep-nf.html' } })
@@ -283,7 +288,7 @@
       var nazwa = el('div', { cls: 'mini-item__name' });
       if (p.latin) nazwa.appendChild(el('i', { cls: 'latin', text: p.latin, attr: { lang: 'la' } }));
       nazwa.appendChild(el('span', { text: p.name }));
-      nazwa.appendChild(el('span', { cls: 'muted small num', text: ' × ' + ile }));
+      nazwa.appendChild(licznik(i, p));
 
       var usun = el('button', {
         cls: 'btn btn--underline btn--small',
@@ -305,6 +310,7 @@
     });
 
     podmien('koszykTresc', lista);
+    przywrocFokus();
 
     if (!stopka) return;
     stopka.textContent = '';
@@ -321,6 +327,83 @@
       text: 'Przejdź do kasy',
       attr: { href: 'konto.html' }
     }));
+  }
+
+  /* --- Licznik ilości -----------------------------------------------------
+     Bez niego zmiana ilości znaczyła: usuń pozycję, wróć do sklepu, dodaj
+     ponownie. Minus przy jednej sztuce jest wyłączony, a nie usuwa pozycji
+     — usunięcie ma swoje potwierdzenie i nie powinno wychodzić z kliknięcia
+     w „mniej”. Plus zatrzymuje się na stanie magazynowym: koszyk nie
+     obiecuje sztuk, których nie ma.
+
+     Górna granica bierze pod uwagę to, co już leży w koszyku. Gdyby stan
+     spadł poniżej niej po dodaniu (ktoś inny kupił szybciej), plus jest
+     wyłączony, ale ilość zostaje — o rozbieżność upomni się kasa, nie
+     wysuwka. */
+
+  function licznik(pozycja, produkt) {
+    var ile = Number(pozycja.qty) || 0;
+    var stan = Number(produkt.stock);
+    var maks = isFinite(stan) ? Math.max(stan, ile) : ile + 1;
+
+    var mniej = el('button', {
+      cls: 'qty__btn',
+      text: '−',
+      attr: { type: 'button', 'aria-label': 'Mniej: ' + produkt.name, 'data-qty': pozycja.id + ':mniej' }
+    });
+    var wiecej = el('button', {
+      cls: 'qty__btn',
+      text: '+',
+      attr: { type: 'button', 'aria-label': 'Więcej: ' + produkt.name, 'data-qty': pozycja.id + ':wiecej' }
+    });
+
+    mniej.disabled = ile <= 1;
+    wiecej.disabled = ile >= maks;
+
+    mniej.addEventListener('click', function () { zapiszIlosc(pozycja, ile - 1, mniej); });
+    wiecej.addEventListener('click', function () { zapiszIlosc(pozycja, ile + 1, wiecej); });
+
+    /* Liczba jest tekstem, nie polem: ilości w koszyku są jednocyfrowe,
+       a aria-live czyta nową wartość po kliknięciu, więc czytnik ekranu
+       nie zostaje z poprzednią. */
+    return el('span', { cls: 'qty', attr: { role: 'group', 'aria-label': 'Ilość: ' + produkt.name } }, [
+      mniej,
+      el('span', { cls: 'qty__val num', text: ile, attr: { 'aria-live': 'polite' } }),
+      wiecej
+    ]);
+  }
+
+  function zapiszIlosc(pozycja, ile, przycisk) {
+    if (ile < 1) return;
+
+    /* Blokada na czas zapisu: dwa szybkie kliknięcia w plus wysłałyby
+       dwa razy tę samą wartość, bo oba liczą od ilości z rysowania. */
+    var wysuwka = document.getElementById('koszykWysuwka');
+    Array.prototype.forEach.call(wysuwka ? wysuwka.querySelectorAll('.qty__btn') : [], function (b) {
+      b.disabled = true;
+    });
+
+    /* Po przerysowaniu focus wraca na klikniętym przycisku — bez tego
+       skakałby na początek wysuwki przy każdej zmianie ilości. */
+    ostatniFokus = przycisk.getAttribute('data-qty');
+
+    sb.from('cart_items').update({ qty: ile }).eq('id', pozycja.id).eq('user_id', user.id)
+      .then(function () { wczytajKoszyk(); })
+      .catch(function () { wczytajKoszyk(); });
+  }
+
+  function przywrocFokus() {
+    if (!ostatniFokus) return;
+    var cel = document.querySelector('[data-qty="' + ostatniFokus + '"]');
+
+    /* Kliknięty przycisk mógł właśnie dojść do granicy i być wyłączony —
+       wtedy focus przechodzi na drugi w tym samym liczniku. */
+    if (cel && cel.disabled) {
+      var grupa = cel.closest('.qty');
+      cel = grupa ? grupa.querySelector('.qty__btn:not(:disabled)') : null;
+    }
+    if (cel) cel.focus();
+    ostatniFokus = null;
   }
 
   function usunZKoszyka(pozycja, produkt) {
