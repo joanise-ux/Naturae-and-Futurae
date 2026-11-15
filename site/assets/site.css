@@ -419,7 +419,8 @@ ul, ol { padding: 0; list-style: none; }
 .k-mission p.muted { margin: 22px auto 0; max-width: 58ch; }
 
 /* Formularz */
-.k-contact .k-title + p { margin-top: 18px; color: var(--muted); max-width: 44ch; }
+.k-contact .k-title ~ p { margin-top: 18px; color: var(--muted); max-width: 44ch; }
+.k-contact .k-title ~ p + p { margin-top: 12px; }
 .k-contact__meta { margin-top: 32px; display: grid; gap: 20px; }
 .k-contact__meta dt { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
 .k-contact__meta dd { margin-top: 4px; }
