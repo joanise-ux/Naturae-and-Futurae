@@ -389,15 +389,6 @@ ul, ol { padding: 0; list-style: none; }
 .k-feature h3 { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
 .k-feature p { margin-top: 12px; font-size: 0.9375rem; color: var(--muted); }
 
-.k-stats { display: grid; grid-template-columns: 1.2fr repeat(3, minmax(0, 1fr)); }
-.k-stats > * { padding: clamp(20px, 2.6vw, 34px); }
-.k-stats > * + * { border-left: 1px solid var(--line); }
-.k-stats__intro { color: var(--muted); font-size: 0.9375rem; }
-.k-stats__intro strong { display: block; margin-bottom: 6px; color: var(--text); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.8125rem; }
-.k-stat__label { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-.k-stat__value { margin-top: 6px; font-weight: 300; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1; }
-.k-stat__value small { font-size: 0.45em; color: var(--accent); margin-left: 0.2em; }
-
 .k-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 10px; }
 .k-split--flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
 .k-title {
@@ -470,9 +461,6 @@ ul, ol { padding: 0; list-style: none; }
   .nf-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nf-step { min-height: 340px; }
   .k-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .k-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .k-stats__intro { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
-  .k-stats > .k-stats__intro + * { border-left: 0; }
 }
 
 @media (max-width: 860px) {
@@ -503,9 +491,6 @@ ul, ol { padding: 0; list-style: none; }
   .nf-step { min-height: 300px; }
   .nf-facts { grid-template-columns: 1fr; }
   .k-grid-4 { grid-template-columns: 1fr; }
-  .k-stats { grid-template-columns: 1fr; }
-  .k-stats > * + * { border-left: 0; border-top: 1px solid var(--line); }
-  .k-stats__intro { border-bottom: 0; }
   .k-hero__title span + span { padding-left: 0; }
   .form { grid-template-columns: 1fr; }
   .form__foot .btn { width: 100%; }
