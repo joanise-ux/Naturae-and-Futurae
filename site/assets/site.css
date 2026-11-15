@@ -227,6 +227,7 @@ ul, ol { padding: 0; list-style: none; }
 }
 .nf-rail a:hover { opacity: 1; }
 .nf-rail a[aria-current="true"] { background: var(--accent); opacity: 1; transform: scale(1.5); }
+.nf-rail a[hidden], .nf-section[hidden] { display: none; }
 
 .nf-section { padding-block: clamp(72px, 9vw, 128px); }
 .nf-section--band {
@@ -297,6 +298,18 @@ ul, ol { padding: 0; list-style: none; }
 .nf-mission__body .label + .prose { margin-top: 18px; color: var(--muted); }
 .nf-mission__list { margin-top: 28px; border-top: 1px solid var(--line); }
 .nf-mission__list li { padding-block: 14px; border-bottom: 1px solid var(--line); }
+
+/* Zespół — karty z inicjałami (zdjęcia można dodać później) */
+.nf-team { list-style: none; margin: clamp(40px, 5vw, 64px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.nf-person { padding: clamp(24px, 3vw, 32px); border: 1px solid var(--line); border-radius: 6px; background: var(--bg-raised); }
+.nf-person__initials {
+  display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%;
+  border: 1px solid var(--accent); background: var(--surface); color: var(--accent);
+  font-family: var(--font-display); font-size: 1.625rem; letter-spacing: 0.04em;
+}
+.nf-person__name { margin-top: 22px; font-family: var(--font-display); font-weight: 400; font-size: 1.375rem; }
+.nf-person__role { margin-top: 6px; font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.nf-person__bio { margin-top: 14px; color: var(--muted); }
 
 /* Zapowiedź Kamino — błękitna wyspa na zielonej stronie */
 .nf-kamino {
