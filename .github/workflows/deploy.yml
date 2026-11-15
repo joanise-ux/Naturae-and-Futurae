@@ -10,38 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # UWAGA: ponizsze `exclude` to blok literalny YAML — kazda linia w nim jest
-      # wzorcem, a nie komentarzem. Wyjasnienia trzymamy tutaj, nad kluczem.
+      # Na serwer idzie WYŁĄCZNIE katalog site/ — strona wizytówka Nature & Future
+      # i Kamino BioLabs. Reszta repozytorium (stary sklep, panel klienta, strony
+      # -nf, backupy, dokumentacja) zostaje w gicie, ale nie jest publikowana.
       #
-      # *-nf.html, styleguide.html, assets/styleguide.*
-      #   Nowy front w budowie. Na serwer ma wyjsc przy swiadomym przelaczeniu,
-      #   a nie przy pierwszym commicie — inaczej strony robocze sa publicznie
-      #   dostepne pod zgadywalnymi adresami (nfplantbiotech.com/index-nf.html)
-      #   i moga trafic do wyszukiwarki. Przy przelaczeniu te trzy linie znikaja.
-      #
-      # docs/**
-      #   Dokumentacja wewnetrzna (design system) nie jest trescia dla odwiedzajacych.
-      #
-      # netlify.toml, netlify/**, _site/**
-      #   Pliki podgladu dla zespolu (Netlify). Produkcja ich nie uzywa.
+      # Akcja synchronizuje serwer ze stanem site/: pliki, które wgrała wcześniej,
+      # a których w site/ nie ma, usuwa z /www/. Pierwszy deploy po tej zmianie
+      # zdejmie więc z serwera stary front.
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ftp.cluster100.hosting.ovh.net
           username: nfplano
           password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./site/
           server-dir: /www/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            upload-to-ovh.ps1
-            .claude/**
-            backups/**
-            *-nf.html
-            styleguide.html
-            assets/styleguide.*
-            docs/**
-            netlify.toml
-            netlify/**
-            _site/**
