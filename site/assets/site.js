@@ -28,6 +28,7 @@
   var status = document.getElementById('formStatus');
   var button = form.querySelector('button[type="submit"]');
   var MAIL = 'kontakt@nfplantbiotech.com';
+  var THANKS = 'Dziękujemy za kontakt. Wiadomość do nas dotarła — przeczytamy ją i odpiszemy na podany adres e-mail.';
 
   var MESSAGES = {
     missing_fields: 'Uzupełnij imię i nazwisko, adres e-mail i treść wiadomości.',
@@ -60,7 +61,7 @@
 
   /* Wersja bez JS wraca tutaj z ?wyslano=1 albo ?blad=kod. */
   var params = new URLSearchParams(location.search);
-  if (params.get('wyslano')) showStatus('ok', 'Wiadomość wysłana. Odpiszemy na podany adres e-mail.');
+  if (params.get('wyslano')) showStatus('ok', THANKS);
   else if (params.get('blad')) showStatus('error', MESSAGES[params.get('blad')] || 'Nie udało się wysłać wiadomości. Napisz na ' + MAIL + '.');
 
   form.addEventListener('submit', function (e) {
@@ -88,7 +89,7 @@
       .then(function (result) {
         if (result.ok && result.data.ok) {
           form.reset();
-          showStatus('ok', 'Wiadomość wysłana. Odpiszemy na podany adres e-mail.');
+          showStatus('ok', THANKS);
         } else {
           showStatus('error', MESSAGES[result.data.error] || 'Nie udało się wysłać wiadomości. Napisz na ' + MAIL + '.');
         }
