@@ -2,7 +2,7 @@
 // ============================================================================
 // Kamino BioLabs — formularz kontaktowy
 // ----------------------------------------------------------------------------
-// Przyjmuje POST z kamino.html i wysyła wiadomość na skrzynkę kontaktową
+// Przyjmuje POST z kamino.html i index.html (pole source=nf) i wysyła wiadomość na skrzynkę kontaktową
 // funkcją mail() hostingu OVH. Odpowiada JSON-em (wysyłka przez fetch) albo
 // przekierowaniem z powrotem na stronę (przeglądarka bez JavaScriptu).
 // ============================================================================
@@ -26,7 +26,8 @@ function respond(bool $ok, string $error = '', int $status = 200): void
         echo json_encode($ok ? ['ok' => true] : ['error' => $error]);
     } else {
         $query = $ok ? 'wyslano=1' : 'blad=' . rawurlencode($error);
-        header('Location: kamino.html?' . $query . '#kontakt', true, 303);
+        $page  = (($_POST['source'] ?? '') === 'nf') ? 'index.html' : 'kamino.html';
+        header('Location: ' . $page . '?' . $query . '#kontakt', true, 303);
     }
     exit;
 }
@@ -54,6 +55,9 @@ $name         = line('name', 120);
 $email        = line('email', 200);
 $organization = line('organization', 160);
 $topic        = line('topic', 80);
+$species      = line('species', 120);
+$isNf         = (($_POST['source'] ?? '') === 'nf');
+$brand        = $isNf ? 'Nature & Future' : 'Kamino BioLabs';
 $message      = trim((string) ($_POST['message'] ?? ''));
 $message      = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $message) ?? '';
 
@@ -64,7 +68,7 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
     respond(false, 'bad_email', 400);
 }
 if (mb_strlen($name) > 120 || mb_strlen($email) > 200 || mb_strlen($organization) > 160
-    || mb_strlen($topic) > 80 || mb_strlen($message) > 5000) {
+    || mb_strlen($topic) > 80 || mb_strlen($species) > 120 || mb_strlen($message) > 5000) {
     respond(false, 'too_long', 400);
 }
 
@@ -84,17 +88,20 @@ if (count($hits) >= MAX_PER_HOUR) {
     respond(false, 'rate_limited', 429);
 }
 
-$subject = 'Kamino BioLabs — ' . ($topic !== '' ? $topic : 'formularz kontaktowy') . ' — ' . $name;
+$subject = $brand . ' — ' . ($topic !== '' ? $topic : 'formularz kontaktowy') . ' — ' . $name;
 
-$body  = "Wiadomość z formularza na stronie Kamino BioLabs\n\n";
+$body  = "Wiadomość z formularza na stronie $brand\n\n";
 $body .= "Imię i nazwisko: $name\n";
 $body .= "E-mail: $email\n";
-$body .= 'Firma lub gospodarstwo: ' . ($organization !== '' ? $organization : '—') . "\n";
+$body .= ($isNf ? 'Instytucja: ' : 'Firma lub gospodarstwo: ') . ($organization !== '' ? $organization : '—') . "\n";
+if ($isNf) {
+    $body .= 'Gatunek: ' . ($species !== '' ? $species : '—') . "\n";
+}
 $body .= 'Temat: ' . ($topic !== '' ? $topic : '—') . "\n\n";
 $body .= $message . "\n";
 
 $headers = [
-    'From'         => 'Formularz Kamino BioLabs <' . SENDER . '>',
+    'From'         => mb_encode_mimeheader('Formularz ' . $brand, 'UTF-8', 'B') . ' <' . SENDER . '>',
     'Reply-To'     => $email,
     'MIME-Version' => '1.0',
     'Content-Type' => 'text/plain; charset=UTF-8',

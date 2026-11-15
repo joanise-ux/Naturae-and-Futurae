@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nature &amp; Future — bank roślin in vitro dla ochrony zagrożonych gatunków</title>
+<title>Nature &amp; Future — bankujemy przyszłość zagrożonych roślin</title>
 <meta name="description" content="Nature &amp; Future zabezpiecza zagrożone gatunki roślin w kulturach in vitro. Pracujemy dla sektora publicznego: parków narodowych, rezerwatów i ogrodów botanicznych. Laboratorium w Wałbrzychu.">
 <link rel="canonical" href="https://nfplantbiotech.com/">
-<meta property="og:title" content="Nature &amp; Future — bank roślin in vitro dla ochrony zagrożonych gatunków">
+<meta property="og:title" content="Nature &amp; Future — bankujemy przyszłość zagrożonych roślin">
 <meta property="og:description" content="Zabezpieczamy zagrożone gatunki roślin, zanim znikną z natury. Kultury in vitro dla parków narodowych i opiekunów przyrody.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nfplantbiotech.com/">
@@ -24,6 +24,7 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Nature & Future",
+  "slogan": "Bankujemy przyszłość",
   "url": "https://nfplantbiotech.com/",
   "logo": "https://nfplantbiotech.com/assets/img/logo-circle.png",
   "email": "kontakt@nfplantbiotech.com",
@@ -147,7 +148,7 @@
       </div>
 
       <dl class="nf-facts">
-        <div><dt>In vitro</dt><dd>Metoda przechowywania</dd></div>
+        <div><dt>6</dt><dd>Gatunków w banku</dd></div>
         <div><dt>Wałbrzych</dt><dd>Laboratorium</dd></div>
         <div><dt>Sektor publiczny</dt><dd>Dla kogo pracujemy</dd></div>
       </dl>
@@ -257,8 +258,9 @@
         <p class="label">Kontakt</p>
         <h2 class="h-display">Opiekujesz się terenem, na którym rośnie coś rzadkiego?</h2>
         <p>
-          Napisz, o jaki gatunek chodzi i w jakim jest stanie. Odpowiemy, czy
-          da się go wprowadzić do kultury i jak mogłaby wyglądać współpraca.
+          Zgłoś gatunek przez formularz: napisz, co to za roślina, gdzie rośnie
+          i w jakim jest stanie. Odpowiemy, czy da się ją wprowadzić do kultury
+          i jak mogłaby wyglądać współpraca.
         </p>
         <p>
           Teraz szczególnie chętnie rozmawiamy z instytucjami, które chcą
@@ -266,14 +268,62 @@
           dopracowujemy wspólnie z opiekunem terenu — od pierwszej próbki
           po gotowy depozyt.
         </p>
+        <div class="nf-contact__meta">
+          <a class="nf-contact__mail" href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a>
+          <address>
+            Nature &amp; Future<br>
+            ul. Orkana 148, 58-300 Wałbrzych
+          </address>
+        </div>
       </div>
-      <div>
-        <a class="nf-contact__mail" href="mailto:kontakt@nfplantbiotech.com">kontakt@nfplantbiotech.com</a>
-        <address>
-          Nature &amp; Future<br>
-          ul. Orkana 148, 58-300 Wałbrzych
-        </address>
-      </div>
+
+      <form class="form nf-form" id="contactForm" action="kontakt.php" method="post" novalidate>
+        <input type="hidden" name="source" value="nf">
+        <div class="field">
+          <label for="f-name">Imię i nazwisko</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="f-email">Adres e-mail</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" maxlength="200" required>
+        </div>
+        <div class="field">
+          <label for="f-org">Instytucja <span>(np. park narodowy, ogród botaniczny)</span></label>
+          <input id="f-org" name="organization" type="text" autocomplete="organization" maxlength="160">
+        </div>
+        <div class="field">
+          <label for="f-species">Gatunek <span>(jeśli znany)</span></label>
+          <input id="f-species" name="species" type="text" maxlength="120">
+        </div>
+        <div class="field field--full">
+          <label for="f-topic">Czego dotyczy zgłoszenie</label>
+          <select id="f-topic" name="topic">
+            <option>Zabezpieczenie gatunku</option>
+            <option>Odtworzenie stanowiska</option>
+            <option>Współpraca naukowa</option>
+            <option>Inna sprawa</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for="f-message">Opis</label>
+          <textarea id="f-message" name="message" maxlength="5000" required placeholder="Gdzie rośnie gatunek, ile jest osobników, co mu zagraża."></textarea>
+        </div>
+
+        <!-- Pułapka na boty: człowiek tego pola nie widzi i nie wypełni. -->
+        <div class="form__trap" aria-hidden="true">
+          <label for="f-website">Strona www</label>
+          <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="form__status" id="formStatus" role="status" tabindex="-1" hidden></p>
+
+        <div class="form__foot">
+          <p class="form__note">
+            Dane z formularza wykorzystamy wyłącznie po to, żeby odpowiedzieć na to zgłoszenie.
+          </p>
+          <button class="btn" type="submit">Wyślij zgłoszenie</button>
+        </div>
+      </form>
     </div>
   </section>
 

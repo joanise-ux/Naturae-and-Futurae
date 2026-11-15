@@ -21,13 +21,14 @@
     document.querySelectorAll('[data-rail]').forEach(function (s) { observer.observe(s); });
   }
 
-  /* --- 2. Formularz kontaktowy (strona Kamino) --------------------------- */
+  /* --- 2. Formularz kontaktowy (Kamino i NF) ----------------------------- */
   var form = document.getElementById('contactForm');
   if (!form) return;
 
   var status = document.getElementById('formStatus');
   var button = form.querySelector('button[type="submit"]');
   var MAIL = 'kontakt@nfplantbiotech.com';
+  var BUTTON_LABEL = button.textContent;
   var THANKS = 'Dziękujemy za kontakt. Wiadomość do nas dotarła — przeczytamy ją i odpiszemy na podany adres e-mail.';
 
   var MESSAGES = {
@@ -99,7 +100,7 @@
       })
       .then(function () {
         button.disabled = false;
-        button.textContent = 'Wyślij wiadomość';
+        button.textContent = BUTTON_LABEL;
       });
   });
 })();
