@@ -4,14 +4,14 @@
     {
       "name": "site",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "."],
+      "runtimeArgs": ["serve", "site"],
       "port": 3000,
       "autoPort": true
     },
     {
-      "name": "podglad",
+      "name": "stary-front",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "_site"],
+      "runtimeArgs": ["serve", "."],
       "port": 4321,
       "autoPort": true
     }
