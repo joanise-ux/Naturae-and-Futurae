@@ -227,6 +227,7 @@ ul, ol { padding: 0; list-style: none; }
 }
 .nf-rail a:hover { opacity: 1; }
 .nf-rail a[aria-current="true"] { background: var(--accent); opacity: 1; transform: scale(1.5); }
+.nf-rail a[hidden], .nf-section[hidden] { display: none; }
 
 .nf-section { padding-block: clamp(72px, 9vw, 128px); }
 .nf-section--band {
@@ -298,6 +299,18 @@ ul, ol { padding: 0; list-style: none; }
 .nf-mission__list { margin-top: 28px; border-top: 1px solid var(--line); }
 .nf-mission__list li { padding-block: 14px; border-bottom: 1px solid var(--line); }
 
+/* Zespół — karty z inicjałami (zdjęcia można dodać później) */
+.nf-team { list-style: none; margin: clamp(40px, 5vw, 64px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.nf-person { padding: clamp(24px, 3vw, 32px); border: 1px solid var(--line); border-radius: 6px; background: var(--bg-raised); }
+.nf-person__initials {
+  display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%;
+  border: 1px solid var(--accent); background: var(--surface); color: var(--accent);
+  font-family: var(--font-display); font-size: 1.625rem; letter-spacing: 0.04em;
+}
+.nf-person__name { margin-top: 22px; font-family: var(--font-display); font-weight: 400; font-size: 1.375rem; }
+.nf-person__role { margin-top: 6px; font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.nf-person__bio { margin-top: 14px; color: var(--muted); }
+
 /* Zapowiedź Kamino — błękitna wyspa na zielonej stronie */
 .nf-kamino {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
@@ -323,6 +336,12 @@ ul, ol { padding: 0; list-style: none; }
 }
 .nf-contact__mail:hover { color: var(--text); }
 .nf-contact address { margin-top: 18px; font-style: normal; color: var(--muted); }
+.nf-contact { align-items: start; }
+.nf-contact__meta { margin-top: 36px; }
+.nf-form { padding: clamp(22px, 3vw, 36px); border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+[data-brand="nf"] .field input, [data-brand="nf"] .field textarea, [data-brand="nf"] .field select { border-color: rgba(118, 203, 154, 0.32); background: var(--bg-raised); }
+[data-brand="nf"] .btn { background: var(--accent-deep); }
+[data-brand="nf"] .btn:hover { background: #0B6427; }
 
 .footer { border-top: 1px solid var(--line); padding-block: 28px; font-size: 0.875rem; color: var(--muted); }
 .footer__inner { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; align-items: center; }
@@ -419,7 +438,8 @@ ul, ol { padding: 0; list-style: none; }
 .k-mission p.muted { margin: 22px auto 0; max-width: 58ch; }
 
 /* Formularz */
-.k-contact .k-title + p { margin-top: 18px; color: var(--muted); max-width: 44ch; }
+.k-contact .k-title ~ p { margin-top: 18px; color: var(--muted); max-width: 44ch; }
+.k-contact .k-title ~ p + p { margin-top: 12px; }
 .k-contact__meta { margin-top: 32px; display: grid; gap: 20px; }
 .k-contact__meta dt { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
 .k-contact__meta dd { margin-top: 4px; }
